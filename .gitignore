@@ -21,4 +21,3 @@ __pycache__/
 Thumbs.db
 .vscode/
 tools/.cache/
-dist/
