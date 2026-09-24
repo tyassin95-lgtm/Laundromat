@@ -31,7 +31,8 @@ A ready-to-install build is in [`dist/TheLastLaundromat.apk`](dist/TheLastLaundr
 1. Copy the APK to your phone, or download it there.
 2. Open it. Android will ask you to allow installs from that app (the browser or file
    manager). Allow it, then install.
-3. It runs on Android 7.0 (API 24) or newer, in landscape.
+3. It runs on Android 7.0 (API 24) or newer, in landscape. It needs a reasonably current
+   Android System WebView (2021 or later), which the Play Store keeps up to date.
 
 Progress saves automatically: at the start of each day and each phase, when you sleep, and
 when the app goes to the background. The save is mirrored to the app's private storage, so
