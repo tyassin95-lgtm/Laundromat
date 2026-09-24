@@ -75,6 +75,9 @@ export const weekOf = day => Math.ceil(day / 7);
 export const weekday = day => (day - 1) % 7;          // 0 = Monday (Sept 1 is a Monday)
 export const isSunday = day => weekday(day) === 6;
 export const flag = f => !!G.flags[f];
+// The shop opens on Sundays only for pay-what-you-can afternoons (a policy June suggests in week 2).
+export const sundayOpen = () => !!(G.flags.open_sundays || G.policies.pwyc);
+export const pwycToday = () => !!G.policies.pwyc && isSunday(G.day);
 
 export function setFlag(f, v = true) { G.flags[f] = v; }
 

@@ -1,6 +1,6 @@
 // Laundromat simulation: machines, drop-off orders, self-service walk-ins, wear and satisfaction.
 // Pure game logic (no drawing); scenes/laundromat.js renders it and drives the player actions.
-import { G, addMoney, addStat, stars, weekday, takeItem } from './state.js';
+import { G, addMoney, addStat, stars, weekday, takeItem, pwycToday } from './state.js';
 import { makeRng, clamp } from '../engine/util.js';
 import { REGULARS, SERVICES } from '../data/regulars.js';
 
@@ -166,9 +166,11 @@ export function pickup(o) {
   let q = (onTime ? 0.55 : 0.2) + foldQ * 0.25 + (G.cleanliness / 100) * 0.1 + comfortScore() * 0.1;
   if (o.softenerWanted !== undefined) q += o.softenerOk ? 0.05 : -0.08;
   q = clamp(q, 0, 1);
-  const priceMul = G.policies.prices === 'low' ? 0.85 : G.policies.prices === 'high' ? 1.2 : 1;
+  const pwyc = pwycToday();
+  const priceMul = pwyc ? 0.5 : G.policies.prices === 'low' ? 0.85 : G.policies.prices === 'high' ? 1.2 : 1;
   const pay = Math.round(o.price * priceMul);
-  const tip = Math.round(o.price * 0.35 * Math.max(0, q - 0.45) / 0.55 * (G.policies.prices === 'high' ? 0.5 : 1));
+  const tip = pwyc ? 0 : Math.round(o.price * 0.35 * Math.max(0, q - 0.45) / 0.55 * (G.policies.prices === 'high' ? 0.5 : 1));
+  if (pwyc) addStat('community', 1.2);
   addMoney(pay, `${o.name} — ${SERVICES[o.service].label}`, 'order');
   if (tip > 0) addMoney(tip, `Tip from ${o.name}`, 'tip');
   const repDelta = (q - 0.55) * 4 - (G.policies.prices === 'high' ? 0.6 : 0) + (G.policies.prices === 'low' ? 0.3 : 0);
@@ -197,7 +199,8 @@ export function planDay(extra = []) {
   const st = stars();
   let n = Math.round(1.5 + st * 1.1 + (wd === 5 ? 2 : 0) + (wd === 0 ? 1 : 0) + (G.weather === 'rain' ? 0.5 : 0));
   if (G.day === 1) n = 2;
-  if (G.flags.storm_day) n = Math.max(2, n - 2);
+  if (G.flags.storm_day || G.weather === 'storm') n = Math.max(2, n - 2);
+  if (pwycToday()) n += 1;
   n = clamp(n, 1, 10);
   const pool = REGULARS.filter(r => (!r.from || G.day >= r.from) && (!r.until || G.day <= r.until) && (!r.flag || G.flags[r.flag]) && (!r.notFlag || !G.flags[r.notFlag]));
   const picks = rng.shuffle(pool).slice(0, n);
@@ -280,8 +283,9 @@ export function tick(dm) {
     if (d) {
       unload(w);
       startCycle(d, 'self');
-      addMoney(SELF_DRY, null, 'self');
-      G.today.selfServe += SELF_DRY;
+      const dry = SELF_DRY * (pwycToday() ? 0.5 : 1);
+      addMoney(dry, null, 'self');
+      G.today.selfServe += dry;
       emit('selfMove', { from: w, to: d });
       Sim.selfQueue.splice(i, 1);
     } else if (G.time - q.since > 70) {
@@ -302,8 +306,9 @@ export function tick(dm) {
     if (free.length >= 2 || (free.length === 1 && washers().filter(isFree).length > 1)) {
       const m = free[Math.floor(Math.random() * free.length)];
       startCycle(m, 'self');
-      addMoney(SELF_WASH, null, 'self');
-      G.today.selfServe += SELF_WASH;
+      const wash = SELF_WASH * (pwycToday() ? 0.5 : 1);
+      addMoney(wash, null, 'self');
+      G.today.selfServe += wash;
       emit('walkIn', { m });
     } else {
       addStat('reputation', -0.25);

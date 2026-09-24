@@ -21,6 +21,8 @@ remy.sad: And it's also them buying the thing they erased. Like hanging a photo 
 * Don't. They don't get to buy what they erased.
   remy.excited: ...Okay. OKAY. Yes. Thank you. I needed somebody to say it out loud.
   remy.worried: My mom's going to kill me. Then she's going to be proud of me. In that order.
+  remy.wink: Also, if that Crestline ad on the corner gets a little… improved tonight, you didn't see anything.
+  <<flag ad_tagged>>
   <<flag commission_refused>>
   <<rel remy 35>>
   <<community 5>>

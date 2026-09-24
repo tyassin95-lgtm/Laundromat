@@ -1,5 +1,5 @@
 // Day flow: morning at home -> shift in the laundromat -> free evening -> sleep.
-import { G, freshToday, weekday, isSunday, weekOf, addMoney, STORY_DAYS, WEEKDAYS_LONG, heartsOf, FRIENDS, addStat } from './state.js';
+import { G, freshToday, weekday, isSunday, weekOf, addMoney, STORY_DAYS, WEEKDAYS_LONG, heartsOf, FRIENDS, addStat, sundayOpen } from './state.js';
 import * as L from './laundry.js';
 import { Save } from './save.js';
 import { UI } from '../ui/ui.js';
@@ -41,7 +41,9 @@ export class DayFlow {
     await app.story.trigger('home_morning');
     if (!app.scene || app.scene.name === 'title') return;   // the final choice ended the story
     await this.checkMail();
-    app.hud.setGoal(G.goal || (isSunday(G.day) ? 'Sunday — the shop is closed. Rest, explore, see friends.' : 'Head downstairs and open the shop.'));
+    app.hud.setGoal(G.goal || (isSunday(G.day)
+      ? (sundayOpen() ? 'Pay-what-you-can Sunday: open the shop if you like, or take the day off.' : 'Sunday — the shop is closed. Rest, explore, see friends.')
+      : 'Head downstairs and open the shop.'));
   }
 
   async checkMail() {
@@ -52,7 +54,7 @@ export class DayFlow {
   // ------------------------------------------------------------------ shift
   async startShift() {
     const app = this.app;
-    if (isSunday(G.day) && !G.flags.open_sundays) { UI.toast('The shop is closed on Sundays.', 'icon_calendar'); return; }
+    if (isSunday(G.day) && !sundayOpen()) { UI.toast('The shop is closed on Sundays.', 'icon_calendar'); return; }
     G.phase = 'shift';
     G.time = Math.max(G.time, L.OPEN_AT);
     G.location = 'laundromat';

@@ -1,5 +1,5 @@
 // Things to do at home and around the neighbourhood (hobbies, errands, collectibles).
-import { G, addStat, giveItem, takeItem, addMoney, isSunday, weekday, heartsOf } from './state.js';
+import { G, addStat, giveItem, takeItem, addMoney, isSunday, weekday, heartsOf, sundayOpen } from './state.js';
 import { UI } from '../ui/ui.js';
 import { Sound } from '../engine/audio.js';
 import { tweens } from '../engine/tween.js';
@@ -34,7 +34,7 @@ export class Activities {
   // ------------------------------------------------------------------ home
   async a_door() {
     if (G.phase === 'morning') {
-      if (isSunday(G.day) && !G.flags.open_sundays) {
+      if (isSunday(G.day) && !sundayOpen()) {
         const go = await UI.confirm('Sunday', 'The shop is closed on Sundays. Head out into the neighbourhood?', 'Go out', 'Stay in');
         if (go) { G.phase = 'evening'; this.app.day.openMap(); }
         return;
