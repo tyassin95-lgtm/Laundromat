@@ -14,7 +14,7 @@ import { LOCATIONS, MAP_ORDER } from '../data/locations.js';
 import { LETTERS } from '../data/letters.js';
 import { CALENDAR_MARKS } from '../data/events.js';
 import { ENDINGS, CREDITS } from '../data/endings.js';
-import { formatText } from './dialogue.js';
+import { Dialogue, formatText } from './dialogue.js';
 
 const S = n => 'assets/sprites/' + n + '.webp';
 
@@ -581,6 +581,7 @@ export class Menus {
   // ------------------------------------------------------------------ ending
   async playEnding(id) {
     const E = ENDINGS[id];
+    Dialogue.close();            // the final choice is still on screen; the ending takes over from here
     Sound.music(E.music || 'ending', 3);
     this.app.hud.show(false);
     await UI.fadeOut(1200);

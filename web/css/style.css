@@ -364,7 +364,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .gauge .needle { position: absolute; top: 0; bottom: 0; width: .55rem; margin-left: -.27rem; background: #c4392e; border-left: .12rem solid #fff3c4; border-right: .12rem solid #fff3c4; box-shadow: 0 0 .5rem rgba(0,0,0,.6); }
 
 /* ------------------------------------------------------------------ fade + cards */
-.fader { position: absolute; inset: 0; background: #0e0a08; z-index: 40; pointer-events: none; opacity: 0; transition: opacity .5s; }
+.fader { position: absolute; inset: 0; background: #0e0a08; z-index: 19; pointer-events: none; opacity: 0; transition: opacity .5s; }
 .fader.on { opacity: 1; pointer-events: auto; }
 .daycard { position: absolute; inset: 0; z-index: 41; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--cream); pointer-events: none; animation: fadeIn .6s; }
 .daycard .d1 { font-family: 'Fraunces', serif; letter-spacing: .4em; font-size: 1.3rem; opacity: .8; }
