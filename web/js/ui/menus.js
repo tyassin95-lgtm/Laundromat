@@ -573,6 +573,7 @@ export class Menus {
       <p><b>Hands full?</b> Tap a finished machine to swap loads, or tap the counter to set a bag down for later. Tap an order ticket to read its note.</p>
       <p><b>Walk-ins</b> use free washers on their own and pay coins. Keep a machine free for them.</p>
       <p><b>Chores:</b> mop puddles, clean dryer lint, fix broken machines (you'll need spare parts), and keep detergent stocked.</p>
+      <p><b>Energy</b> (the bar under your stars) drains as you work. When it runs low you slow down: sit on the bench, have a cup of tea, or pet Biscuit.</p>
       <p><b>Evenings</b> are yours: see friends, take photos, sketch, knit, explore. Talk to people every day and bring gifts they love.</p>
       <p><b>Bills</b> come every Sunday night. Don't let Rosa's go under.</p>`, { ok: 'Got it' });
   }

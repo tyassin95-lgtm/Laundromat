@@ -744,6 +744,7 @@ export class LaundromatScene extends Scene {
       }
     }
     this.particles.update(dt);
+    this.applyFatigue(330, this.shiftRunning ? 'Running on fumes. Sit on the bench or make a cup of tea to catch your breath.' : null);
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
     this.follow(this.player, dt);

@@ -269,6 +269,7 @@ export class StreetScene extends Scene {
     if (!this.app.paused()) for (const a of this.actors) a.update(dt);
     this.particles.update(dt);
     this.rain.update(dt, this.r.VW, 700);
+    this.applyFatigue(330, null);
     this.follow(this.player, dt);
     if (this.player.moving) {
       this.stepT = (this.stepT || 0) + dt;

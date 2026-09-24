@@ -2,6 +2,7 @@
 import { clamp, damp, lerp } from '../engine/util.js';
 import { Particles, Rain } from '../engine/particles.js';
 import { G } from '../game/state.js';
+import { UI } from '../ui/ui.js';
 
 // Ambient light colour for a time of day (minutes) and weather.
 export function ambientFor(time, weather, interior) {
@@ -120,5 +121,15 @@ export class Scene {
   }
 
   update(dt) { this.t += dt; }
+
+  // Tired players walk slower; the first time each day it happens, say how to recover.
+  applyFatigue(baseSpeed, hint) {
+    const tired = G.energy < 20;
+    if (this.player) this.player.speed = tired ? baseSpeed * 0.75 : baseSpeed;
+    if (tired && hint && G.vars.tiredWarned !== G.day) {
+      G.vars.tiredWarned = G.day;
+      UI.toast(hint, 'icon_heart', 'bad', 4200);
+    }
+  }
   draw() {}
 }

@@ -134,6 +134,7 @@ export class HomeScene extends Scene {
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
     this.fitView();
+    this.applyFatigue(300, null);
     this.follow(this.player, dt);
     if (this.player.moving) {
       this.stepT = (this.stepT || 0) + dt;
