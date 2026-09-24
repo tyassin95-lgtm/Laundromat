@@ -320,21 +320,40 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ------------------------------------------------------------------ minigames */
 .mg { position: absolute; inset: 0; z-index: 24; display: flex; align-items: center; justify-content: center; background: rgba(12,9,7,.5); animation: fadeIn .2s; }
 .mg .board { position: relative; width: 44rem; height: 30rem; border-radius: 1rem; background: #8a5a36 url('') ; box-shadow: 0 .6rem 1.5rem rgba(0,0,0,.5); overflow: hidden; }
-.mg .board.wood { background: repeating-linear-gradient(0deg, #a86b3c 0 2.2rem, #9a5f35 2.2rem 2.3rem, #b27442 2.3rem 4.5rem, #8e5630 4.5rem 4.6rem); }
+.mg .board.wood { border: .25rem solid #3a2a1e; box-shadow: inset 0 0 3.5rem rgba(40,18,6,.5), 0 .6rem 1.5rem rgba(0,0,0,.5);
+  background: repeating-linear-gradient(90deg, rgba(60,30,10,.06) 0 .12rem, transparent .12rem 1.7rem),
+    repeating-linear-gradient(0deg, #a86b3c 0 2.2rem, #6e4326 2.2rem 2.32rem, #b27442 2.32rem 4.5rem, #6e4326 4.5rem 4.62rem); }
 .mg .hint { position: absolute; top: .9rem; left: 0; right: 0; text-align: center; font-size: calc(1.3rem * var(--ts)); color: var(--cream); text-shadow: 0 .1rem .3rem #000; z-index: 3; }
 .mg .progress { position: absolute; bottom: .9rem; left: 50%; transform: translateX(-50%); display: flex; gap: .5rem; z-index: 3; }
 .mg .progress i { width: 1rem; height: 1rem; border-radius: 50%; background: rgba(255,255,255,.3); }
 .mg .progress i.on { background: var(--gold); }
 .garment { position: absolute; left: 50%; top: 54%; width: 22rem; height: 17rem; transform: translate(-50%, -50%); }
-.garment .part { position: absolute; background: var(--gc, #7fa0b0); border: .2rem solid rgba(40,30,20,.7); border-radius: .5rem;
-  transition: transform .28s cubic-bezier(.3,1.3,.5,1), background .28s; transform-origin: var(--o, 50% 50%); box-shadow: inset 0 0 1.2rem rgba(0,0,0,.15);
-  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 .3rem, rgba(0,0,0,.03) .3rem .6rem); }
+.garment .part { position: absolute; background-color: var(--gc, #7fa0b0); border: .22rem solid #2e2218; border-radius: .6rem .6rem .45rem .45rem;
+  transition: transform .28s cubic-bezier(.3,1.3,.5,1), background .28s; transform-origin: var(--o, 50% 50%);
+  box-shadow: inset 0 0 0 .3rem rgba(255,255,255,.1), inset 0 -1.2rem 1.6rem rgba(0,0,0,.2), 0 .3rem .5rem rgba(0,0,0,.25);
+  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 .25rem, rgba(0,0,0,.04) .25rem .5rem),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 .25rem, rgba(0,0,0,.03) .25rem .5rem); }
+.garment.shirt .part[data-id="body"]::before { content: ''; position: absolute; top: -.25rem; left: 50%; width: 34%; height: 13%; transform: translateX(-50%);
+  border-radius: 0 0 50% 50%; background: rgba(0,0,0,.28); border: .18rem solid #2e2218; border-top: none; }
+.garment.shirt .part[data-id="body"]::after { content: ''; position: absolute; left: 50%; top: 18%; bottom: 8%; width: .7rem; transform: translateX(-50%);
+  background: radial-gradient(circle, #f4ead2 0 35%, #2e2218 36% 48%, transparent 50%) center top / .7rem 2.4rem repeat-y; }
+.garment.towel .part::after { content: ''; position: absolute; left: 0; right: 0; bottom: 10%; height: 9%; background: rgba(255,248,230,.4); box-shadow: 0 -1.1rem 0 -.25rem rgba(255,248,230,.25); }
+.garment.pants .part[data-id="top"] { filter: brightness(.85); }
+.garment.pants .part[data-id="top"]::after { content: ''; position: absolute; left: 50%; top: 20%; width: .8rem; height: .8rem; margin-left: -.4rem; border-radius: 50%; background: #c9a24c; border: .12rem solid #2e2218; }
 .arrow { position: absolute; width: 5rem; height: 5rem; border-radius: 50%; background: rgba(232,176,78,.92); color: #3a2a1e; font-size: 2.8rem; display: flex;
   align-items: center; justify-content: center; box-shadow: 0 .3rem .8rem rgba(0,0,0,.4); animation: pulse 1s infinite; z-index: 4; }
 .swipe-trail { position: absolute; pointer-events: none; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: rgba(255,240,200,.8); transform: translate(-50%, -50%); animation: trail .4s forwards; }
 @keyframes trail { to { opacity: 0; transform: translate(-50%, -50%) scale(.2); } }
 .repair { background: #56585a; }
-.repair .panel { position: absolute; inset: 2.2rem; border-radius: .6rem; background: linear-gradient(#7d807f, #5d605f); box-shadow: inset 0 0 1.4rem rgba(0,0,0,.5); }
+.repair .panel { position: absolute; inset: 2.2rem; border-radius: .6rem; border: .2rem solid #2e2a26; box-shadow: inset 0 0 1.4rem rgba(0,0,0,.5);
+  background: radial-gradient(circle at 1.2rem 1.2rem, #c8c4b8 0 .35rem, #3a3632 .4rem .5rem, transparent .55rem),
+    radial-gradient(circle at calc(100% - 1.2rem) 1.2rem, #c8c4b8 0 .35rem, #3a3632 .4rem .5rem, transparent .55rem),
+    radial-gradient(circle at 1.2rem calc(100% - 1.2rem), #c8c4b8 0 .35rem, #3a3632 .4rem .5rem, transparent .55rem),
+    radial-gradient(circle at calc(100% - 1.2rem) calc(100% - 1.2rem), #c8c4b8 0 .35rem, #3a3632 .4rem .5rem, transparent .55rem),
+    repeating-linear-gradient(100deg, rgba(255,255,255,.035) 0 .2rem, transparent .2rem .9rem),
+    linear-gradient(#80847f, #5a5d5a); }
+.repair .panel::after { content: 'MOTOR ACCESS — DISCONNECT POWER'; position: absolute; left: 50%; top: 1.1rem; transform: translateX(-50%); font-family: 'Fraunces', serif;
+  font-weight: 700; font-size: .8rem; letter-spacing: .12em; color: #2e2a26; background: #d9c9a0; padding: .15rem .6rem; border-radius: .2rem; border: .1rem solid #2e2a26; opacity: .85; white-space: nowrap; }
 .bolt { position: absolute; width: 5.4rem; height: 5.4rem; margin: -2.7rem; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #e6e1d2, #9a958a 60%, #5e5a52);
   box-shadow: 0 .25rem .5rem rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; transition: transform .2s; }
 .bolt::after { content: ''; width: 45%; height: 45%; background: #4a463f; clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%); }
@@ -342,7 +361,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .bolt.done { background: radial-gradient(circle at 40% 35%, #f1e2a8, #c9a24c 60%, #7d6326); transform: rotate(90deg); }
 .gauge { position: absolute; left: 50%; bottom: 2.5rem; transform: translateX(-50%); width: 30rem; height: 2rem; border-radius: 1rem; background: rgba(0,0,0,.45); overflow: hidden; border: .15rem solid rgba(255,255,255,.3); }
 .gauge .zone { position: absolute; top: 0; bottom: 0; background: rgba(125,190,110,.75); }
-.gauge .needle { position: absolute; top: -.2rem; bottom: -.2rem; width: .45rem; margin-left: -.22rem; background: #fff3c4; box-shadow: 0 0 .5rem #fff; }
+.gauge .needle { position: absolute; top: 0; bottom: 0; width: .55rem; margin-left: -.27rem; background: #c4392e; border-left: .12rem solid #fff3c4; border-right: .12rem solid #fff3c4; box-shadow: 0 0 .5rem rgba(0,0,0,.6); }
 
 /* ------------------------------------------------------------------ fade + cards */
 .fader { position: absolute; inset: 0; background: #0e0a08; z-index: 40; pointer-events: none; opacity: 0; transition: opacity .5s; }

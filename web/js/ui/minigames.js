@@ -58,11 +58,12 @@ export function foldGame(opts = {}) {
     const hint = el('div', 'hint', 'Swipe along the arrow to fold');
     const prog = el('div', 'progress');
     G1.steps.forEach(() => prog.appendChild(el('i')));
-    const gar = el('div', 'garment');
+    const gar = el('div', 'garment ' + kind);
     gar.style.setProperty('--gc', color);
     const parts = {};
     for (const p of G1.parts) {
       const d = el('div', 'part');
+      d.dataset.id = p.id;
       d.style.left = (p.x / G1.w * 100) + '%'; d.style.top = (p.y / G1.h * 100) + '%';
       d.style.width = (p.w / G1.w * 100) + '%'; d.style.height = (p.h / G1.h * 100) + '%';
       if (p.o) d.style.setProperty('--o', p.o);
