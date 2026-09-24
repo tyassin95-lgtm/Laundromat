@@ -22,7 +22,7 @@ export class TitleScene extends StreetScene {
     this.app.hud.setMode('hidden');
   }
 
-  exit() { this.r.cam.zoom = 1; }
+  exit() { super.exit(); this.r.cam.zoom = 1; }
 
   onTap() { /* the DOM menu handles input */ }
 

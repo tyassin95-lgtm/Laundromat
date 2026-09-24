@@ -70,7 +70,7 @@ export async function skipDialogue(page, choice = 0, max = 300, log = false, set
       if (modals.length) {
         const m = modals[modals.length - 1];
         const btns = [...m.querySelectorAll('.btn')];
-        return { k: 'modal', n: btns.length, txt: m.innerText.slice(0, 160).replace(/\s+/g, ' ') };
+        return { k: 'modal', n: btns.length, labels: btns.map(b => b.innerText.trim()), txt: m.innerText.slice(0, 160).replace(/\s+/g, ' ') };
       }
       const d = document.querySelector('.dlg');
       if (d) {
@@ -88,14 +88,17 @@ export async function skipDialogue(page, choice = 0, max = 300, log = false, set
     if (st.k === 'modal') {
       const m = page.locator('.modal').last();
       const prim = m.locator('.btn.primary');
-      if (await prim.count()) await prim.first().click({ timeout: 3000 }).catch(() => {});
+      const want = typeof choice === 'function' && st.labels.length > 1 ? choice(st.labels) : -1;
+      if (want >= 0) await m.locator('.btn').nth(want).click({ timeout: 3000 }).catch(() => {});
+      else if (await prim.count()) await prim.first().click({ timeout: 3000 }).catch(() => {});
       else if (st.n) await m.locator('.btn').last().click({ timeout: 3000 }).catch(() => {});
       else await m.click({ position: { x: 5, y: 5 }, timeout: 3000 }).catch(() => {});
       await wait(250);
       continue;
     }
     if (st.k === 'choice') {
-      const idx = typeof choice === 'function' ? choice(st.ch) : choice;
+      let idx = typeof choice === 'function' ? choice(st.ch) : choice;
+      if (idx < 0) idx = 0;
       await page.locator('.dlg .choices .btn').nth(Math.min(idx, st.ch.length - 1)).click({ timeout: 3000 }).catch(() => {});
       await wait(200); continue;
     }

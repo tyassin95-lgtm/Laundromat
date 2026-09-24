@@ -9,9 +9,9 @@ const SELL = args.includes('--sell');
 const MAXD = +(args[args.indexOf('--days') + 1] || 0) || 28;
 const SPEED = +(args[args.indexOf('--speed') + 1] || 0) || 3;
 
-const PREFER = [SELL ? /^Sell\./ : /^Keep it/, /Don't\. They don't/, /Keep the doors open/, /Meet here/, /^Of course/, /We could fight/,
+const PREFER = [SELL ? /^Sell\./ : /^Keep it/, /^Decline politely/, /Don't\. They don't/, /Keep the doors open/, /Meet here/, /^Of course/, /We could fight/,
   /^Stay\. We need/, /cover the paint/, /neighbours/, /Get out of my/, /Go down and see/, /Come on in/];
-const chooser = opts => { for (const re of PREFER) { const i = opts.findIndex(o => re.test(o)); if (i >= 0) return i; } return 0; };
+const chooser = opts => { for (const re of PREFER) { const i = opts.findIndex(o => re.test(o)); if (i >= 0) return i; } return -1; };
 const skip = (page, max = 300) => skipDialogue(page, chooser, max);
 setChooser(chooser);
 

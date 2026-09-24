@@ -3,6 +3,8 @@
 
 const cache = new Map();      // name -> HTMLImageElement
 const pending = new Map();    // name -> Promise
+const bgUse = new Set();      // background keys, least recently used first
+const MAX_BGS = 10;
 export let manifest = {};
 
 function loadImage(url) {
@@ -37,9 +39,12 @@ export const Assets = {
   has(name) { return cache.has(name); },
   url(name) { return 'assets/sprites/' + name + '.webp'; },
 
-  // Background image (lazy). Returns a promise.
+  // Background image (lazy). Returns a promise. Keeps only the most recently used few in memory
+  // (a big painted background decodes to ~15 MB).
   bg(name) {
     const key = 'bg:' + name;
+    bgUse.delete(key); bgUse.add(key);
+    while (bgUse.size > MAX_BGS) { const old = bgUse.values().next().value; bgUse.delete(old); cache.delete(old); }
     if (cache.has(key)) return Promise.resolve(cache.get(key));
     if (pending.has(key)) return pending.get(key);
     const p = loadImage('assets/bg/' + name + '.webp').then(im => { cache.set(key, im); pending.delete(key); return im; })
@@ -48,7 +53,7 @@ export const Assets = {
     return p;
   },
   bgSync(name) { return cache.get('bg:' + name) || null; },
-  dropBg(name) { cache.delete('bg:' + name); },
+  dropBg(name) { cache.delete('bg:' + name); bgUse.delete('bg:' + name); },
 
   async fonts() {
     if (!document.fonts) return;

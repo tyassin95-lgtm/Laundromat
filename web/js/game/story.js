@@ -34,7 +34,7 @@ export class Story {
     const hearts = {};
     for (const f of FRIENDS) hearts[f] = heartsOf(f);
     return {
-      flag: G.flags, var: G.vars, hearts, pts: G.hearts, day: G.day, money: G.money, community: G.community, petition: G.petition,
+      flag: G.flags, var: G.vars, vars: G.vars, hearts, pts: G.hearts, day: G.day, money: G.money, community: G.community, petition: G.petition,
       rep: G.reputation, stars: stars(), energy: G.energy, weekday: weekday(G.day), time: G.time, phase: G.phase, item: G.inv,
       seen: G.seen, name: G.name, weather: G.weather, loc: G.location, talkedToday: (w) => G.talked[w] === G.day,
       owns: (d) => G.decor.includes(d), placed: (d) => Object.values(G.placed).includes(d), upgrade: (u) => G.upgrades.includes(u),

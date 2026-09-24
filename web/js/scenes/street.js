@@ -120,6 +120,9 @@ export class StreetScene extends Scene {
     this.app.day.sceneMusic();
   }
 
+  // Let go of the big images when leaving (the asset cache keeps recently used ones).
+  exit() { this.bg = this.bgLights = this.sky = this.skyLights = null; this.skyMask = null; }
+
   // Coarse map of where the background is transparent (open sky), for stars.
   buildSkyMask(im) {
     if (!im) return null;
@@ -350,6 +353,7 @@ export class StreetScene extends Scene {
     if (pr.ay !== undefined) o.ay = pr.ay;
     if (pr.flip) o.flip = true;
     if (pr.tree) o.rot = Math.sin(this.t * 0.8 + pr.x) * 0.006;
+    if (pr.market) this.drawMarketCanopy(r, pr);
     const box = r.sprite(e.s, pr.x, pr.y, o);
     if (pr.sign && box) {
       const c = r.ctx;
@@ -358,6 +362,28 @@ export class StreetScene extends Scene {
       c.fillText(G.shop, box.x + box.w * 0.5, box.y + box.h * 0.66);
       c.restore();
     }
+  }
+
+  // Weekend flea market: a striped canopy on two poles and a hand-lettered sign over the table.
+  drawMarketCanopy(r, pr) {
+    const c = r.ctx;
+    const x0 = pr.x - 104, x1 = pr.x + 104, top = pr.y - 214, base = pr.y - 6;
+    c.save();
+    c.fillStyle = '#5a3a24'; c.strokeStyle = '#2a1c14'; c.lineWidth = 1.5;
+    for (const px of [x0 + 2, x1 - 8]) { c.fillRect(px, top, 6, base - top); c.strokeRect(px, top, 6, base - top); }
+    const n = 7, w = (x1 - x0) / n;
+    for (let i = 0; i < n; i++) {
+      c.fillStyle = i % 2 ? '#efe3c6' : '#c4692e';
+      c.beginPath(); c.moveTo(x0 + i * w, top); c.lineTo(x0 + (i + 1) * w, top); c.lineTo(x0 + (i + 1) * w, top + 24);
+      c.quadraticCurveTo(x0 + (i + 0.5) * w, top + 38, x0 + i * w, top + 24); c.closePath(); c.fill(); c.stroke();
+    }
+    c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(x0, top + 22, x1 - x0, 4);
+    c.fillStyle = '#f7ecd4'; c.strokeStyle = '#3a2a1e';
+    c.beginPath(); c.roundRect(pr.x - 58, top - 30, 116, 26, 4); c.fill(); c.stroke();
+    c.font = '700 14px Fraunces'; c.fillStyle = '#8f3f2c'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText('FLEA MARKET', pr.x, top - 16);
+    c.restore();
+    r.sprite('item_yarn_basket', x1 + 20, pr.y + 4, { h: 46 });
   }
 
   drawBulbs(r, pr, night) {

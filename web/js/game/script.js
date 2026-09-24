@@ -109,6 +109,7 @@ const exprCache = new Map();
 export function compileExpr(src) {
   if (exprCache.has(src)) return exprCache.get(src);
   const js = src
+    .replace(/\bvar\./g, 'vars.')                    // "var" is reserved in JS
     .replace(/\band\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!')
     .replace(/(^|[^=!<>])=([^=])/g, '$1==$2');
   let fn;
