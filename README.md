@@ -111,6 +111,14 @@ python3 -m http.server 8765 -d web
 To get the phone experience, use your browser's device emulation in landscape. Chrome's
 engine is the same one the Android WebView uses.
 
+Static checks you can run any time (no browser needed):
+
+```sh
+python3 tools/check_story.py    # every script node referenced exists; every <<command>> is known
+node tools/check_exprs.mjs      # every story condition compiles
+node tools/check_assets.mjs     # every sprite, background and sound named in code exists
+```
+
 Headless test tools (they need Node and Playwright with Chromium):
 
 - `tools/test/shot.mjs` loads the game at phone size and provides helpers for screenshots,
