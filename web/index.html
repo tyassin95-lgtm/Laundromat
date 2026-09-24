@@ -23,5 +23,23 @@
   </div>
   <noscript>This game needs JavaScript.</noscript>
   <script type="module" src="js/main.js"></script>
+  <script nomodule>
+    // Very old WebViews can't run the game's JavaScript modules.
+    document.querySelector('.boot-msg').textContent = 'This device\'s web engine is too old to run the game. Please update "Android System WebView" (or Chrome) from the Play Store, then reopen.';
+  </script>
+  <script>
+    // The game needs a WebView from 2021 or later (Chromium 88+); tell users of outdated ones how to fix it.
+    try {
+      new Function('var a = {}; return a?.b ?? 1;');
+      if (window.CSS && CSS.supports && !CSS.supports('aspect-ratio', '1 / 1')) throw new Error('old css');
+    } catch (e) {
+      document.querySelector('.boot-msg').textContent = 'This device\'s web engine is too old to run the game. Please update "Android System WebView" (or Chrome) from the Play Store, then reopen.';
+    }
+    // If nothing has started after a while, say so rather than spinning forever.
+    setTimeout(function () {
+      var b = document.getElementById('boot'), m = document.querySelector('.boot-msg');
+      if (b && m && !b.classList.contains('gone') && !/wrong|too old/.test(m.textContent)) m.textContent = 'Still loading… if this takes more than a minute, try closing and reopening the game.';
+    }, 30000);
+  </script>
 </body>
 </html>
