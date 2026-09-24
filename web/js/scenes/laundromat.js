@@ -272,7 +272,7 @@ export class LaundromatScene extends Scene {
     if (!waiting.length) { UI.toast('No bags waiting at the counter.', 'icon_basket'); return; }
     if (!this.canCarryMore()) { UI.toast('Your hands are full.', 'icon_basket', 'bad'); return; }
     this.queue({ x: COUNTER.x + 10, y: 548, face: 1, run: async () => {
-      const o = G.orders.find(q => q.stage === 'counter');
+      const o = this.pickFromCounter();
       if (!o || !this.canCarryMore()) return;
       o.stage = 'carried';
       this.setCarry([...this.carry, o.id]);
@@ -282,6 +282,19 @@ export class LaundromatScene extends Scene {
       if (o.note && !o.noteRead) { o.noteRead = true; await this.app.menus.readNote(o); }
       this.app.story.trigger('picked', { o });
     } });
+  }
+
+  // Which bag to take: one whose next step can happen right now (a free washer or dryer),
+  // otherwise the oldest. Loads you set down come back when their machine frees up.
+  pickFromCounter() {
+    const waiting = G.orders.filter(o => o.stage === 'counter');
+    const ready = o => {
+      const st = L.nextStep(o);
+      if (st === 'wash') return L.washers().some(L.isFree);
+      if (st === 'dry') return L.dryers().some(L.isFree);
+      return true;
+    };
+    return waiting.find(ready) || waiting[0] || null;
   }
 
   // ------------------------------------------------------------------ washers
