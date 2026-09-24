@@ -133,7 +133,11 @@ maya.content: They didn't listen because it was new. They listened because it wa
 <<if var.speakers == 0>>
 : None of your friends came up to the microphone. The Linden Street side of the room is very quiet.
 <<endif>>
+<<if petition >= 5>>
 : The petition goes into the record: {petition} signatures, some in crayon.
+<<else>>
+: There's no petition to read into the record. You wish, suddenly, that there were.
+<<endif>>
 : Then it's your turn.
 * Talk about Rosa.
   me.sad: My grandmother kept those lights on for fifty-three years. Through blackouts, recessions, a pandemic. Nurses came in at three a.m. and cried in the chair by the window.

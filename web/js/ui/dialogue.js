@@ -16,6 +16,8 @@ export function formatText(s) {
     .replace(/\{shop\}/g, escapeHtml(G.shop))
     .replace(/\{day\}/g, String(G.day))
     .replace(/\{money\}/g, '$' + Math.round(G.money))
+    .replace(/\{petition\}/g, String(G.petition || 0))
+    .replace(/\{community\}/g, String(Math.round(G.community || 0)))
     .replace(/\{var\.(\w+)\}/g, (_, k) => escapeHtml(String(G.vars[k] ?? '')));
   t = t.replace(/\*([^*]+)\*/g, '<span class="em">$1</span>');
   return t;

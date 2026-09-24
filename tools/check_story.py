@@ -74,6 +74,17 @@ for n, lines in lines_by_node.items():
             if who not in speakers:
                 problems.append(f'unknown speaker {who} at {os.path.basename(f)}:{i}')
 
+# text placeholders the dialogue formatter understands (ui/dialogue.js formatText)
+fmt = open(os.path.join(ROOT, 'web', 'js', 'ui', 'dialogue.js'), encoding='utf8').read()
+known_ph = set(re.findall(r"\\\{(\w+)\\\}", fmt)) | {'var'}
+for n, lines in lines_by_node.items():
+    for f, i, line in lines:
+        if line.strip().startswith('<<'):
+            continue
+        for ph in re.findall(r'\{(\w+)(?:\.\w+)?\}', line):
+            if ph not in known_ph:
+                problems.append(f'unknown placeholder {{{ph}}} at {os.path.basename(f)}:{i}')
+
 unused = [n for n in nodes if n not in {r[0] for r in refs} and not n.startswith(('gift_', 'chat_')) and not re.match(r'^(walt|maya|june|remy)_c\d+$', n)]
 print(f'{len(nodes)} nodes, {len(refs)} references, {len(problems)} problems')
 for p in problems:
