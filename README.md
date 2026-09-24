@@ -25,7 +25,7 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
 - **Four friends with their own stories.** Walt, a retired machinist; Maya, a music student
   who works nights; June, a retired teacher who runs the garden; and Remy, a barista who
   paints murals. Each has their own routine and ten friendship levels with scenes along the way.
-- **Your choices matter.** How you set prices, open hours and policies changes the shop's
+- **Your choices matter.** Your prices, house rules and story decisions change the shop's
   reputation and community spirit. Friendships decide who stands up for the shop when it
   matters. There are three endings.
 - **Rain on the glass.** Hand-painted art with ink outlines and warm lighting. Time of day
@@ -56,7 +56,7 @@ it survives the WebView cache being cleared.
 | Repair a machine | Tap the glowing bolt, then tap again when the needle is in the green |
 | Put a load down to free your hands | Tap the counter |
 | Swap a finished load for the one you're holding | Tap the finished machine |
-| Close up early (after 4 PM) | 🏠 button during a shift |
+| Close up for the day | 🏠 button during a shift (closing before 5 PM costs a little reputation) |
 | Menu / settings / save & quit | ⚙ button, or the Android back button |
 
 The Journal (📓) holds friendships, your diary, collections and the ledger. The detergent
@@ -134,9 +134,11 @@ Headless test tools (they need Node and Playwright with Chromium):
   taps and skipping dialogue.
 - `tools/test/bot.mjs` plays a shop shift through the game's own actions, including the
   fold and repair mini-games.
-- `node tools/test/campaign.mjs [--days N] [--sell]` plays the campaign day by day: shifts,
-  evenings out, talking and gifting. It prints daily stats, the ending reached, and any
-  console errors.
+- `node tools/test/campaign.mjs [--days N] [--sell] [--speed K] [--instant-text]` plays the
+  campaign day by day: shifts, evenings out, talking and gifting. It prints daily stats, the
+  ending reached, and any console errors. It expects the game served at
+  `http://127.0.0.1:8765/` (or set `GAME_URL`, keeping `?debug` on it); screenshots go to
+  `SHOT_DIR`.
 
 ## Swapping and adding assets
 
