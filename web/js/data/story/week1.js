@@ -182,6 +182,9 @@ me.surprised: At ten at night?
 
 === maya_intro
 <<flag met_maya>>
+<<if phase == "shift">>
+-> maya_intro_day
+<<endif>>
 maya.worried: Oh — sorry. Sorry. I saw a light. I didn't know if…
 me.neutral: If anyone was here?
 maya.neutral: Rosa used to let me do my laundry after close. I work nights at the pharmacy on Mill Road. I'm Maya.
@@ -200,6 +203,43 @@ me.surprised: The *best rhythm*?
 maya.neutral: You'll hear it. Once you hear it you can't un-hear it.
 <<goal "Go up to bed when you're ready (back door).">>
 <<diary "A girl named Maya came in at 10pm to listen to machine two. I think I like her.">>
+
+=== maya_intro_day
+: A girl in a green jacket stops in the doorway, big headphones around her neck, a laundry bag over one shoulder.
+maya.worried: Oh — you're open. Sorry. I wasn't sure anyone would be.
+me.neutral: Just about. I'm {name}. Rosa's granddaughter.
+maya.content: Yeah. You have her eyebrows.
+maya.neutral: I'm Maya. I work nights at the pharmacy on Mill Road. Rosa used to let me do my laundry after close, when it's quiet.
+: You can hear something faint and rhythmic leaking out of her headphones.
+* Come by after close, then. The machines don't sleep.
+  maya.laugh: That's exactly what she used to say.
+  <<rel maya 25>>
+  <<flag maya_night_ok>>
+* Days are fine too, you know.
+  maya.content: Days are loud. But — thanks. Really.
+  <<rel maya 15>>
+maya.sly: Machine two, if it's still alive. It has the best rhythm.
+me.surprised: The *best rhythm*?
+maya.neutral: You'll hear it. Once you hear it you can't un-hear it.
+<<diary "A girl named Maya came in with headphones on and listened to machine two. I think I like her.">>
+
+=== remy_intro_shop
+<<flag met_remy>>
+: A woman with pink hair and paint on her sleeves leans on the counter like she owns it.
+remy.skeptical: You're the heiress.
+me.surprised: The — I'm sorry?
+remy.neutral: Rosa's granddaughter. You never come by the café, so I came to you. There's a pool on how long before you sell.
+me.worried: There's a *pool*?
+remy.wink: I've got the eighteenth. Don't let me down.
+* I'm not selling.
+  remy.skeptical: Everybody says that. Then a guy in a nice coat shows up with a big number.
+  remy.neutral: ...We'll see. I'm Remy. Corner Cup, next door but one.
+  <<rel remy 15>>
+* Honestly? I don't know yet.
+  remy.neutral: Huh. At least you're honest. I'm Remy. I make the coffee at the Corner Cup. And the art. And the trouble, mostly.
+  <<rel remy 20>>
+<<give coffee 1>>
+<<flag remy_shop_1>>
 
 === d2_camera
 : Tucked into the window seat cushions: Rosa's old film camera, a strap worn soft as cloth.

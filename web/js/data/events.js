@@ -18,6 +18,7 @@ export const EVENTS = [
   { id: 'june_intro', on: 'arrive', who: 'june', day: 1, node: 'june_intro' },
   { id: 'd1_close', on: 'shift_end', day: 1, node: 'd1_close' },
   { id: 'remy_intro', on: 'location', loc: 'street', cond: 'not flag.met_remy', node: 'remy_intro' },
+  { id: 'remy_intro_shop', on: 'arrive', who: 'remy', cond: 'not flag.met_remy', node: 'remy_intro_shop' },
   { id: 'd1_maya_knock', on: 'home_night', day: 1, cond: 'not flag.met_maya', node: 'd1_maya_knock' },
   { id: 'maya_intro', on: 'arrive', who: 'maya', cond: 'not flag.met_maya', node: 'maya_intro' },
 

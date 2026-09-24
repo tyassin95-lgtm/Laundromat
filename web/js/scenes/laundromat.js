@@ -692,6 +692,9 @@ export class LaundromatScene extends Scene {
     for (const id of ['walt', 'maya', 'june', 'remy']) {
       if (this.visitors.has(id) || G.vars['visited_' + id] === G.day) continue;
       if (!this.app.story.canVisit(id)) continue;
+      // routine visits are for people you know; Maya and Remy drop in to introduce themselves
+      // if you haven't met them elsewhere by then
+      if (!G.flags['met_' + id] && !(id === 'maya' && G.day >= 2) && !(id === 'remy' && G.day >= 4)) continue;
       const rt = ROUTINES[id];
       for (const s of rt.shift) {
         if (!s.days.includes(wd)) continue;

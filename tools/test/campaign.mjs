@@ -102,6 +102,7 @@ await clickText(page, 'Begin');
 await wait(1200);
 await skip(page, 400);
 await page.evaluate(k => window.__game.speed(k), SPEED);
+if (args.includes('--instant-text')) await page.evaluate(async () => { const { Settings } = await import('./js/game/settings.js'); Settings.set('textSpeed', 'instant'); });
 const report = [];
 const V = process.env.VERBOSE;
 const log = (...a) => { if (V) console.log(new Date().toISOString().slice(11, 19), ...a); };
