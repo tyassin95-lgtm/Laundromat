@@ -44,7 +44,7 @@ export class Menus {
   orderInfo(o) {
     const svc = SERVICES[o.service];
     const step = L.nextStep(o);
-    const where = o.stage === 'counter' ? 'Waiting on the counter' : o.stage === 'ready' ? 'Folded and on the pickup shelf' :
+    const where = o.stage === 'counter' ? (o.washed ? 'Set down on the counter' : 'Waiting on the counter') : o.stage === 'ready' ? 'Folded and on the pickup shelf' :
       o.stage === 'washing' ? 'In a washer' : o.stage === 'drying' ? 'In a dryer' : o.stage === 'washed' ? 'Washed — needs a dryer' : o.stage === 'dried' ? 'Dry — needs unloading' : 'In your arms';
     const next = { wash: 'Put it in a free washer.', dry: 'Move it to a free dryer.', fold: 'Fold it at the folding table.', shelf: 'Put it on the pickup shelf.' }[step];
     let html = `<h2>${escapeHtml(o.name)}</h2><div class="summary-row"><span>Service</span><span>${svc.label}</span></div>` +
