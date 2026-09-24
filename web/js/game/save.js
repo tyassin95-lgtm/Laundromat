@@ -4,6 +4,7 @@ import { G, setState, newState, SAVE_VERSION } from './state.js';
 
 const KEY = 'lastlaundromat.save.v1';
 const SETTINGS_KEY = 'lastlaundromat.settings.v1';
+const CHECKPOINT_KEY = 'lastlaundromat.checkpoint';
 const bridge = () => (typeof window !== 'undefined' && window.AndroidBridge) || null;
 
 function readRaw(key) {
@@ -48,6 +49,22 @@ export const Save = {
   wipe() {
     try { localStorage.removeItem(KEY); } catch (e) { /* noop */ }
     if (bridge()) { try { bridge().deleteBackup(KEY); } catch (e) { /* noop */ } }
+  },
+
+  // Snapshot taken just before the final decision, so a "sell" ending can be rewound.
+  saveCheckpoint() { try { writeRaw(CHECKPOINT_KEY, JSON.stringify(G)); } catch (e) { /* noop */ } },
+  hasCheckpoint() { return !!readRaw(CHECKPOINT_KEY); },
+  restoreCheckpoint() {
+    const raw = readRaw(CHECKPOINT_KEY);
+    if (!raw) return false;
+    try {
+      const s = migrate(JSON.parse(raw));
+      delete s.flags.ev_final_morning; delete s.flags.checkpoint; delete s.flags.ending_done;
+      s.ending = null; s.phase = 'morning';
+      setState(s);
+      writeRaw(KEY, JSON.stringify(s));
+      return true;
+    } catch (e) { console.warn('checkpoint restore failed', e); return false; }
   },
 
   loadSettings() {

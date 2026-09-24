@@ -140,7 +140,7 @@ export function stagesOf(o) {
 export function stageIndex(o) {
   const st = stagesOf(o);
   const map = { counter: 0, carried: 0, washing: 0, washed: 1, drying: 1, dried: 2, folding: 2, ready: st.length, done: st.length };
-  if (o.stage === 'carried' && o.washed) return o.dried ? 2 : 1;
+  if ((o.stage === 'carried' || o.stage === 'counter') && o.washed) return o.dried ? 2 : 1;
   return map[o.stage] ?? 0;
 }
 

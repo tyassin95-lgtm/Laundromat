@@ -1,3 +1,10 @@
+Fonts in this folder and their copyright notices:
+  PatrickHand-Regular.woff2  Copyright (c) 2010-2012 Patrick Wagesreiter (mail@patrickwagesreiter.at)
+  Fraunces.woff2             Copyright 2020 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
+  Pacifico-Regular.woff2     Copyright 2018 The Pacifico Project Authors (https://github.com/googlefonts/Pacifico)
+  Caveat.woff2               Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)
+All are licensed under the SIL Open Font License, Version 1.1, reproduced below.
+
 Copyright (c) 2010-2012 Patrick Wagesreiter (mail@patrickwagesreiter.at)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.

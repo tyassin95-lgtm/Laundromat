@@ -143,11 +143,14 @@ class App {
     t.innerHTML = `<div class="logo"><div class="the">THE LAST</div><div class="name">Laundromat</div><div class="tag">a cosy story about keeping the lights on</div></div>`;
     const menu = el('div', 'menu');
     const peek = Save.peek();
-    if (peek) {
-      const b = UI.button(`Continue · Day ${peek.day}`, () => this.continueGame(), 'primary');
-      menu.appendChild(b);
+    let hasContinue = false;
+    if (peek && peek.ending === 'sold') {
+      if (Save.hasCheckpoint()) { menu.appendChild(UI.button('Rewind to the last morning', () => this.rewind(), 'primary')); hasContinue = true; }
+    } else if (peek) {
+      menu.appendChild(UI.button(peek.ending ? 'Continue · Free play' : `Continue · Day ${peek.day}`, () => this.continueGame(), 'primary'));
+      hasContinue = true;
     }
-    menu.appendChild(UI.button('New game', () => this.newGameFlow(!!peek), peek ? '' : 'primary'));
+    menu.appendChild(UI.button('New game', () => this.newGameFlow(!!peek), hasContinue ? '' : 'primary'));
     menu.appendChild(UI.button('Settings', () => this.menus.openPause(), 'small'));
     menu.appendChild(UI.button('Credits', () => this.menus.credits(), 'small'));
     t.appendChild(menu);
@@ -208,6 +211,12 @@ class App {
     await UI.fadeIn(800);
   }
 
+  // After selling, go back to the morning of the final decision.
+  async rewind() {
+    if (!Save.restoreCheckpoint()) { UI.toast('Nothing to rewind to.', null, 'bad'); return; }
+    await this.continueGame();
+  }
+
   async continueGame() {
     if (!Save.load()) { UI.toast('That save could not be read.', null, 'bad'); return; }
     this.hideTitleMenu();
@@ -240,7 +249,7 @@ class App {
 
   // ------------------------------------------------------------------ platform hooks
   onPause() {
-    if (G && this.scene && this.scene.name !== 'title' && !G.flags.ending_done) {
+    if (G && this.scene && this.scene.name !== 'title' && G.ending !== 'sold') {
       if (G.phase === 'shift') this.saveMidShift(); else Save.save();
     }
     Sound.pauseAll();

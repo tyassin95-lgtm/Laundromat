@@ -24,7 +24,7 @@ export const HOME_SLOTS = {
   h_wall2: { x: 1210, y: 250, label: 'Wall' },
   h_shelf: { x: 470, y: 410, label: 'Window seat' },
   h_table: { x: 1060, y: 470, label: 'Desk' },
-  h_floor: { x: 1330, y: 640, label: 'Corner' },
+  h_floor: { x: 152, y: 532, label: 'By the door' },
   h_rug: { x: 760, y: 690, label: 'Floor' },
 };
 

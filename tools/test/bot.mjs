@@ -46,6 +46,9 @@ export async function playRepair(page) {
 }
 
 // One decision of the shift bot. Returns a short string describing what it did.
+let choose = 0;
+export function setChooser(fn) { choose = fn; }
+
 export async function botStep(page) {
   const mg = await page.evaluate(() => {
     if (document.querySelector('.mg .board.repair')) return 'repair';
@@ -55,7 +58,7 @@ export async function botStep(page) {
   if (mg === 'fold') { await playFold(page); return 'fold'; }
   if (mg === 'repair') { await playRepair(page); return 'repair'; }
   const blocked = await page.evaluate(() => !!document.querySelector('.modal, .dlg, .daycard'));
-  if (blocked) { await skipDialogue(page, 0, 60); return 'dialogue'; }
+  if (blocked) { await skipDialogue(page, choose, 60, false, 1); return 'dialogue'; }
   return page.evaluate(() => {
     const app = window.__app, sc = app.scene, G = window.__game.G, L = window.__game.L;
     if (G.phase !== 'shift') return 'closed';
@@ -67,24 +70,19 @@ export async function botStep(page) {
       const o = v.order && L.order(v.order);
       if (v.state === 'here' && o && o.stage === 'ready') { sc.tapVisitor(v); return 'handover ' + v.id; }
     }
-    // 2. repair broken machines when empty-handed
-    const broken = G.machines.find(m => m.broken);
-    if (broken && !carried.length) {
-      if (broken.kind === 'washer') sc.tapWasherSlot(broken.slot); else sc.tapDryerUnit(Math.floor(broken.slot / 2), broken.slot % 2 ? 400 : 250);
-      return 'repair ' + broken.id;
-    }
     // 3. progress what we're holding
     if (carried.length) {
       const o = carried[0], step = L.nextStep(o);
+      const mine = k => G.machines.find(m => m.kind === k && m.state === 'done' && m.load && m.load !== 'self' && !m.broken);
       if (step === 'wash') {
-        const m = L.washers().find(L.isFree);
+        const m = L.washers().find(L.isFree) || (!sc.canCarryMore() && mine('washer'));
         if (!m) return 'wait-washer';
-        sc.tapWasherSlot(m.slot); return 'wash ' + o.id;
+        sc.tapWasherSlot(m.slot); return (m.state === 'done' ? 'swap ' : 'wash ') + o.id;
       }
       if (step === 'dry') {
-        const d = L.dryers().find(L.isFree);
+        const d = L.dryers().find(L.isFree) || (!sc.canCarryMore() && mine('dryer'));
         if (!d) return 'wait-dryer';
-        sc.tapDryerUnit(Math.floor(d.slot / 2), d.slot % 2 ? 400 : 250); return 'dry ' + o.id;
+        sc.tapDryerUnit(Math.floor(d.slot / 2), d.slot % 2 ? 400 : 250); return (d.state === 'done' ? 'swap ' : 'dry ') + o.id;
       }
       if (step === 'fold') { sc.tapFold(); return 'fold ' + o.id; }
       sc.tapShelf(); return 'shelf ' + o.id;
@@ -97,7 +95,13 @@ export async function botStep(page) {
     }
     // 5. take a new bag from the counter
     if (G.orders.some(o => o.stage === 'counter')) { sc.tapCounter(); return 'counter'; }
-    // 6. chores
+    // 6. repair broken machines when nothing else is waiting
+    const broken = G.machines.find(m => m.broken);
+    if (broken) {
+      if (broken.kind === 'washer') sc.tapWasherSlot(broken.slot); else sc.tapDryerUnit(Math.floor(broken.slot / 2), broken.slot % 2 ? 400 : 250);
+      return 'repair ' + broken.id;
+    }
+    // 7. chores
     const p = L.Sim.puddles[0];
     if (p) { sc.mopPuddle(p); return 'mop'; }
     const l = L.Sim.litter[0];
@@ -112,13 +116,16 @@ export async function playShift(page, { maxSec = 400, log = false } = {}) {
   let last = '';
   while ((Date.now() - t0) / 1000 < maxSec) {
     const r = await botStep(page);
-    if (log && r !== last && r !== 'busy' && r !== 'idle') console.log('  bot:', r);
+    if (log && r !== last && r !== 'busy' && r !== 'idle') {
+      const t = await page.evaluate(() => { const m = Math.round(window.__game.G.time); return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`; }).catch(() => '');
+      console.log('  bot:', t, r);
+    }
     last = r;
     if (r === 'closed') {
       await skipDialogue(page, 0, 100);
       return r;
     }
-    await wait(r === 'busy' || r === 'idle' || r.startsWith('wait') ? 250 : 400);
+    await wait(r === 'busy' || r === 'idle' || r.startsWith('wait') ? 100 : 150);
   }
   return 'timeout';
 }

@@ -62,7 +62,7 @@ export async function clickText(page, text, opts = {}) {
 }
 // Advance through dialogue, notices and modals until nothing blocks the game.
 // choice: index of the dialogue choice to pick (or a function (texts) => index).
-export async function skipDialogue(page, choice = 0, max = 300, log = false) {
+export async function skipDialogue(page, choice = 0, max = 300, log = false, settle = 3) {
   let idle = 0;
   for (let i = 0; i < max; i++) {
     const st = await page.evaluate(() => {
@@ -82,7 +82,7 @@ export async function skipDialogue(page, choice = 0, max = 300, log = false) {
       return { k: 'none' };
     });
     if (log && st.k !== 'wait') console.log('  ', st.k, st.txt || st.ch || '');
-    if (st.k === 'none') { if (++idle > 3) return i; await wait(150); continue; }
+    if (st.k === 'none') { if (++idle > settle) return i; await wait(settle > 1 ? 150 : 60); continue; }
     idle = 0;
     if (st.k === 'wait') { await wait(300); continue; }
     if (st.k === 'modal') {

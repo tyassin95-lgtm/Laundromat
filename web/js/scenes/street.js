@@ -12,6 +12,65 @@ import { UI } from '../ui/ui.js';
 
 const CS = 0.68;
 
+// Laundry on June's clothesline: kind, position along the line (0..1), size and colours.
+const CLOTHES = [
+  { kind: 'sheet', at: 0.08, w: 128, h: 108, col: '#efe3c6', stripe: '#8fb0c0' },
+  { kind: 'shirt', at: 0.24, w: 112, h: 86, col: '#9fb8c6' },
+  { kind: 'pants', at: 0.37, w: 64, h: 124, col: '#4f6a8a' },
+  { kind: 'dress', at: 0.51, w: 92, h: 118, col: '#c48fa0' },
+  { kind: 'socks', at: 0.62, w: 56, h: 46, col: '#e8b04e' },
+  { kind: 'towel', at: 0.74, w: 82, h: 96, col: '#e8b04e', stripe: '#c4692e' },
+  { kind: 'shirt', at: 0.9, w: 104, h: 82, col: '#efe3c6' },
+];
+
+function garmentPath(c, g) {
+  const { w, h } = g;
+  c.beginPath();
+  if (g.kind === 'shirt') {
+    const b = w * 0.27;
+    c.moveTo(-b, 0); c.lineTo(-b - w * 0.23, h * 0.13); c.lineTo(-b - w * 0.13, h * 0.34); c.lineTo(-b, h * 0.26);
+    c.lineTo(-b - 2, h); c.lineTo(b + 2, h); c.lineTo(b, h * 0.26); c.lineTo(b + w * 0.13, h * 0.34); c.lineTo(b + w * 0.23, h * 0.13);
+    c.lineTo(b, 0); c.quadraticCurveTo(0, h * 0.14, -b, 0);
+  } else if (g.kind === 'pants') {
+    c.moveTo(-w / 2, 0); c.lineTo(w / 2, 0); c.lineTo(w / 2 + 3, h); c.lineTo(w * 0.07, h); c.lineTo(0, h * 0.28);
+    c.lineTo(-w * 0.07, h); c.lineTo(-w / 2 - 3, h);
+  } else if (g.kind === 'dress') {
+    c.moveTo(-w * 0.2, 0); c.lineTo(w * 0.2, 0); c.lineTo(w * 0.24, h * 0.32); c.quadraticCurveTo(w * 0.56, h * 0.9, w * 0.5, h);
+    c.quadraticCurveTo(0, h * 1.06, -w * 0.5, h); c.quadraticCurveTo(-w * 0.56, h * 0.9, -w * 0.24, h * 0.32);
+  } else if (g.kind === 'socks') {
+    for (const dx of [-w * 0.3, w * 0.3]) {
+      c.moveTo(dx - 9, 0); c.lineTo(dx + 9, 0); c.lineTo(dx + 9, h * 0.72); c.quadraticCurveTo(dx + 9, h, dx - 6, h);
+      c.quadraticCurveTo(dx - 22, h, dx - 20, h * 0.8); c.quadraticCurveTo(dx - 16, h * 0.66, dx - 9, h * 0.62); c.closePath();
+    }
+    return;
+  } else {
+    c.moveTo(-w / 2, 0); c.lineTo(w / 2, 0); c.lineTo(w / 2 + 1, h); c.quadraticCurveTo(0, h + 5, -w / 2 - 1, h);
+  }
+  c.closePath();
+}
+
+function drawGarment(c, g, x, y, sway) {
+  c.save();
+  c.translate(x, y);
+  c.transform(1, 0, sway * 0.01, 1, 0, 0);   // the hem swings, the pegged top stays put
+  garmentPath(c, g);
+  c.fillStyle = g.col; c.fill();
+  c.save(); c.clip();
+  const sh = c.createLinearGradient(-g.w / 2, 0, g.w / 2, 0);
+  sh.addColorStop(0, 'rgba(40,25,15,0.22)'); sh.addColorStop(0.35, 'rgba(255,250,235,0.1)'); sh.addColorStop(0.65, 'rgba(40,25,15,0.06)'); sh.addColorStop(1, 'rgba(40,25,15,0.24)');
+  c.fillStyle = sh; c.fillRect(-g.w, 0, g.w * 2, g.h + 12);
+  c.fillStyle = 'rgba(40,25,15,0.08)';
+  for (let k = -2; k <= 2; k++) c.fillRect(k * g.w * 0.16 - 2, g.h * 0.2, 4, g.h);
+  if (g.stripe) { c.fillStyle = g.stripe; c.fillRect(-g.w, g.h * 0.7, g.w * 2, g.h * 0.08); c.fillRect(-g.w, g.h * 0.83, g.w * 2, g.h * 0.04); }
+  c.restore();
+  c.strokeStyle = 'rgba(40,28,20,0.85)'; c.lineWidth = 1.6; c.lineJoin = 'round'; c.stroke();
+  // wooden pegs
+  const pegs = g.kind === 'socks' ? [-g.w * 0.3, g.w * 0.3] : g.kind === 'dress' ? [-g.w * 0.16, g.w * 0.16] : [-g.w * 0.36, g.w * 0.36];
+  c.fillStyle = '#b8864f'; c.strokeStyle = '#3a2a1e'; c.lineWidth = 1;
+  for (const px of pegs) { c.fillRect(px - 2.5, -7, 5, 14); c.strokeRect(px - 2.5, -7, 5, 14); }
+  c.restore();
+}
+
 export class StreetScene extends Scene {
   constructor(app) {
     super(app, { worldW: 2600, interior: false, charScale: CS });
@@ -359,18 +418,16 @@ export class StreetScene extends Scene {
 
   drawClothesline(r) {
     const c = r.ctx, cl = this.cfg.clothesline;
+    const sag = 30, lineY = x => { const t = (x - cl.x0) / (cl.x1 - cl.x0); return cl.y + 4 * sag * t * (1 - t); };
     c.save();
     c.strokeStyle = '#3a2a1e'; c.lineWidth = 2;
-    c.beginPath(); c.moveTo(cl.x0, cl.y); c.quadraticCurveTo((cl.x0 + cl.x1) / 2, cl.y + 40, cl.x1, cl.y); c.stroke();
-    const cols = ['#efe3c6', '#9fb8c6', '#e8b04e', '#c48fa0', '#efe3c6', '#7fa0b0'];
-    for (let i = 0; i < 6; i++) {
-      const t = (i + 0.5) / 6, x = cl.x0 + (cl.x1 - cl.x0) * t, y = cl.y + Math.sin(t * Math.PI) * 38;
-      const sway = Math.sin(this.t * 1.8 + i) * 4;
-      const w = 90 + (i % 2) * 20, h = 70 + (i % 3) * 18;
-      c.fillStyle = cols[i]; c.strokeStyle = 'rgba(40,30,20,0.8)'; c.lineWidth = 1.5;
-      c.beginPath(); c.moveTo(x - w / 2, y); c.lineTo(x + w / 2, y); c.lineTo(x + w / 2 + sway, y + h); c.lineTo(x - w / 2 + sway, y + h); c.closePath(); c.fill(); c.stroke();
-      c.fillStyle = '#8a5a36'; c.fillRect(x - w / 2 + 6, y - 4, 5, 10); c.fillRect(x + w / 2 - 11, y - 4, 5, 10);
-    }
+    c.beginPath(); c.moveTo(cl.x0, cl.y); c.quadraticCurveTo((cl.x0 + cl.x1) / 2, cl.y + 2 * sag, cl.x1, cl.y); c.stroke();
+    const wind = this.wx() === 'storm' ? 3 : this.wx() === 'rain' ? 1.4 : 1;
+    CLOTHES.forEach((g, i) => {
+      const x = cl.x0 + (cl.x1 - cl.x0) * g.at;
+      const sway = Math.sin(this.t * (1.3 + i * 0.17) + i * 1.7) * 3 * wind + (wind > 1 ? 2 : 0);
+      drawGarment(c, g, x, lineY(x), sway);
+    });
     c.restore();
   }
 

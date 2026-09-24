@@ -114,14 +114,15 @@ walt.neutral: Cool water. Gentle cycle. Don't ask.
 
 === d13_bodega_morning
 <<flag bodega_closed>>
+<<flag mural_gone>>
 : Down the street, a truck is loading crates out of Delgado's. A paper sign in the window: FOR LEASE.
+: Beside it, two men with rollers are painting grey over the big mural on the corner.
 
 === bodega_closing
 <<flag bodega_scene>>
 : Luis Delgado sits on an upturned crate on the sidewalk, looking at his dark shop window.
-remy.worried: They painted over my mural this afternoon. "Harbor Dreams." Six years on that wall. Three coats of grey primer.
+remy.worried: They painted over my mural. "Harbor Dreams." Six years on that wall. Three coats of grey primer and a Crestline ad on top.
 remy.skeptical: And Luis is done. Thirty-one years, done, because a company with a logo like a toothpaste brand decided his rent should be five grand.
-<<flag mural_gone>>
 * It isn't fair, Remy.
   remy.worried: No. It isn't.
   remy.neutral: Thanks for not saying "that's just how cities work." Everybody keeps saying that.

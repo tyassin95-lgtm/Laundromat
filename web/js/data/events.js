@@ -99,7 +99,7 @@ export const EVENTS = [
   { id: 'prices_high', on: 'prices', cond: 'not flag.prices_reacted', node: 'prices_reaction' },
   { id: 'all_socks', on: 'sock', cond: 'socks >= 12', node: 'all_socks' },
   { id: 'first_sock', on: 'sock', node: 'first_sock' },
-  { id: 'late_night_shop', on: 'location', loc: 'laundromat', minDay: 2, cond: 'time >= 19*60 and flag.met_maya', node: 'late_night_shop' },
+  { id: 'late_night_shop', on: 'location', loc: 'laundromat', minDay: 2, cond: 'time >= 19*60 and flag.met_maya and not var.maya_here', node: 'late_night_shop' },
 ];
 
 // Things shown on the wall calendar (flag = only once known).

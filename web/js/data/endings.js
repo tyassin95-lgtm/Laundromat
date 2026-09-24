@@ -53,7 +53,7 @@ export const ENDINGS = {
   commons: {
     title: 'Rosa\'s Commons', tagline: 'The last laundromat on Linden Street became the first of something new.', music: 'ending',
     cards: G => [
-      { img: 'furn_bulletin_board', title: 'The Council', text: `Rezoning application #2291 was denied, ${G.vars.speakers || 'several'} neighbours having spoken and ${G.petition} having signed. Crestline built on the old lot anyway — smaller, with a line of affordable units the city insisted on. Linden Street kept its face.` },
+      { img: 'furn_bulletin_board', title: 'The Council', text: `Rezoning application #2291 was denied, ${G.vars.speakers > 1 ? G.vars.speakers + ' neighbours' : 'the neighbours'} having spoken and ${G.petition >= 20 ? G.petition + ' people' : 'half the street'} having signed. Crestline built on the old lot anyway — smaller, with a line of affordable units the city insisted on. Linden Street kept its face.` },
       { img: 'machine_washer_blue', title: G.shop, text: 'Rosa\'s became a co-op in the spring: the regulars own a share, the Night Wash happens on the last Saturday of every month, and there\'s a pay-what-you-can shelf of detergent by the door. The lights stay on until midnight.' },
       { img: 'face_player_laugh', title: G.name, text: 'You run the place, sort of. Mostly you fold, and fix, and listen, and draw the regulars on the backs of tickets. Your sketches cover a whole wall now. Abuela would say you finally found the right crayon.' },
       waltCard(G, false), juneCard(G, false), mayaCard(G, false), remyCard(G, false),

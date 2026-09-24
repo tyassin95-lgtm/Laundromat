@@ -58,7 +58,7 @@ export const CALLS = {
   checkpoint(app) {
     G.flags.checkpoint = true;
     Save.save();
-    try { localStorage.setItem('lastlaundromat.checkpoint', JSON.stringify(G)); } catch (e) { /* noop */ }
+    Save.saveCheckpoint();
   },
 
   // Decide which "keep" ending the player earned.

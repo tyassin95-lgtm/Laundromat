@@ -37,6 +37,7 @@ export function newState(name) {
       { id: 'W2', kind: 'washer', slot: 1, model: 'classic', cond: 55, broken: false },
       { id: 'W3', kind: 'washer', slot: 2, model: 'classic', cond: 20, broken: true },
       { id: 'D1', kind: 'dryer', slot: 0, model: 'stack', cond: 60, broken: false },
+      { id: 'D2', kind: 'dryer', slot: 1, model: 'stack', cond: 52, broken: false },
     ],
     orders: [],
     orderSeq: 1,

@@ -51,7 +51,7 @@ export const ROUTINES = {
     evening: { park: [0, 1, 2, 3, 4, 5, 6] },
   },
   maya: {
-    shift: [{ days: [0, 2, 4, 5], at: 16 * 60 + 30, stay: 80 }],
+    shift: [{ days: [0, 2, 4, 5], at: 14 * 60 + 20, stay: 80 }],
     evening: { riverside: [0, 3, 5], laundromat_night: [1, 2, 4], street: [6] },
   },
   june: {

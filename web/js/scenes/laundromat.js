@@ -84,6 +84,7 @@ export class LaundromatScene extends Scene {
     else { this.player.x = opts.x || 900; this.player.y = opts.y || 620; }
     this.follow(this.player, 0, true);
     this.shiftRunning = G.phase === 'shift';
+    this.placeNightVisitors();
     this.updateSound();
     this.app.hud.setMode(this.shiftRunning ? 'shift' : 'free');
     this.app.hud.refresh();
@@ -252,11 +253,23 @@ export class LaundromatScene extends Scene {
   // ------------------------------------------------------------------ counter
   tapCounter() {
     const waiting = G.orders.filter(o => o.stage === 'counter');
-    if (!waiting.length) {
-      if (this.carry.length) return this.tapShelf();
-      UI.toast('No bags waiting at the counter.', 'icon_basket');
+    if (this.carry.length && (!waiting.length || !this.canCarryMore())) {
+      // hands full: set the load down on the counter to come back to later
+      const held = this.carried();
+      const o = held[held.length - 1];
+      if (!o) return;
+      if (L.nextStep(o) === 'shelf') return this.tapShelf();
+      this.queue({ x: COUNTER.x + 10, y: 548, face: 1, run: async () => {
+        if (!this.carry.includes(o.id)) return;
+        this.player.setPose('load', 0.4);
+        o.stage = 'counter';
+        this.setCarry(this.carry.filter(id => id !== o.id));
+        Sound.play('cloth2', { vol: 0.8 });
+        UI.toast(`${o.name}'s laundry is back on the counter for now.`, 'icon_basket');
+      } });
       return;
     }
+    if (!waiting.length) { UI.toast('No bags waiting at the counter.', 'icon_basket'); return; }
     if (!this.canCarryMore()) { UI.toast('Your hands are full.', 'icon_basket', 'bad'); return; }
     this.queue({ x: COUNTER.x + 10, y: 548, face: 1, run: async () => {
       const o = G.orders.find(q => q.stage === 'counter');
@@ -303,16 +316,28 @@ export class LaundromatScene extends Scene {
     }
     if (m.state === 'done') {
       if (m.load === 'self') { UI.toast('A customer\'s load. They\'ll be right back for it.', 'icon_basket'); return; }
-      if (!this.canCarryMore()) { UI.toast('Your hands are full.', 'icon_basket', 'bad'); return; }
+      // hands full? swap: take the finished load out and put the one you're holding in
+      const swapIn = this.canCarryMore() ? null : this.firstNeeding(kind === 'washer' ? 'wash' : 'dry');
+      if (!this.canCarryMore() && !swapIn) { UI.toast('Your hands are full. (Tap the counter to set a load down.)', 'icon_basket', 'bad'); return; }
+      if (swapIn && kind === 'washer' && (G.inv.detergent || 0) < L.modelOf(m).soap) { this.askDetergent(); return; }
       this.queue(Object.assign({}, spot, { run: async () => {
-        if (m.state !== 'done' || !this.canCarryMore()) return;
-        await this.machineAction(m, spot.pose, 0.55);
+        if (m.state !== 'done') return;
+        const swapping = !!swapIn && !this.canCarryMore() && this.carry.includes(swapIn.id);
+        if (!swapping && !this.canCarryMore()) return;
+        await this.machineAction(m, spot.pose, swapping ? 0.9 : 0.55);
         const id = L.unload(m);
         const o = L.order(id);
-        if (o) { o.stage = 'carried'; o.machine = null; this.setCarry([...this.carry, o.id]); }
+        let carry = this.carry;
+        if (swapping && L.startCycle(m, swapIn.id).ok) {
+          this.loadedInto(m, swapIn);
+          carry = carry.filter(x => x !== swapIn.id);
+        }
+        if (o) { o.stage = 'carried'; o.machine = null; carry = [...carry, o.id]; }
+        this.setCarry(carry);
         Sound.play(rand.pick(['cloth2', 'cloth3']), { vol: 0.9 });
         addStat('energy', -1);
         this.updateSound();
+        if (swapping) await this.app.story.trigger('loaded', { o: swapIn, m });
         this.app.story.trigger('unloaded', { o, m });
       } }));
       return;
@@ -327,31 +352,38 @@ export class LaundromatScene extends Scene {
       else UI.toast(`${L.modelOf(m).name} · condition ${Math.round(m.cond)}%`, kind === 'washer' ? 'icon_washer' : 'icon_dryer');
       return;
     }
-    if (kind === 'washer' && (G.inv.detergent || 0) < L.modelOf(m).soap) {
-      Sound.play('error', { vol: 0.5 });
-      UI.confirm('Out of detergent', 'The supply shelf is empty. Order a jug now?', `Buy (${money(SUPPLIES.detergent.price)})`, 'Later').then(yes => {
-        if (yes) this.app.menus.buySupply('detergent');
-      });
-      return;
-    }
+    if (kind === 'washer' && (G.inv.detergent || 0) < L.modelOf(m).soap) { this.askDetergent(); return; }
     this.queue(Object.assign({}, spot, { run: async () => {
       if (!L.isFree(m) || !this.carry.includes(o.id)) return;
       await this.machineAction(m, spot.pose, 0.7);
       const res = L.startCycle(m, o.id);
       if (!res.ok) { UI.toast(res.reason === 'soap' ? 'Out of detergent!' : 'Machine unavailable.', null, 'bad'); return; }
-      if (kind === 'washer' && o.softener && (G.inv.softener || 0) >= 1) { G.inv.softener -= 1; o.softenerOk = true; }
-      if (kind === 'washer' && o.softener) o.softenerWanted = true;
-      if (kind === 'washer' && o.gentle && m.model === 'eco') o.gentleOk = true;
-      o.machine = m.id;
-      o.stage = kind === 'washer' ? 'washing' : 'drying';
+      this.loadedInto(m, o);
       this.setCarry(this.carry.filter(id => id !== o.id));
-      Sound.play('machine_door', { vol: 0.8 });
-      Sound.play('machine_start', { vol: 0.5, delay: 0.25 });
-      addStat('energy', -1);
-      vibrate(12);
       this.updateSound();
       this.app.story.trigger('loaded', { o, m });
     } }));
+  }
+
+  // Bookkeeping after an order goes into a machine.
+  loadedInto(m, o) {
+    const kind = m.kind;
+    if (kind === 'washer' && o.softener && (G.inv.softener || 0) >= 1) { G.inv.softener -= 1; o.softenerOk = true; }
+    if (kind === 'washer' && o.softener) o.softenerWanted = true;
+    if (kind === 'washer' && o.gentle && m.model === 'eco') o.gentleOk = true;
+    o.machine = m.id;
+    o.stage = kind === 'washer' ? 'washing' : 'drying';
+    Sound.play('machine_door', { vol: 0.8 });
+    Sound.play('machine_start', { vol: 0.5, delay: 0.25 });
+    addStat('energy', -1);
+    vibrate(12);
+  }
+
+  askDetergent() {
+    Sound.play('error', { vol: 0.5 });
+    UI.confirm('Out of detergent', 'The supply shelf is empty. Order a jug now?', `Buy (${money(SUPPLIES.detergent.price)})`, 'Later').then(yes => {
+      if (yes) this.app.menus.buySupply('detergent');
+    });
   }
 
   async machineAction(m, pose, secs) {
@@ -571,6 +603,22 @@ export class LaundromatScene extends Scene {
     return v;
   }
 
+  // After close, Maya does her laundry here on her nights off (she's already in when you arrive).
+  placeNightVisitors() {
+    delete G.vars.maya_here;
+    if (this.shiftRunning || G.time < 20 * 60 || !G.flags.met_maya || !this.app.story.canVisit('maya')) return;
+    const forced = G.vars.at_maya;
+    const nights = ROUTINES.maya.evening.laundromat_night || [];
+    if (forced ? forced !== 'laundromat' : !nights.includes(weekday(G.day))) return;
+    const c = CHARACTERS.maya;
+    const a = new Actor({ id: 'maya', sprite: c.sprite, h: c.h, x: 820, y: 604, speed: 190 });
+    a.facing = -1;
+    this.actors.push(a);
+    this.visitors.set('maya', { id: 'maya', actor: a, state: 'here', leaveAt: 26 * 60, order: null, pinned: true });
+    if (G.talked.maya !== G.day) a.say('…', 99999);
+    G.vars.maya_here = true;
+  }
+
   freeLoungeSpot() {
     const spots = [{ x: 1600, y: 668, face: -1 }, { x: 1470, y: 652, face: -1 }, { x: 1760, y: 690, face: -1 }, { x: 1290, y: 668, face: -1 }];
     for (const s of spots) {
@@ -604,7 +652,7 @@ export class LaundromatScene extends Scene {
       return;
     }
     this.app.menus.contextMenu(this.r.toScreen(a.x, a.y - a.dispH - 20), CHARACTERS[v.id].name, [
-      { label: 'Talk', icon: 'icon_speech', run: () => this.app.story.talk(v.id, { place: 'laundromat', v }) },
+      { label: 'Talk', icon: 'icon_speech', run: () => { if (a.emote === '…') a.emote = null; return this.app.story.talk(v.id, { place: 'laundromat', v }); } },
       { label: 'Give gift', icon: 'icon_heart', run: () => this.app.story.giftTo(v.id) },
     ]);
   }
@@ -625,6 +673,9 @@ export class LaundromatScene extends Scene {
   visitorLeave(v) {
     if (v.state === 'leaving') return;
     v.state = 'leaving';
+    // laundry they dropped off stays: it goes on the pickup shelf like anyone else's
+    const o = v.order && L.order(v.order);
+    if (o && o.stage !== 'done') { o.personal = false; v.order = null; this.app.hud.refreshTickets(); }
     v.actor.walkTo(1858, 570).then(() => {
       Sound.play('shop_bell', { vol: 0.5 });
       this.doorOpen = 0.8;
@@ -891,6 +942,7 @@ export class LaundromatScene extends Scene {
       c.strokeRect(x - 66, WASHER_BASE - 190, 132, 186); c.setLineDash([]);
       c.fillStyle = 'rgba(40,30,20,0.25)'; c.beginPath(); c.ellipse(x, WASHER_BASE + 2, 70, 9, 0, 0, Math.PI * 2); c.fill();
       c.restore();
+      this.drawAddBadge(r, x, WASHER_BASE - 96);
       return;
     }
     const sprite = this.machineSprite(m);
@@ -911,6 +963,7 @@ export class LaundromatScene extends Scene {
     if (!drums.length) {
       c.save(); c.globalAlpha = 0.5; c.strokeStyle = '#5a4a3a'; c.setLineDash([6, 6]); c.lineWidth = 2;
       c.strokeRect(x - 62, WASHER_BASE - 280, 124, 276); c.setLineDash([]); c.restore();
+      this.drawAddBadge(r, x, WASHER_BASE - 140);
       return;
     }
     const running = drums.some(d => d.state === 'running' && !d.broken);
@@ -934,6 +987,17 @@ export class LaundromatScene extends Scene {
     if (u === 0 && G.flags.cat_in_shop && running) {
       r.sprite('item_cat_bed', x - 4, box.y + 6, { h: 44 });
     }
+  }
+
+  // A soft "+" on an empty bay: tap to buy a machine for it.
+  drawAddBadge(r, x, y) {
+    const c = r.ctx, p = 1 + Math.sin(this.t * 2.2) * 0.04;
+    c.save(); c.translate(x, y); c.scale(p, p);
+    c.globalAlpha = 0.75;
+    c.fillStyle = '#f7ecd4'; c.strokeStyle = '#2b5a60'; c.lineWidth = 2.5;
+    c.beginPath(); c.arc(0, 0, 17, 0, Math.PI * 2); c.fill(); c.stroke();
+    c.fillStyle = '#2b5a60'; c.fillRect(-8, -2, 16, 4); c.fillRect(-2, -8, 4, 16);
+    c.restore();
   }
 
   // Tumbling laundry inside a drum window.

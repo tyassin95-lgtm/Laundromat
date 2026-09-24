@@ -39,6 +39,7 @@ export class DayFlow {
     await app.go('home', { from: 'bed' });
     Save.save();
     await app.story.trigger('home_morning');
+    if (!app.scene || app.scene.name === 'title') return;   // the final choice ended the story
     await this.checkMail();
     app.hud.setGoal(G.goal || (isSunday(G.day) ? 'Sunday — the shop is closed. Rest, explore, see friends.' : 'Head downstairs and open the shop.'));
   }
@@ -181,8 +182,9 @@ export class DayFlow {
       const yes = await UI.confirm('Go back to bed?', 'You just got up. Skip today and sleep until tomorrow?', 'Sleep', 'Stay up');
       if (!yes) return;
     }
+    const endingBefore = G.ending;
     await app.story.trigger('sleep');
-    if (G.ending && G.flags.ending_done) return;
+    if (G.ending !== endingBefore) return;          // a story ending played instead
     G.phase = 'night';
     Sound.music(null, 1.5);
     await UI.fadeOut(900);

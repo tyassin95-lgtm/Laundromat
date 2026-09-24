@@ -209,7 +209,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* notebook (journal / catalog) */
 .notebook { position: relative; width: min(86rem, 96vw, calc(94vh * 592 / 410)); aspect-ratio: 592 / 410;
   background: url('../assets/sprites/ui_notebook.webp') center/100% 100% no-repeat; filter: drop-shadow(0 .6rem 1.2rem rgba(0,0,0,.5)); }
-.notebook .page { position: absolute; top: 7%; bottom: 13%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 0 .4rem; }
+.notebook .page { position: absolute; top: 10.5%; bottom: 12.5%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 0 .4rem; }
 .notebook .page.l { left: 13%; right: 53.5%; }
 .notebook .page.r { left: 52%; right: 13%; }
 .notebook .tabs { position: absolute; right: 1.6%; top: 16%; display: flex; flex-direction: column; gap: .35rem; z-index: 2; }
