@@ -102,6 +102,7 @@ remy.worried: Paint's expensive, though. Like, eighty bucks of expensive.
 june.happy: Sixty-two people, dear. Sixty-two.
 <<petition 25>>
 <<community 6>>
+<<time +90>>
 
 === hearing
 <<music tension>>
@@ -161,10 +162,14 @@ maya.content: They didn't listen because it was new. They listened because it wa
 june.worried: Four to three. We were close, dear. We were so close.
 <<diary "We lost the vote, 4-3. But the whole street showed up. That has to count for something.">>
 <<endif>>
+<<time 21:30>>
 <<hud on>>
 <<resume_music>>
 
 === night_wash
+<<if not var.trackName>>
+<<set trackName "Linden Street">>
+<<endif>>
 <<music community>>
 <<call gather>>
 : The NIGHT WASH. Remy's very pink posters did their job: the shop is packed wall to wall, the dryers spinning with nobody's laundry just for the sound.
@@ -188,6 +193,8 @@ remy.wink: Not bad for a laundromat and a very old cat.
 <<call dismiss>>
 <<resume_music>>
 <<diary "The Night Wash. Maya sang. The whole shop sang back. I will remember this when I'm ninety.">>
+<<time 23:30>>
+<<goal "Crestline wants an answer in the morning. Go up to bed (back door).">>
 
 === final_morning
 <<letter crestline_final>>
