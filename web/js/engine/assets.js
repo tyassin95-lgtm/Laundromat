@@ -4,7 +4,7 @@
 const cache = new Map();      // name -> HTMLImageElement
 const pending = new Map();    // name -> Promise
 const bgUse = new Set();      // background keys, least recently used first
-const MAX_BGS = 10;
+const MAX_BGS = 7;           // the shop (3 layers) + one street location (4 layers)
 export let manifest = {};
 
 function loadImage(url) {
