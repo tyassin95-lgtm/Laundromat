@@ -311,7 +311,12 @@
       c.save(); c.globalCompositeOperation = 'multiply';
       const g = c.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.3, w / 2, h / 2, Math.max(w, h) * 0.75);
       g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, `rgba(${80},${60},${50},${strength})`);
-      c.fillStyle = g; c.fillRect(0, 0, w, h); c.restore();
+      // multiply would fill transparent holes (windows, sky), so restore the original alpha afterwards
+      const keep = document.createElement('canvas'); keep.width = this.canvas.width; keep.height = this.canvas.height;
+      keep.getContext('2d').drawImage(this.canvas, 0, 0);
+      c.fillStyle = g; c.fillRect(0, 0, w, h);
+      c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'destination-in'; c.drawImage(keep, 0, 0);
+      c.restore();
     }
 
     // --- text -----------------------------------------------------------------------

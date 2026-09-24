@@ -39,7 +39,7 @@ export class Story {
       seen: G.seen, name: G.name, weather: G.weather, loc: G.location, talkedToday: (w) => G.talked[w] === G.day,
       owns: (d) => G.decor.includes(d), placed: (d) => Object.values(G.placed).includes(d), upgrade: (u) => G.upgrades.includes(u),
       skill: G.skills, socks: G.collections.socks.length, records: G.collections.records.length, ending: G.ending,
-      Math,
+      ev: this.lastEventData || {}, Math,
     };
   }
 

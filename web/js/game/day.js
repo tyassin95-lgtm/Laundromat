@@ -243,6 +243,7 @@ export class DayFlow {
   // ------------------------------------------------------------------ cut to a scene mid-script
   async cutTo(name, arg) {
     await UI.fadeOut(400);
+    G.location = name;
     if (name === 'laundromat') await this.app.go('laundromat', { from: arg || 'backdoor', noFade: true });
     else if (name === 'home') await this.app.go('home', { from: arg || 'door', noFade: true });
     else await this.app.go('street', { loc: name, from: arg, noFade: true });

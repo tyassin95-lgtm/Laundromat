@@ -19,7 +19,7 @@ me.neutral: Number three sticks. Kick it low, left side. Got it.
 me.tired: Morning, Biscuit.
 biscuit: ...
 me.smug: Great talk.
-: *Tap* the floor to walk. *Tap* things to use them — Nora walks over and does the rest.
+: *Tap* the floor to walk. *Tap* things to use them — {name} walks over and does the rest.
 me.thinking: The shop opens at eight. Rosa never opened late in fifty-three years. No pressure.
 <<goal "Pet Biscuit if you like, then head downstairs (the door on the left).">>
 
@@ -63,7 +63,7 @@ walt.neutral: I'll wait. Got nowhere to be.
 === tut_carry
 <<flag tut_carry_done>>
 : You're holding the bag. *Gold arrows* show where it can go next.
-: Tap a free *washer*. Nora walks over and loads it.
+: Tap a free *washer*. {name} walks over and loads it.
 <<goal "Put the laundry in a free washer.">>
 
 === tut_loaded
@@ -77,7 +77,7 @@ walt.neutral: I'll wait. Got nowhere to be.
 
 === tut_ready
 : Folded, bagged, tagged, and on the *pickup shelf*. Customers collect at their pickup time and pay — tips are better when it's on time and folded well.
-<<if day == 1>>
+<<if ev.o and ev.o.who == "walt">>
 : Walt's waiting in person, though. Tap *Walt* to hand it over.
 <<goal "Hand Walt his laundry (tap him).">>
 <<else>>
@@ -97,6 +97,7 @@ me.laugh: That's what her note said!
 walt.neutral: Who do you think told her?
 <<rel walt 15>>
 <<if flag.w3_fixed>>
+<<goal "Keep the orders moving until closing time (6 PM).">>
 <<else>>
 walt.neutral: You've got a spare parts kit on the supply shelf. Fix it before the lunch rush.
 <<goal "Repair washer #3 — tap it. (Stop the needle in the green zone.)">>
@@ -165,6 +166,10 @@ remy.wink: I've got the eighteenth. Don't let me down.
 <<give coffee 1>>
 
 === d1_maya_knock
+<<if time < 21 * 60 + 30>>
+: You spend the evening unpacking Rosa's things. Recipe cards. A shoebox of photos. An astonishing number of single socks.
+<<time 22:00>>
+<<endif>>
 <<sfx phone_buzz>>
 : *Tap. Tap-tap.* Someone is knocking on the shop's front glass, downstairs.
 me.surprised: At ten at night?
@@ -190,11 +195,11 @@ maya.content: Yeah. You have her eyebrows.
 * We're closed, but — just this once.
   maya.content: I'll be quick. Thank you. Really.
   <<rel maya 15>>
-maya.sly: Machine four, if it's still alive. It has the best rhythm.
+maya.sly: Machine two, if it's still alive. It has the best rhythm.
 me.surprised: The *best rhythm*?
 maya.neutral: You'll hear it. Once you hear it you can't un-hear it.
 <<goal "Go up to bed when you're ready (back door).">>
-<<diary "A girl named Maya came in at 10pm to listen to machine four. I think I like her.">>
+<<diary "A girl named Maya came in at 10pm to listen to machine two. I think I like her.">>
 
 === d2_camera
 : Tucked into the window seat cushions: Rosa's old film camera, a strap worn soft as cloth.
@@ -244,7 +249,7 @@ june.happy: Everything looks like a pretzel at first. You held your pencil like 
 
 === maya_record
 <<flag maya_recorded>>
-: Maya sets a little recorder on top of washer four and closes her eyes.
+: Maya sets a little recorder on top of washer two and closes her eyes.
 maya.content: Listen. Hear that? *Chug*-a-chug, chug-*chug* — the drum's a little off-balance. It swings.
 me.thinking: I… do hear it. Oh no. I can't un-hear it.
 maya.laugh: Told you!

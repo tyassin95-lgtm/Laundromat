@@ -135,15 +135,13 @@
   function laundromatFront(p, x, y, w, h) {
     const gx = x + 30, gw = w - 170, gy = y + 60, gh = h - 90;
     if (p.emissive) {
-      p.litInterior(gx, gy, gw, gh, { color: '#f4c877', props: 0 });
-      washersInWindow(p, gx, gy, gw, gh, true);
-      p.glow(gx + gw / 2, gy + gh / 2, gw * 0.8, '#ffc870', 0.28);
+      laundromatWindow(p, gx, gy, gw, gh);
+      p.glow(gx + gw / 2, gy + gh / 2, gw * 0.8, '#ffc870', 0.18);
       p.litInterior(x + w - 118, y + 76, 72, 110, { color: '#f4c877' });
       return;
     }
     p.rect(x + 8, y, w - 16, h, PAL.tealD);
-    p.vgrad(gx, gy, gw, gh, [[0, '#7c98a0'], [1, '#3e555c']]);
-    washersInWindow(p, gx, gy, gw, gh, false);
+    laundromatWindow(p, gx, gy, gw, gh);
     p.window(gx, gy, gw, gh, { frame: PAL.teal, frameW: 8, cols: 3, rows: 1, sill: false, seed: 71 });
     p.text("Rosa's", gx + gw / 2, gy + 48, '40px Pacifico', 'rgba(247,226,170,0.85)', { outline: 'rgba(60,30,20,0.4)', outlineWidth: 3 });
     p.text('SELF-SERVICE · WASH & FOLD', gx + gw / 2, gy + 80, '700 13px Fraunces', 'rgba(247,226,170,0.75)');
@@ -152,35 +150,129 @@
     p.awning(x + 16, y - 2, w - 32, 34, { a: PAL.teal, b: PAL.cream, stripes: 13, drop: 16, seed: 73 });
   }
 
-  function washersInWindow(p, gx, gy, gw, gh, glow) {
+  // Rosa's interior seen through the front window. Base layer = daylight paint;
+  // emissive layer = the warm glow added at night (machines block some light, their doors glow).
+  function laundromatWindow(p, gx, gy, gw, gh) {
     const c = p.ctx;
-    for (let i = 0; i < 4; i++) {
-      const mx = gx + 30 + i * (gw - 60) / 3.3, my = gy + gh - 110;
-      c.save(); c.globalAlpha = glow ? 0.25 : 0.6;
-      p.rect(mx, my, 70, 100, glow ? '#fff2c8' : '#d8c8a4');
-      p.ellipse(mx + 38, my + 58, 22, 22, glow ? '#ffe7b0' : '#56646a');
-      c.restore();
+    const wy = gy + gh * 0.5;
+    const mw = 74, mh = 98, my = gy + gh - mh - 4;
+    const xs = [0, 1, 2, 3].map(i => gx + 30 + i * ((gw - 60 - mw) / 3));
+    const lamps = [gx + gw * 0.2, gx + gw * 0.5, gx + gw * 0.8];
+    if (p.emissive) {
+      p.vgrad(gx, gy, gw, gh, [[0, '#f5c77c'], [0.55, '#eab060'], [1, '#a86c34']]);
+      for (const lx of lamps) p.glow(lx, gy + 30, 80, '#fff0c0', 0.7);
+      for (const mx of xs) {
+        p.rect(mx, my, mw, mh, '#b88a55');
+        p.ellipse(mx + mw / 2 - 2, my + 18 + (mh - 18) * 0.5, mw * 0.3, mw * 0.3, '#ffe4a8');
+      }
+      return;
     }
+    // back wall (mint, like the real interior) over a tile wainscot
+    p.rect(gx, gy, gw, wy - gy, '#8fb3a2');
+    for (let xx = gx + 6; xx < gx + gw; xx += 14) p.rect(xx, gy, 5, wy - gy, 'rgba(255,255,255,0.07)');
+    p.rect(gx, wy, gw, gy + gh - wy, '#e4d8bd');
+    for (let yy = wy + 12; yy < gy + gh; yy += 12) p.ink([[gx, yy], [gx + gw, yy]], 0.7, 'rgba(110,95,70,0.35)');
+    for (let xx = gx + 12; xx < gx + gw; xx += 12) p.ink([[xx, wy], [xx, gy + gh]], 0.7, 'rgba(110,95,70,0.22)');
+    p.rect(gx, wy - 4, gw, 5, PAL.tealD);
+    // pendant lamps, clock, price chalkboard
+    for (const lx of lamps) {
+      p.ink([[lx, gy], [lx, gy + 16]], 1.2, '#2a2520');
+      p.poly([[lx - 16, gy + 30], [lx + 16, gy + 30], [lx + 9, gy + 16], [lx - 9, gy + 16]], PAL.tealD, PAL.ink, 1.1);
+      p.ellipse(lx, gy + 31, 7, 3, '#fff0c0');
+    }
+    const ck = gx + gw * 0.91;
+    p.ellipse(ck, gy + 60, 12, 12, '#f4ead2', PAL.ink, 1.2);
+    p.ink([[ck, gy + 60], [ck, gy + 52]], 1.2, PAL.ink); p.ink([[ck, gy + 60], [ck + 6, gy + 62]], 1.2, PAL.ink);
+    p.rect(gx + 14, gy + 44, 56, 38, '#2f3a33'); p.inkRect(gx + 14, gy + 44, 56, 38, 1.2, '#6a4a2e');
+    for (let k = 0; k < 4; k++) p.rect(gx + 20, gy + 51 + k * 8, 28 + (k * 9) % 16, 1.6, 'rgba(240,235,220,0.7)');
+    // the machines
+    const r = p.rand(177);
+    for (const mx of xs) {
+      p.vshade(mx + 4, my + mh - 6, mw, 10, '#000000', 0, 0.3);
+      p.rect(mx, my, mw, mh, '#efe4c8');
+      p.rect(mx + mw - 12, my, 12, mh, 'rgba(120,100,70,0.22)');
+      p.rect(mx, my, mw, 18, '#dccfb0');
+      p.ink([[mx, my + 18], [mx + mw, my + 18]], 1, PAL.ink);
+      p.ellipse(mx + mw - 14, my + 9, 3.2, 3.2, '#b3402f'); p.ellipse(mx + mw - 25, my + 9, 3.2, 3.2, '#3f6c74');
+      p.rect(mx + 8, my + 5, 20, 7, '#3a4a4a');
+      const cx = mx + mw / 2 - 2, cy = my + 18 + (mh - 18) * 0.5, rr = mw * 0.3;
+      p.ellipse(cx, cy, rr + 4, rr + 4, '#c9c6bb', PAL.ink, 1.2);
+      p.ellipse(cx, cy, rr, rr, '#44545a');
+      for (let k = 0; k < 3; k++) p.ellipse(cx - 6 + r() * 12, cy + 3 + r() * 7, 7 + r() * 4, 4 + r() * 3, r.pick(['#c9b88f', '#b86a4a', '#7fa0b0', '#e0c070']));
+      p.ellipse(cx - rr * 0.35, cy - rr * 0.38, rr * 0.28, rr * 0.14, 'rgba(255,255,255,0.4)');
+      p.specks(mx, my, mw, mh, { colors: ['#b8763a', '#6c9aa0'], size: 1.2, count: 10, alpha: 0.5, seed: Math.round(mx) });
+      p.inkRect(mx, my, mw, mh, 1.3, PAL.ink);
+    }
+    // glass tint + reflections
+    p.vgrad(gx, gy, gw, gh, [[0, 'rgba(190,215,225,0.16)'], [1, 'rgba(40,60,70,0.2)']]);
+    p.clipRect(gx, gy, gw, gh, () => {
+      c.save(); c.globalAlpha = 0.12; c.fillStyle = '#ffffff';
+      for (const [a, b] of [[0.1, 0.17], [0.46, 0.5], [0.72, 0.83]]) {
+        c.beginPath(); c.moveTo(gx + gw * a, gy); c.lineTo(gx + gw * b, gy); c.lineTo(gx + gw * b - 70, gy + gh); c.lineTo(gx + gw * a - 70, gy + gh); c.closePath(); c.fill();
+      }
+      c.restore();
+    });
   }
 
   function cafeFront(p, x, y, w, h) {
     const gx = x + 26, gw = w - 190, gy = y + 70, gh = h - 100;
     if (p.emissive) {
-      p.litInterior(gx, gy, gw, gh, { color: '#f5b460', props: 4 });
-      p.glow(gx + gw / 2, gy + gh / 2, gw * 0.7, '#ffb050', 0.25);
+      cafeInterior(p, gx, gy, gw, gh);
+      p.glow(gx + gw / 2, gy + gh / 2, gw * 0.7, '#ffb050', 0.18);
       p.litInterior(x + w - 130, y + 90, 80, 110, { color: '#f5b460' });
       p.text('CORNER CUP', x + w / 2, y + 30, '700 30px Fraunces', '#ffcf7a', { shadow: '#ff9a3a', shadowBlur: 18 });
       return;
     }
     p.planks(x + 6, y, w - 12, h, { vertical: true, plankH: 22, colors: ['#3e5a4a', '#46634f', '#365243'], seed: 81 });
-    p.vgrad(gx, gy, gw, gh, [[0, '#8a9a8c'], [1, '#48564c']]);
-    // interior hints: counter, cups
-    p.rect(gx + 20, gy + gh - 60, gw - 40, 60, 'rgba(120,70,40,0.5)');
-    for (let i = 0; i < 6; i++) p.rect(gx + 30 + i * 40, gy + gh - 78, 14, 16, 'rgba(240,230,210,0.5)');
+    cafeInterior(p, gx, gy, gw, gh);
     p.window(gx, gy, gw, gh, { frame: '#2c4034', frameW: 8, cols: 2, rows: 1, sill: false, seed: 82 });
     signBoard(p, x + 40, y + 10, w - 80, 42, 'CORNER CUP', { bg: '#2c4034', fg: '#f3d9a4', font: '700 26px Fraunces', sub: null, seed: 83 });
     door(p, x + w - 130, y + 90, 80, h - 90, '#8a4a2a', { glass: true, seed: 84 });
     p.awning(x + 20, y + 52, gw + 20, 30, { a: PAL.rust, b: PAL.cream, stripes: 9, drop: 14, seed: 85 });
+  }
+
+  // The Corner Cup seen through its window: counter, espresso machine, cups, bulbs, plants.
+  function cafeInterior(p, gx, gy, gw, gh) {
+    const c = p.ctx;
+    const cy = gy + gh - 64;
+    const bulbs = [0.15, 0.38, 0.62, 0.85].map(f => gx + gw * f);
+    if (p.emissive) {
+      p.vgrad(gx, gy, gw, gh, [[0, '#f3b865'], [0.6, '#e49a4a'], [1, '#9a5a2a']]);
+      for (const bx of bulbs) p.glow(bx, gy + 40, 60, '#fff0c0', 0.8);
+      p.rect(gx + 14, cy, gw - 28, 64, '#8a5a30');
+      return;
+    }
+    p.rect(gx, gy, gw, gh, '#5f7a68');
+    for (let xx = gx; xx < gx + gw; xx += 18) p.rect(xx, gy, 8, gh, 'rgba(255,255,255,0.05)');
+    // shelves with jars and cups
+    for (const sy of [gy + 58, gy + 96]) {
+      p.rect(gx + 20, sy, gw - 40, 5, '#7a5134'); p.ink([[gx + 20, sy + 5], [gx + gw - 20, sy + 5]], 0.9, PAL.ink);
+      const r = p.rand(sy);
+      for (let xx = gx + 26; xx < gx + gw - 40; xx += 20 + r() * 8) {
+        const jh = 10 + r() * 12;
+        p.rect(xx, sy - jh, 12, jh, r.pick(['#e8dcc0', '#c9a24c', '#b86a4a', '#e6d2a6', 'rgba(200,220,210,0.8)']));
+        p.inkRect(xx, sy - jh, 12, jh, 0.7, PAL.ink);
+      }
+    }
+    // hanging bulbs on cords
+    for (const bx of bulbs) { p.ink([[bx, gy], [bx, gy + 30]], 1, '#2a2520'); p.ellipse(bx, gy + 36, 6, 8, '#ffe6a8', PAL.ink, 0.9); }
+    // counter with an espresso machine and a cake stand
+    p.rect(gx + 14, cy, gw - 28, 64, '#8a5a36');
+    p.rect(gx + 14, cy, gw - 28, 8, '#c9a27a'); p.inkRect(gx + 14, cy, gw - 28, 64, 1.3, PAL.ink);
+    for (let xx = gx + 30; xx < gx + gw - 30; xx += 34) p.ink([[xx, cy + 10], [xx, cy + 64]], 0.8, 'rgba(40,20,10,0.35)');
+    const ex = gx + gw * 0.62;
+    p.rect(ex, cy - 40, 62, 40, '#b8b8b0'); p.rect(ex, cy - 40, 62, 8, '#8a8a84'); p.inkRect(ex, cy - 40, 62, 40, 1.1, PAL.ink);
+    p.ellipse(ex + 18, cy - 20, 6, 6, '#3a3a36'); p.ellipse(ex + 44, cy - 20, 6, 6, '#3a3a36');
+    p.ellipse(gx + gw * 0.25, cy - 6, 30, 6, '#e8dcc0', PAL.ink, 1); p.ellipse(gx + gw * 0.25, cy - 16, 22, 12, '#e0a05a', PAL.ink, 1);
+    // plant in the corner
+    p.rect(gx + gw - 44, cy - 26, 22, 26, '#b86a4a'); p.inkRect(gx + gw - 44, cy - 26, 22, 26, 1, PAL.ink);
+    for (let k = 0; k < 6; k++) p.ellipse(gx + gw - 33 + (k - 2.5) * 7, cy - 34 - (k % 2) * 8, 9, 5, '#5a7a3a', PAL.ink, 0.8);
+    p.vgrad(gx, gy, gw, gh, [[0, 'rgba(190,215,225,0.14)'], [1, 'rgba(40,60,70,0.2)']]);
+    p.clipRect(gx, gy, gw, gh, () => {
+      c.save(); c.globalAlpha = 0.1; c.fillStyle = '#ffffff';
+      for (const [a, b] of [[0.2, 0.26], [0.6, 0.7]]) { c.beginPath(); c.moveTo(gx + gw * a, gy); c.lineTo(gx + gw * b, gy); c.lineTo(gx + gw * b - 60, gy + gh); c.lineTo(gx + gw * a - 60, gy + gh); c.closePath(); c.fill(); }
+      c.restore();
+    });
   }
 
   function bodegaFront(p, x, y, w, h, closed) {

@@ -56,6 +56,13 @@ export class Scene {
 
   get r() { return this.app.r; }
 
+  // Rooms narrower than the screen zoom in to fill it, keeping the floor in view.
+  fitView() {
+    const r = this.r;
+    if (this.worldW < r.VW) { r.cam.zoom = r.VW / this.worldW; r.cam.y = 360 - 360 / r.cam.zoom; }
+    else { r.cam.zoom = 1; r.cam.y = 0; }
+  }
+
   cameraClamp(x) {
     const vw = this.r.VW;
     if (this.worldW <= vw) return (this.worldW - vw) / 2;

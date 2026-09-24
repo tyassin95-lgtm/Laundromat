@@ -31,6 +31,7 @@ export class HomeScene extends Scene {
     if (!G.placed.h_table) G.placed.h_table = 'record_player';
     if (!G.placed.h_shelf) G.placed.h_shelf = 'pothos';
     this.buildEntities();
+    this.fitView();
     this.follow(this.player, 0, true);
     this.updateSound();
     this.app.hud.setMode('home');
@@ -128,6 +129,7 @@ export class HomeScene extends Scene {
     this.particles.update(dt);
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
+    this.fitView();
     this.follow(this.player, dt);
     if (this.player.moving) {
       this.stepT = (this.stepT || 0) + dt;

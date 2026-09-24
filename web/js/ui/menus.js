@@ -568,7 +568,7 @@ export class Menus {
 
   help() {
     UI.notice(`<h2>How to run a laundromat</h2>
-      <p><b>Tap</b> anywhere on the floor to walk. <b>Tap things</b> to use them — Nora walks over and does it.</p>
+      <p><b>Tap</b> anywhere on the floor to walk. <b>Tap things</b> to use them — you walk over and do it.</p>
       <p><b>Drop-offs:</b> bags appear on the counter. Carry one to a <b>washer</b>, then a <b>dryer</b>, then <b>fold</b> it at the folding table. It goes on the pickup shelf and the customer collects it at their pickup time. Gold arrows show where the laundry you're holding can go.</p>
       <p><b>Walk-ins</b> use free washers on their own and pay coins. Keep a machine free for them.</p>
       <p><b>Chores:</b> mop puddles, clean dryer lint, fix broken machines (you'll need spare parts), and keep detergent stocked.</p>

@@ -39,7 +39,7 @@ walt.neutral: Keep the photo. It belongs in the shop.
 
 === maya_offer
 <<flag maya_offer>>
-: Maya's sitting on top of washer four in the dark, headphones on, not listening to anything.
+: Maya's sitting on top of washer two in the dark, headphones on, not listening to anything.
 maya.worried: The producer wants me in LA. A real studio. A real record. They want me there October first.
 maya.worried: My parents cried. Happy crying. I think. Nigerian parents cry the same either way.
 maya.sad: But the Night Wash is next Saturday. And the shop. And… this. I don't know if I can make music anywhere else.
@@ -170,7 +170,7 @@ june.worried: Four to three. We were close, dear. We were so close.
 june.happy: Lemon bars! Get them before Walt does.
 walt.laugh: Too late.
 maya.worried: Okay. Okay okay okay. I'm on.
-: Maya sits on top of washer four with her guitar and a little speaker. She presses play: the chug of the machines, the tumble of the dryers. Then she starts to sing.
+: Maya sits on top of washer two with her guitar and a little speaker. She presses play: the chug of the machines, the tumble of the dryers. Then she starts to sing.
 maya.content: This one's called "{var.trackName}." It's for Rosa. And for this place. And for {name}, who kept the lights on.
 <<sfx applause_big>>
 : The whole shop sings the last chorus. Even Walt. Especially Walt.

@@ -36,7 +36,7 @@ export const ENDINGS = {
     title: 'The Last Load', tagline: 'Rosa\'s Laundromat closed on October 1st.', music: 'bittersweet',
     cards: G => [
       { img: 'machine_washer_idle', title: 'Rosa\'s', text: 'The machines went to a scrapyard in Jersey. The sign went into your closet. The Linden opened eighteen months later: 212 residences, a gym, a "laundry concierge." The lobby smells like expensive candles.' },
-      { img: 'face_player_sad', title: G.name, text: 'The money paid Rosa\'s debts, and yours, and then some. You went back to school. Some nights you still dream about the rhythm of number four.' },
+      { img: 'face_player_sad', title: G.name, text: 'The money paid Rosa\'s debts, and yours, and then some. You went back to school. Some nights you still dream about the rhythm of number two.' },
       waltCard(G, true), juneCard(G, true), mayaCard(G, true), remyCard(G, true),
       { img: 'item_cat_bed', title: 'Biscuit', text: 'Biscuit moved with you. He sleeps on the warm spot on top of your fridge and has forgiven no one.' },
     ],

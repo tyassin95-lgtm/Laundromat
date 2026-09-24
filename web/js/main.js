@@ -99,7 +99,7 @@ class App {
   }
 
   loop(t) {
-    const dt = Math.min(0.05, Math.max(0, (t - this.last) / 1000));
+    const dt = Math.min(0.05, Math.max(0, (t - this.last) / 1000)) * (this.timeScale || 1);
     this.last = t;
     try {
       tweens.update(dt);
@@ -122,7 +122,7 @@ class App {
   async setScene(name, opts = {}) {
     if (this.scene) this.scene.exit();
     this.scene = this.scenes[name];
-    this.r.cam.zoom = 1; this.r.cam.shake = 0;
+    this.r.cam.zoom = 1; this.r.cam.y = 0; this.r.cam.shake = 0;
     await this.scene.enter(opts);
   }
 
@@ -266,6 +266,7 @@ class App {
     window.__game = {
       app: this, get G() { return G; }, L, Save, Sound, UI,
       skipTime: m => { G.time += m; },
+      speed: k => { this.timeScale = k; },
       setDay: d => { G.day = d; },
     };
   }

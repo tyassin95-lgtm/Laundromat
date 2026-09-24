@@ -76,6 +76,27 @@ export class StreetScene extends Scene {
     } catch (e) { return null; }
   }
 
+  // Distant skyline windows, cut out by the foreground so they only show through open sky.
+  farLights(r) {
+    if (!this.skyLights) return null;
+    const k = 0.5, W = Math.ceil(r.VW * k), H = Math.ceil(720 * k);
+    const cv = this.farCv || (this.farCv = document.createElement('canvas'));
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+    const o = cv.getContext('2d');
+    o.setTransform(1, 0, 0, 1, 0, 0);
+    o.globalCompositeOperation = 'source-over';
+    o.clearRect(0, 0, W, H);
+    o.setTransform(k, 0, 0, k, 0, 0);
+    o.drawImage(this.skyLights, -r.cam.x * 0.25 - 100, this.cfg.sky === 'wide' ? 0 : 60, 2400, 720);
+    if (this.bg) {
+      const z = r.cam.zoom, s = k * z;
+      o.globalCompositeOperation = 'destination-out';
+      o.setTransform(s, 0, 0, s, -r.cam.x * s + (r.VW / 2) * (1 - z) * k, -r.cam.y * s + 360 * (1 - z) * k);
+      o.drawImage(this.bg, 0, 0, this.worldW, 720);
+    }
+    return cv;
+  }
+
   isSky(wx, wy) {
     const m = this.skyMask;
     if (!m) return wy < 200;
@@ -119,6 +140,8 @@ export class StreetScene extends Scene {
     const here = [];
     for (const id of ['walt', 'maya', 'june', 'remy']) {
       if (!this.app.story.canVisit(id)) continue;
+      // strangers only show up where their introduction happens
+      if (!G.flags['met_' + id] && !(id === 'remy' && this.loc === 'street')) continue;
       const forced = G.vars['at_' + id];
       let present = false;
       if (forced) present = forced === this.loc;
@@ -235,11 +258,13 @@ export class StreetScene extends Scene {
     // emissive layers after lighting
     if (night > 0.02) {
       c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = night;
+      const far = this.farLights(r);
+      if (far) { c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(far, 0, 0, r.canvas.width, r.canvas.height); }
       r.screen();
-      if (this.skyLights) c.drawImage(this.skyLights, -r.cam.x * 0.25 - 100, this.cfg.sky === 'wide' ? 0 : 60, 2400, 720);
+      const z = r.cam.zoom;
       for (const s of this.stars) {
         const sx = ((s.x - r.cam.x * 0.1) % r.VW + r.VW) % r.VW;
-        if (!this.isSky(sx / r.cam.zoom + r.cam.x, s.y)) continue;
+        if (!this.isSky((sx - r.VW / 2 * (1 - z)) / z + r.cam.x, (s.y - 360 * (1 - z)) / z + r.cam.y)) continue;
         const a = (0.4 + 0.6 * Math.abs(Math.sin(this.t + s.p))) * night * (wet ? 0.2 : 1);
         c.fillStyle = `rgba(255,248,230,${a})`; c.fillRect(sx, s.y, s.s, s.s);
       }

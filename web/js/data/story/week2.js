@@ -36,7 +36,7 @@ walt.sad: Then they shut it down and sold the lot, and here we are.
 === maya_track
 <<flag maya_track>>
 maya.worried: Okay. So. Don't laugh.
-: She hands you one side of her headphones. A soft, swinging beat: the chug of washer four, the tumble of the dryers, a coin clinking, rain.
+: She hands you one side of her headphones. A soft, swinging beat: the chug of washer two, the tumble of the dryers, a coin clinking, rain.
 : Then a piano melody drifts in over the top, slow and bright, like the lights coming on in here at night.
 me.surprised: Maya. That's the *shop*.
 maya.content: That's the shop. I've been recording it for a year. It's the only place I can think.

@@ -6,6 +6,7 @@ import { tweens } from '../engine/tween.js';
 import { rand, money, el } from '../engine/util.js';
 import { ITEMS } from '../data/items.js';
 import { ROSA_JOURNAL, READING, WINDOW_LINES } from '../data/flavor.js';
+import { formatText } from '../ui/dialogue.js';
 
 export class Activities {
   constructor(app) { this.app = app; }
@@ -153,7 +154,7 @@ export class Activities {
     const e = unread || unlocked[unlocked.length - 1];
     G.flags['rj_' + e.id] = true;
     Sound.play('book_open', { vol: 0.7 });
-    await UI.notice(`<h2>Rosa's journal</h2><p class="letter">${e.date}</p><div class="letter">${e.text}</div>`, { ok: 'Close the journal', sound: 'page' });
+    await UI.notice(`<h2>Rosa's journal</h2><p class="letter">${e.date}</p><div class="letter">${formatText(e.text)}</div>`, { ok: 'Close the journal', sound: 'page' });
     if (unread) { addStat('energy', 2); this.spend(15); }
     else UI.toast('That\'s the last page Rosa wrote… that you\'ve reached so far.', 'item_journal');
   }

@@ -57,7 +57,7 @@ maya.worried: Can I tell you a secret? I've never played anything for anyone. No
 maya.content: Except you. Now.
 
 === maya_c13
-maya.laugh: Machine four skipped a beat today. I think it's getting old. We're all getting old.
+maya.laugh: Machine two skipped a beat today. I think it's getting old. We're all getting old.
 me.smug: You're twenty-two.
 maya.sly: Twenty-two is old in beat years.
 

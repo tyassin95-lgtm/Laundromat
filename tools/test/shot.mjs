@@ -22,7 +22,18 @@ export async function launch(opts = {}) {
   const logs = [];
   page.on('console', m => { const t = `[${m.type()}] ${m.text()}`; logs.push(t); if (m.type() === 'error' || m.type() === 'warning') console.log(t); });
   page.on('pageerror', e => { logs.push('[pageerror] ' + e.message); console.log('[pageerror]', e.message, e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : ''); });
-  if (opts.clearStorage !== false) await page.addInitScript(() => { try { if (!sessionStorage.getItem('kept')) { localStorage.clear(); sessionStorage.setItem('kept', '1'); } } catch (e) { } });
+  if (opts.clearStorage !== false) {
+    // start from a clean slate (or from a saved localStorage snapshot), once per test
+    await page.addInitScript((snap) => {
+      try {
+        if (!sessionStorage.getItem('kept')) {
+          localStorage.clear();
+          if (snap) for (const [k, v] of Object.entries(JSON.parse(snap))) localStorage.setItem(k, v);
+          sessionStorage.setItem('kept', '1');
+        }
+      } catch (e) { }
+    }, opts.storage ? fs.readFileSync(opts.storage, 'utf8') : null);
+  }
   await page.goto(URL);
   await page.waitForFunction(() => !document.getElementById('boot'), null, { timeout: 60000 });
   return { browser, page, logs };
@@ -49,19 +60,54 @@ export async function clickText(page, text, opts = {}) {
   await loc.click({ timeout: opts.timeout || 5000 });
   await wait(250);
 }
-// Advance any open dialogue until it closes (answering choices with the given index).
-export async function skipDialogue(page, choice = 0, max = 200) {
+// Advance through dialogue, notices and modals until nothing blocks the game.
+// choice: index of the dialogue choice to pick (or a function (texts) => index).
+export async function skipDialogue(page, choice = 0, max = 300, log = false) {
+  let idle = 0;
   for (let i = 0; i < max; i++) {
-    const state = await page.evaluate(() => {
+    const st = await page.evaluate(() => {
+      const modals = [...document.querySelectorAll('.modal')].filter(m => m.style.opacity !== '0');
+      if (modals.length) {
+        const m = modals[modals.length - 1];
+        const btns = [...m.querySelectorAll('.btn')];
+        return { k: 'modal', n: btns.length, txt: m.innerText.slice(0, 160).replace(/\s+/g, ' ') };
+      }
       const d = document.querySelector('.dlg');
-      if (!d) return 'none';
-      if (d.querySelector('.choices .btn')) return 'choice';
-      return 'text';
+      if (d) {
+        const ch = [...d.querySelectorAll('.choices .btn')].map(b => b.innerText);
+        return ch.length ? { k: 'choice', ch } : { k: 'text', txt: (d.querySelector('.txt') || d).innerText.slice(0, 120) };
+      }
+      if (document.querySelector('.daycard, .mg, .epilogue')) return { k: 'wait' };
+      if (document.querySelector('.fader.on')) return { k: 'wait' };
+      return { k: 'none' };
     });
-    if (state === 'none') return i;
-    if (state === 'choice') { await page.locator('.dlg .choices .btn').nth(choice).click(); await wait(200); continue; }
-    await page.locator('.dlg').click({ position: { x: 400, y: 200 } });
-    await wait(60);
+    if (log && st.k !== 'wait') console.log('  ', st.k, st.txt || st.ch || '');
+    if (st.k === 'none') { if (++idle > 3) return i; await wait(150); continue; }
+    idle = 0;
+    if (st.k === 'wait') { await wait(300); continue; }
+    if (st.k === 'modal') {
+      const m = page.locator('.modal').last();
+      const prim = m.locator('.btn.primary');
+      if (await prim.count()) await prim.first().click({ timeout: 3000 }).catch(() => {});
+      else if (st.n) await m.locator('.btn').last().click({ timeout: 3000 }).catch(() => {});
+      else await m.click({ position: { x: 5, y: 5 }, timeout: 3000 }).catch(() => {});
+      await wait(250);
+      continue;
+    }
+    if (st.k === 'choice') {
+      const idx = typeof choice === 'function' ? choice(st.ch) : choice;
+      await page.locator('.dlg .choices .btn').nth(Math.min(idx, st.ch.length - 1)).click({ timeout: 3000 }).catch(() => {});
+      await wait(200); continue;
+    }
+    await page.locator('.dlg').click({ position: { x: 400, y: 100 }, timeout: 3000 }).catch(() => {});
+    await wait(70);
   }
   return max;
+}
+
+export async function state(page) {
+  return page.evaluate(() => {
+    const g = window.__game.G;
+    return { scene: window.__app.scene && window.__app.scene.name, day: g.day, phase: g.phase, time: g.time, money: g.money, goal: g.goal, loc: g.location };
+  });
 }
