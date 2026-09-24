@@ -1,0 +1,114 @@
+// Story events: when a trigger fires (see game/story.js), the first matching, not-yet-played
+// event runs its script node. Fields: on, day/minDay/maxDay, at (minutes, for 'time'), who, loc,
+// weekday, cond (script expression), once (default true), node.
+
+export const EVENTS = [
+  // ------------------------------------------------------------------ Day 1
+  { id: 'd1_wake', on: 'home_morning', day: 1, node: 'd1_wake' },
+  { id: 'd1_open', on: 'shift_start', day: 1, node: 'd1_open' },
+  { id: 'd1_walt_arrives', on: 'time', day: 1, at: 8 * 60 + 30, node: 'd1_walt_visit' },
+  { id: 'walt_intro', on: 'arrive', who: 'walt', day: 1, node: 'walt_intro' },
+  { id: 'tut_carry', on: 'picked', maxDay: 2, cond: 'not flag.tut_carry_done', node: 'tut_carry' },
+  { id: 'tut_loaded', on: 'loaded', maxDay: 2, node: 'tut_loaded' },
+  { id: 'tut_unloaded', on: 'unloaded', maxDay: 2, node: 'tut_unloaded' },
+  { id: 'tut_ready', on: 'ready', maxDay: 2, node: 'tut_ready' },
+  { id: 'walt_d1_handover', on: 'handover', who: 'walt', day: 1, node: 'walt_d1_handover' },
+  { id: 'tut_repaired', on: 'repaired', maxDay: 3, node: 'tut_repaired' },
+  { id: 'd1_june', on: 'time', day: 1, at: 13 * 60, node: 'd1_june_visit' },
+  { id: 'june_intro', on: 'arrive', who: 'june', day: 1, node: 'june_intro' },
+  { id: 'd1_close', on: 'shift_end', day: 1, node: 'd1_close' },
+  { id: 'remy_intro', on: 'location', loc: 'street', cond: 'not flag.met_remy', node: 'remy_intro' },
+  { id: 'd1_maya_knock', on: 'home_night', day: 1, cond: 'not flag.met_maya', node: 'd1_maya_knock' },
+  { id: 'maya_intro', on: 'arrive', who: 'maya', cond: 'not flag.met_maya', node: 'maya_intro' },
+
+  // ------------------------------------------------------------------ Day 2-7
+  { id: 'd2_camera', on: 'home_morning', day: 2, node: 'd2_camera' },
+  { id: 'd2_letter', on: 'mail', day: 2, node: 'd2_letter' },
+  { id: 'walt_d2', on: 'arrive', who: 'walt', day: 2, node: 'walt_d2' },
+  { id: 'remy_shop_1', on: 'arrive', who: 'remy', maxDay: 6, cond: 'not flag.remy_shop_1', node: 'remy_shop_1' },
+  { id: 'june_knit', on: 'arrive', who: 'june', minDay: 3, cond: 'not flag.learned_knit', node: 'june_knit' },
+  { id: 'maya_record', on: 'arrive', who: 'maya', minDay: 2, cond: 'flag.met_maya and not flag.maya_recorded', node: 'maya_record' },
+  { id: 'walt_park_1', on: 'location', loc: 'park', cond: 'not flag.walt_park_1 and flag.met_walt', node: 'walt_park_1' },
+  { id: 'june_garden_1', on: 'location', loc: 'garden', cond: 'not flag.june_garden_1 and flag.met_june', node: 'june_garden_1' },
+  { id: 'd4_poster', on: 'mail', day: 4, node: 'd4_poster' },
+  { id: 'walt_tab', on: 'arrive', who: 'walt', minDay: 5, maxDay: 8, cond: 'not flag.tab_asked', node: 'walt_tab' },
+  { id: 'remy_bodega_rumor', on: 'location', loc: 'street', minDay: 5, maxDay: 10, cond: 'flag.met_remy', node: 'remy_bodega_rumor' },
+  { id: 'd6_cat', on: 'time', day: 6, at: 12 * 60, node: 'd6_cat' },
+  { id: 'd7_sunday', on: 'home_morning', day: 7, node: 'd7_sunday' },
+  { id: 'first_sunday_market', on: 'location', loc: 'park', weekday: 6, cond: 'not flag.market_seen', node: 'market_intro' },
+
+  // ------------------------------------------------------------------ Week 2
+  { id: 'd8_offer', on: 'mail', day: 8, node: 'd8_offer' },
+  { id: 'june_offer_talk', on: 'arrive', who: 'june', minDay: 8, maxDay: 10, cond: 'flag.crestline_offer', node: 'june_offer_talk' },
+  { id: 'walt_lesson', on: 'arrive', who: 'walt', minDay: 9, cond: 'not flag.walt_lesson', node: 'walt_lesson' },
+  { id: 'maya_track', on: 'arrive', who: 'maya', minDay: 10, cond: 'flag.maya_recorded and not flag.maya_track', node: 'maya_track' },
+  { id: 'june_pwyc', on: 'arrive', who: 'june', minDay: 10, cond: 'not flag.pwyc_idea and flag.learned_knit', node: 'june_pwyc' },
+  { id: 'd11_sold', on: 'time', day: 11, at: 10 * 60 + 30, node: 'd11_june_rushes' },
+  { id: 'june_sold', on: 'arrive', who: 'june', day: 11, node: 'june_sold' },
+  { id: 'walt_quilt', on: 'arrive', who: 'walt', minDay: 12, cond: 'not flag.walt_quilt', node: 'walt_quilt' },
+  { id: 'd13_bodega', on: 'home_morning', day: 13, node: 'd13_bodega_morning' },
+  { id: 'bodega_closing', on: 'location', loc: 'street', minDay: 13, cond: 'not flag.bodega_scene', node: 'bodega_closing' },
+  { id: 'garden_workday', on: 'location', loc: 'garden', day: 14, node: 'garden_workday' },
+  { id: 'tenants_1', on: 'shift_end', weekday: 3, minDay: 11, cond: 'flag.tenants_meetings and not flag.tenants_1', node: 'tenants_meeting_1' },
+
+  // ------------------------------------------------------------------ Week 3
+  { id: 'd15_tax', on: 'mail', day: 15, node: 'd15_tax' },
+  { id: 'remy_commission', on: 'location', loc: 'street', minDay: 15, cond: 'not flag.commission_decided', node: 'remy_commission' },
+  { id: 'remy_commission_shop', on: 'arrive', who: 'remy', minDay: 16, cond: 'not flag.commission_decided', node: 'remy_commission' },
+  { id: 'walt_storm_prep', on: 'arrive', who: 'walt', day: 16, node: 'walt_storm_prep' },
+  { id: 'd16_radio', on: 'shift_start', day: 16, node: 'd16_radio' },
+  { id: 'd17_storm_start', on: 'shift_start', day: 17, node: 'd17_storm_start' },
+  { id: 'storm_night', on: 'shift_end', day: 17, node: 'storm_night' },
+  { id: 'grant_visit', on: 'time', day: 18, at: 11 * 60, node: 'grant_visit' },
+  { id: 'inspection', on: 'time', day: 19, at: 14 * 60, node: 'inspection' },
+  { id: 'petition_launch', on: 'time', day: 20, at: 12 * 60, node: 'petition_launch' },
+  { id: 'maya_viral', on: 'location', loc: 'riverside', minDay: 21, cond: 'flag.maya_track and not flag.maya_viral', node: 'maya_viral' },
+  { id: 'maya_viral_home', on: 'home_night', day: 21, cond: 'not flag.maya_viral', node: 'maya_viral_text' },
+
+  // ------------------------------------------------------------------ Week 4
+  { id: 'd22_hearing', on: 'mail', day: 22, node: 'd22_hearing' },
+  { id: 'june_testify', on: 'arrive', who: 'june', minDay: 22, cond: 'flag.hearing_announced and not flag.june_asked', node: 'june_testify' },
+  { id: 'walt_1974', on: 'arrive', who: 'walt', minDay: 23, cond: 'not flag.walt_1974', node: 'walt_1974' },
+  { id: 'walt_1974_talk', on: 'talk', who: 'walt', minDay: 23, cond: 'not flag.walt_1974', node: 'walt_1974' },
+  { id: 'maya_offer', on: 'location', loc: 'laundromat', minDay: 23, cond: 'flag.maya_viral and not flag.maya_offer', node: 'maya_offer' },
+  { id: 'maya_offer_home', on: 'home_night', minDay: 24, cond: 'flag.maya_viral and not flag.maya_offer', node: 'maya_offer_text' },
+  { id: 'remy_mural', on: 'arrive', who: 'remy', minDay: 23, cond: 'flag.commission_decided and not flag.mural_asked', node: 'remy_mural_ask' },
+  { id: 'remy_mural_street', on: 'location', loc: 'street', minDay: 24, cond: 'flag.commission_decided and not flag.mural_asked', node: 'remy_mural_ask' },
+  { id: 'tenants_2', on: 'shift_end', day: 25, cond: 'flag.tenants_meetings', node: 'tenants_meeting_2' },
+  { id: 'hearing', on: 'shift_end', day: 26, node: 'hearing' },
+  { id: 'night_wash', on: 'shift_end', day: 27, node: 'night_wash' },
+  { id: 'final_morning', on: 'home_morning', day: 28, node: 'final_morning' },
+
+  // ------------------------------------------------------------------ friendship moments (talk-triggered)
+  { id: 'walt_h2', on: 'talk', who: 'walt', cond: 'hearts.walt >= 2', minDay: 3, node: 'walt_h2' },
+  { id: 'walt_h8', on: 'talk', who: 'walt', cond: 'hearts.walt >= 7 and flag.walt_quilt', node: 'walt_h8' },
+  { id: 'walt_h10', on: 'talk', who: 'walt', cond: 'hearts.walt >= 9 and flag.walt_1974', node: 'walt_h10' },
+  { id: 'maya_h2', on: 'talk', who: 'maya', cond: 'hearts.maya >= 2', node: 'maya_h2' },
+  { id: 'maya_h6', on: 'talk', who: 'maya', cond: 'hearts.maya >= 5 and flag.maya_track', node: 'maya_h6' },
+  { id: 'maya_h10', on: 'talk', who: 'maya', cond: 'hearts.maya >= 9 and flag.maya_offer', node: 'maya_h10' },
+  { id: 'june_h4', on: 'talk', who: 'june', cond: 'hearts.june >= 4', node: 'june_h4' },
+  { id: 'june_h8', on: 'talk', who: 'june', cond: 'hearts.june >= 7 and flag.june_sold', node: 'june_h8' },
+  { id: 'june_h10', on: 'talk', who: 'june', cond: 'hearts.june >= 9 and flag.june_asked', node: 'june_h10' },
+  { id: 'remy_h2', on: 'talk', who: 'remy', cond: 'hearts.remy >= 2', node: 'remy_h2' },
+  { id: 'remy_h4', on: 'talk', who: 'remy', cond: 'hearts.remy >= 4 and day >= 8', node: 'remy_h4' },
+  { id: 'remy_h8', on: 'talk', who: 'remy', cond: 'hearts.remy >= 7 and flag.commission_decided', node: 'remy_h8' },
+  { id: 'remy_h10', on: 'talk', who: 'remy', cond: 'hearts.remy >= 9 and flag.mural_asked', node: 'remy_h10' },
+
+  // ------------------------------------------------------------------ small things
+  { id: 'debt_help', on: 'home_morning', cond: 'flag.in_debt and not flag.debt_help', node: 'debt_help' },
+  { id: 'prices_high', on: 'prices', cond: 'not flag.prices_reacted', node: 'prices_reaction' },
+  { id: 'all_socks', on: 'sock', cond: 'socks >= 12', node: 'all_socks' },
+  { id: 'first_sock', on: 'sock', node: 'first_sock' },
+  { id: 'late_night_shop', on: 'location', loc: 'laundromat', minDay: 2, cond: 'time >= 19*60 and flag.met_maya', node: 'late_night_shop' },
+];
+
+// Things shown on the wall calendar (flag = only once known).
+export const CALENDAR_MARKS = [
+  { day: 1, text: 'Opening day!' },
+  { day: 12, text: 'Walt\'s quilt', flag: 'walt_lesson' },
+  { day: 17, text: 'Storm warning', flag: 'storm_warned' },
+  { day: 20, text: 'Petition drive', flag: 'petition_plan' },
+  { day: 26, text: 'Council hearing 7pm', flag: 'hearing_announced' },
+  { day: 27, text: 'NIGHT WASH', flag: 'night_wash_planned' },
+  { day: 28, text: 'Crestline deadline', flag: 'crestline_offer' },
+];

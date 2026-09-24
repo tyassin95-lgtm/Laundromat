@@ -1,0 +1,388 @@
+{
+  "_doc": [
+    "Sprite-sheet slicing config for tools/slice_sheets.py.",
+    "Each sheet lives in art/source/<file>. Sprites are cut out by alpha (mode 'components')",
+    "or by a detected grid (mode 'grid'), named in row-major order, scaled by 'scale',",
+    "and written to web/assets/sprites/<prefix><name>.webp with an entry in",
+    "web/assets/sprites/manifest.json. To swap art: replace the source sheet (same layout)",
+    "or drop a replacement image with the same file name into web/assets/sprites/."
+  ],
+  "sheets": [
+    {
+      "file": "decor_wall.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.5,
+      "prefix": "decor_",
+      "rows": [
+        [
+          "hanging_sign",
+          "hanging_plant",
+          "cat_planter",
+          "painting"
+        ],
+        [
+          "rug",
+          "wall_shelf",
+          "record_player",
+          "kettle"
+        ],
+        [
+          "cork_board",
+          "string_lights",
+          "flower_vase",
+          "chalkboard"
+        ]
+      ]
+    },
+    {
+      "file": "furniture.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.6,
+      "prefix": "furn_",
+      "rows": [
+        [
+          "work_table",
+          "bench",
+          "plastic_chair",
+          "tall_shelf"
+        ],
+        [
+          "counter",
+          "double_bench",
+          "stool",
+          "laundry_cart"
+        ],
+        [
+          "coat_rack",
+          "potted_plant",
+          "floor_lamp",
+          "bulletin_board"
+        ]
+      ]
+    },
+    {
+      "file": "items_hobby.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.36,
+      "prefix": "item_",
+      "rows": [
+        [
+          "novel",
+          "sketchbook",
+          "pencil_cup",
+          "teacup"
+        ],
+        [
+          "pothos",
+          "vinyl",
+          "camera",
+          "yarn_basket"
+        ],
+        [
+          "journal",
+          "lantern",
+          "picnic_basket",
+          "cat_bed"
+        ]
+      ]
+    },
+    {
+      "file": "items_laundry.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.36,
+      "prefix": "item_",
+      "rows": [
+        [
+          "wicker_basket",
+          "hamper",
+          "towels",
+          "detergent"
+        ],
+        [
+          "soap_box",
+          "spray_bottle",
+          "ironing_board",
+          "iron"
+        ],
+        [
+          "coin_jar",
+          "coin_tray",
+          "softener",
+          "drawstring_bag"
+        ],
+        [
+          "tote_bag",
+          "sock",
+          "apron",
+          "coffee_mug"
+        ]
+      ]
+    },
+    {
+      "file": "machines.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.6,
+      "prefix": "machine_",
+      "rows": [
+        [
+          "washer_idle",
+          "washer_running",
+          "washer_open"
+        ],
+        [
+          "stack_unit",
+          "washer_orange",
+          "washer_blue"
+        ]
+      ]
+    },
+    {
+      "file": "player_poses.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.7,
+      "prefix": "player_",
+      "rows": [
+        [
+          "idle",
+          "idle_look",
+          "walk1",
+          "walk2"
+        ],
+        [
+          "carry",
+          "fold",
+          "load",
+          "mop"
+        ],
+        [
+          "reach",
+          "sit",
+          "wave",
+          "stretch"
+        ]
+      ]
+    },
+    {
+      "file": "street.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.75,
+      "prefix": "street_",
+      "rows": [
+        [
+          "tree_green",
+          "tree_autumn",
+          "bus_shelter",
+          "lamp_post"
+        ],
+        [
+          "bicycle",
+          "trash_can",
+          "news_box",
+          "flower_planter"
+        ],
+        [
+          "cafe_table",
+          "cafe_chair",
+          "mailbox",
+          "barrier"
+        ],
+        [
+          "garden_bed",
+          "brick_planter",
+          "puddle",
+          "billboard"
+        ]
+      ]
+    },
+    {
+      "file": "ui_panels.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.6,
+      "prefix": "ui_",
+      "rows": [
+        [
+          "speech_panel",
+          "pill"
+        ],
+        [
+          "notebook",
+          "slots"
+        ],
+        [
+          "calendar",
+          "notice"
+        ]
+      ]
+    },
+    {
+      "file": "ui_icons.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.32,
+      "prefix": "icon_",
+      "rows": [
+        [
+          "washer",
+          "dryer",
+          "towels",
+          "basket"
+        ],
+        [
+          "detergent",
+          "coin",
+          "clock",
+          "heart"
+        ],
+        [
+          "speech",
+          "star",
+          "map",
+          "home"
+        ],
+        [
+          "wrench",
+          "journal",
+          "calendar",
+          "gear"
+        ]
+      ]
+    },
+    {
+      "file": "portrait_player.png",
+      "mode": "grid",
+      "gridRows": 3,
+      "gridCols": 3,
+      "scale": 0.7,
+      "prefix": "face_player_",
+      "rows": [
+        [
+          "neutral",
+          "laugh",
+          "worried"
+        ],
+        [
+          "surprised",
+          "tired",
+          "thinking"
+        ],
+        [
+          "smug",
+          "sad",
+          "wink"
+        ]
+      ]
+    },
+    {
+      "file": "portrait_maya.png",
+      "mode": "grid",
+      "gridRows": 2,
+      "gridCols": 3,
+      "scale": 0.7,
+      "prefix": "face_maya_",
+      "rows": [
+        [
+          "neutral",
+          "content",
+          "worried"
+        ],
+        [
+          "laugh",
+          "annoyed",
+          "sly"
+        ]
+      ]
+    },
+    {
+      "file": "portrait_walt.png",
+      "mode": "grid",
+      "gridRows": 2,
+      "gridCols": 3,
+      "scale": 0.7,
+      "prefix": "face_walt_",
+      "rows": [
+        [
+          "neutral",
+          "smile",
+          "sad"
+        ],
+        [
+          "laugh",
+          "angry",
+          "content"
+        ]
+      ]
+    },
+    {
+      "file": "portrait_june.png",
+      "mode": "grid",
+      "gridRows": 2,
+      "gridCols": 3,
+      "scale": 0.7,
+      "prefix": "face_june_",
+      "rows": [
+        [
+          "neutral",
+          "sly",
+          "thinking"
+        ],
+        [
+          "worried",
+          "gentle",
+          "happy"
+        ]
+      ]
+    },
+    {
+      "file": "portrait_pink.png",
+      "mode": "grid",
+      "gridRows": 2,
+      "gridCols": 3,
+      "scale": 0.7,
+      "prefix": "face_remy_",
+      "rows": [
+        [
+          "neutral",
+          "excited",
+          "skeptical"
+        ],
+        [
+          "worried",
+          "shy",
+          "wink"
+        ]
+      ]
+    },
+    {
+      "file": "maya_full.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.4,
+      "prefix": "npc_",
+      "rows": [
+        [
+          "maya"
+        ]
+      ]
+    },
+    {
+      "file": "walt_full.png",
+      "mode": "components",
+      "dilate": 6,
+      "scale": 0.4,
+      "prefix": "npc_",
+      "rows": [
+        [
+          "walt"
+        ]
+      ]
+    }
+  ]
+}

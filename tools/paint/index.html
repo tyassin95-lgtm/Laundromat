@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'Fraunces'; src: url('../../web/assets/fonts/Fraunces.woff2') format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Pacifico'; src: url('../../web/assets/fonts/Pacifico-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Patrick Hand'; src: url('../../web/assets/fonts/PatrickHand-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Caveat'; src: url('../../web/assets/fonts/Caveat.woff2') format('woff2'); font-weight: 400 700; }
+body { margin: 0; background: #222; }
+</style>
+<script src="painter.js"></script>
+<script src="scenes/laundromat.js"></script>
+<script src="scenes/home.js"></script>
+<script src="scenes/exterior.js"></script>
+<script src="scenes/map.js"></script>
+</head><body>
+<script>
+window.fontsReady = (async () => {
+  const fams = ['700 20px Fraunces', '400 20px Fraunces', 'italic 20px Fraunces', '20px Pacifico', '20px "Patrick Hand"', '700 20px Caveat', '400 20px Caveat'];
+  await Promise.all(fams.map(f => document.fonts.load(f)));
+  return true;
+})();
+window.render = async (name, variant, scale, fmt, q) => {
+  await window.fontsReady;
+  const p = window.Scenes[name](variant, scale);
+  return p.canvas.toDataURL(fmt || 'image/webp', q || 0.86);
+};
+</script>
+</body></html>

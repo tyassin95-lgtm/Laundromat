@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Signing: the repository ships a "sideload" keystore so every build of the game is
+// update-compatible with previously installed builds. For a store release, create your
+// own keystore and point keystore/sideload.properties (or a copy) at it.
+def keystorePropsFile = rootProject.file('keystore/sideload.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+
+android {
+    namespace 'com.thelastlaundromat.game'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.thelastlaundromat.game'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        sideload {
+            if (keystorePropsFile.exists()) {
+                storeFile rootProject.file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig keystorePropsFile.exists() ? signingConfigs.sideload : signingConfigs.debug
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+
+    // The whole HTML5 game lives in /web at the repository root and is packaged
+    // verbatim as the APK's assets. Edit the game there; no copy step is needed.
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', '../../web']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    androidResources {
+        // Media is already compressed; storing it raw lets the WebView stream it quickly.
+        noCompress += ['webp', 'png', 'jpg', 'ogg', 'mp3', 'm4a', 'woff2', 'ttf']
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

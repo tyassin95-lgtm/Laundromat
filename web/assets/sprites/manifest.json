@@ -1,0 +1,752 @@
+{
+ "decor_cat_planter": {
+  "w": 194,
+  "h": 301,
+  "sheet": "decor_wall.png"
+ },
+ "decor_chalkboard": {
+  "w": 220,
+  "h": 288,
+  "sheet": "decor_wall.png"
+ },
+ "decor_cork_board": {
+  "w": 246,
+  "h": 239,
+  "sheet": "decor_wall.png"
+ },
+ "decor_flower_vase": {
+  "w": 164,
+  "h": 274,
+  "sheet": "decor_wall.png"
+ },
+ "decor_hanging_plant": {
+  "w": 218,
+  "h": 342,
+  "sheet": "decor_wall.png"
+ },
+ "decor_hanging_sign": {
+  "w": 226,
+  "h": 237,
+  "sheet": "decor_wall.png"
+ },
+ "decor_kettle": {
+  "w": 208,
+  "h": 231,
+  "sheet": "decor_wall.png"
+ },
+ "decor_painting": {
+  "w": 226,
+  "h": 240,
+  "sheet": "decor_wall.png"
+ },
+ "decor_record_player": {
+  "w": 226,
+  "h": 252,
+  "sheet": "decor_wall.png"
+ },
+ "decor_rug": {
+  "w": 256,
+  "h": 191,
+  "sheet": "decor_wall.png"
+ },
+ "decor_string_lights": {
+  "w": 298,
+  "h": 180,
+  "sheet": "decor_wall.png"
+ },
+ "decor_wall_shelf": {
+  "w": 267,
+  "h": 220,
+  "sheet": "decor_wall.png"
+ },
+ "face_june_gentle": {
+  "w": 438,
+  "h": 615,
+  "sheet": "portrait_june.png"
+ },
+ "face_june_happy": {
+  "w": 447,
+  "h": 610,
+  "sheet": "portrait_june.png"
+ },
+ "face_june_neutral": {
+  "w": 454,
+  "h": 611,
+  "sheet": "portrait_june.png"
+ },
+ "face_june_sly": {
+  "w": 445,
+  "h": 610,
+  "sheet": "portrait_june.png"
+ },
+ "face_june_thinking": {
+  "w": 449,
+  "h": 612,
+  "sheet": "portrait_june.png"
+ },
+ "face_june_worried": {
+  "w": 454,
+  "h": 612,
+  "sheet": "portrait_june.png"
+ },
+ "face_maya_annoyed": {
+  "w": 458,
+  "h": 627,
+  "sheet": "portrait_maya.png"
+ },
+ "face_maya_content": {
+  "w": 455,
+  "h": 619,
+  "sheet": "portrait_maya.png"
+ },
+ "face_maya_laugh": {
+  "w": 464,
+  "h": 617,
+  "sheet": "portrait_maya.png"
+ },
+ "face_maya_neutral": {
+  "w": 472,
+  "h": 624,
+  "sheet": "portrait_maya.png"
+ },
+ "face_maya_sly": {
+  "w": 465,
+  "h": 621,
+  "sheet": "portrait_maya.png"
+ },
+ "face_maya_worried": {
+  "w": 470,
+  "h": 615,
+  "sheet": "portrait_maya.png"
+ },
+ "face_player_laugh": {
+  "w": 413,
+  "h": 465,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_neutral": {
+  "w": 407,
+  "h": 472,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_sad": {
+  "w": 416,
+  "h": 475,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_smug": {
+  "w": 424,
+  "h": 479,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_surprised": {
+  "w": 417,
+  "h": 465,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_thinking": {
+  "w": 390,
+  "h": 466,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_tired": {
+  "w": 431,
+  "h": 466,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_wink": {
+  "w": 419,
+  "h": 470,
+  "sheet": "portrait_player.png"
+ },
+ "face_player_worried": {
+  "w": 406,
+  "h": 468,
+  "sheet": "portrait_player.png"
+ },
+ "face_remy_excited": {
+  "w": 455,
+  "h": 674,
+  "sheet": "portrait_pink.png"
+ },
+ "face_remy_neutral": {
+  "w": 457,
+  "h": 688,
+  "sheet": "portrait_pink.png"
+ },
+ "face_remy_shy": {
+  "w": 449,
+  "h": 684,
+  "sheet": "portrait_pink.png"
+ },
+ "face_remy_skeptical": {
+  "w": 460,
+  "h": 689,
+  "sheet": "portrait_pink.png"
+ },
+ "face_remy_wink": {
+  "w": 459,
+  "h": 673,
+  "sheet": "portrait_pink.png"
+ },
+ "face_remy_worried": {
+  "w": 456,
+  "h": 686,
+  "sheet": "portrait_pink.png"
+ },
+ "face_walt_angry": {
+  "w": 434,
+  "h": 626,
+  "sheet": "portrait_walt.png"
+ },
+ "face_walt_content": {
+  "w": 437,
+  "h": 629,
+  "sheet": "portrait_walt.png"
+ },
+ "face_walt_laugh": {
+  "w": 450,
+  "h": 645,
+  "sheet": "portrait_walt.png"
+ },
+ "face_walt_neutral": {
+  "w": 438,
+  "h": 640,
+  "sheet": "portrait_walt.png"
+ },
+ "face_walt_sad": {
+  "w": 440,
+  "h": 617,
+  "sheet": "portrait_walt.png"
+ },
+ "face_walt_smile": {
+  "w": 449,
+  "h": 636,
+  "sheet": "portrait_walt.png"
+ },
+ "furn_bench": {
+  "w": 316,
+  "h": 290,
+  "sheet": "furniture.png"
+ },
+ "furn_bulletin_board": {
+  "w": 291,
+  "h": 272,
+  "sheet": "furniture.png"
+ },
+ "furn_coat_rack": {
+  "w": 140,
+  "h": 392,
+  "sheet": "furniture.png"
+ },
+ "furn_counter": {
+  "w": 311,
+  "h": 282,
+  "sheet": "furniture.png"
+ },
+ "furn_double_bench": {
+  "w": 344,
+  "h": 270,
+  "sheet": "furniture.png"
+ },
+ "furn_floor_lamp": {
+  "w": 178,
+  "h": 394,
+  "sheet": "furniture.png"
+ },
+ "furn_laundry_cart": {
+  "w": 277,
+  "h": 317,
+  "sheet": "furniture.png"
+ },
+ "furn_plastic_chair": {
+  "w": 203,
+  "h": 319,
+  "sheet": "furniture.png"
+ },
+ "furn_potted_plant": {
+  "w": 239,
+  "h": 308,
+  "sheet": "furniture.png"
+ },
+ "furn_stool": {
+  "w": 177,
+  "h": 302,
+  "sheet": "furniture.png"
+ },
+ "furn_tall_shelf": {
+  "w": 232,
+  "h": 365,
+  "sheet": "furniture.png"
+ },
+ "furn_work_table": {
+  "w": 325,
+  "h": 282,
+  "sheet": "furniture.png"
+ },
+ "icon_basket": {
+  "w": 155,
+  "h": 125,
+  "sheet": "ui_icons.png"
+ },
+ "icon_calendar": {
+  "w": 134,
+  "h": 137,
+  "sheet": "ui_icons.png"
+ },
+ "icon_clock": {
+  "w": 137,
+  "h": 140,
+  "sheet": "ui_icons.png"
+ },
+ "icon_coin": {
+  "w": 122,
+  "h": 124,
+  "sheet": "ui_icons.png"
+ },
+ "icon_detergent": {
+  "w": 106,
+  "h": 149,
+  "sheet": "ui_icons.png"
+ },
+ "icon_dryer": {
+  "w": 123,
+  "h": 148,
+  "sheet": "ui_icons.png"
+ },
+ "icon_gear": {
+  "w": 130,
+  "h": 132,
+  "sheet": "ui_icons.png"
+ },
+ "icon_heart": {
+  "w": 132,
+  "h": 116,
+  "sheet": "ui_icons.png"
+ },
+ "icon_home": {
+  "w": 138,
+  "h": 134,
+  "sheet": "ui_icons.png"
+ },
+ "icon_journal": {
+  "w": 124,
+  "h": 142,
+  "sheet": "ui_icons.png"
+ },
+ "icon_map": {
+  "w": 146,
+  "h": 126,
+  "sheet": "ui_icons.png"
+ },
+ "icon_speech": {
+  "w": 136,
+  "h": 125,
+  "sheet": "ui_icons.png"
+ },
+ "icon_star": {
+  "w": 122,
+  "h": 120,
+  "sheet": "ui_icons.png"
+ },
+ "icon_towels": {
+  "w": 145,
+  "h": 110,
+  "sheet": "ui_icons.png"
+ },
+ "icon_washer": {
+  "w": 125,
+  "h": 148,
+  "sheet": "ui_icons.png"
+ },
+ "icon_wrench": {
+  "w": 125,
+  "h": 132,
+  "sheet": "ui_icons.png"
+ },
+ "item_apron": {
+  "w": 109,
+  "h": 181,
+  "sheet": "items_laundry.png"
+ },
+ "item_camera": {
+  "w": 174,
+  "h": 141,
+  "sheet": "items_hobby.png"
+ },
+ "item_cat_bed": {
+  "w": 185,
+  "h": 158,
+  "sheet": "items_hobby.png"
+ },
+ "item_coffee_mug": {
+  "w": 122,
+  "h": 169,
+  "sheet": "items_laundry.png"
+ },
+ "item_coin_jar": {
+  "w": 110,
+  "h": 164,
+  "sheet": "items_laundry.png"
+ },
+ "item_coin_tray": {
+  "w": 177,
+  "h": 122,
+  "sheet": "items_laundry.png"
+ },
+ "item_detergent": {
+  "w": 111,
+  "h": 179,
+  "sheet": "items_laundry.png"
+ },
+ "item_drawstring_bag": {
+  "w": 142,
+  "h": 170,
+  "sheet": "items_laundry.png"
+ },
+ "item_hamper": {
+  "w": 146,
+  "h": 176,
+  "sheet": "items_laundry.png"
+ },
+ "item_iron": {
+  "w": 166,
+  "h": 143,
+  "sheet": "items_laundry.png"
+ },
+ "item_ironing_board": {
+  "w": 183,
+  "h": 167,
+  "sheet": "items_laundry.png"
+ },
+ "item_journal": {
+  "w": 187,
+  "h": 212,
+  "sheet": "items_hobby.png"
+ },
+ "item_lantern": {
+  "w": 112,
+  "h": 228,
+  "sheet": "items_hobby.png"
+ },
+ "item_novel": {
+  "w": 188,
+  "h": 168,
+  "sheet": "items_hobby.png"
+ },
+ "item_pencil_cup": {
+  "w": 115,
+  "h": 226,
+  "sheet": "items_hobby.png"
+ },
+ "item_picnic_basket": {
+  "w": 186,
+  "h": 206,
+  "sheet": "items_hobby.png"
+ },
+ "item_pothos": {
+  "w": 186,
+  "h": 233,
+  "sheet": "items_hobby.png"
+ },
+ "item_sketchbook": {
+  "w": 192,
+  "h": 198,
+  "sheet": "items_hobby.png"
+ },
+ "item_soap_box": {
+  "w": 125,
+  "h": 163,
+  "sheet": "items_laundry.png"
+ },
+ "item_sock": {
+  "w": 90,
+  "h": 111,
+  "sheet": "items_laundry.png"
+ },
+ "item_softener": {
+  "w": 103,
+  "h": 175,
+  "sheet": "items_laundry.png"
+ },
+ "item_spray_bottle": {
+  "w": 76,
+  "h": 176,
+  "sheet": "items_laundry.png"
+ },
+ "item_teacup": {
+  "w": 171,
+  "h": 151,
+  "sheet": "items_hobby.png"
+ },
+ "item_tote_bag": {
+  "w": 131,
+  "h": 180,
+  "sheet": "items_laundry.png"
+ },
+ "item_towels": {
+  "w": 155,
+  "h": 143,
+  "sheet": "items_laundry.png"
+ },
+ "item_vinyl": {
+  "w": 174,
+  "h": 171,
+  "sheet": "items_hobby.png"
+ },
+ "item_wicker_basket": {
+  "w": 168,
+  "h": 149,
+  "sheet": "items_laundry.png"
+ },
+ "item_yarn_basket": {
+  "w": 177,
+  "h": 212,
+  "sheet": "items_hobby.png"
+ },
+ "machine_stack_unit": {
+  "w": 293,
+  "h": 628,
+  "sheet": "machines.png"
+ },
+ "machine_washer_blue": {
+  "w": 371,
+  "h": 536,
+  "sheet": "machines.png"
+ },
+ "machine_washer_idle": {
+  "w": 353,
+  "h": 458,
+  "sheet": "machines.png"
+ },
+ "machine_washer_open": {
+  "w": 392,
+  "h": 455,
+  "sheet": "machines.png"
+ },
+ "machine_washer_orange": {
+  "w": 373,
+  "h": 556,
+  "sheet": "machines.png"
+ },
+ "machine_washer_running": {
+  "w": 353,
+  "h": 457,
+  "sheet": "machines.png"
+ },
+ "npc_june": {
+  "w": 191,
+  "h": 575,
+  "sheet": "derived"
+ },
+ "npc_maya": {
+  "w": 195,
+  "h": 576,
+  "sheet": "maya_full.png"
+ },
+ "npc_remy": {
+  "w": 188,
+  "h": 575,
+  "sheet": "derived"
+ },
+ "npc_walt": {
+  "w": 226,
+  "h": 569,
+  "sheet": "walt_full.png"
+ },
+ "player_carry": {
+  "w": 281,
+  "h": 454,
+  "sheet": "player_poses.png"
+ },
+ "player_fold": {
+  "w": 277,
+  "h": 449,
+  "sheet": "player_poses.png"
+ },
+ "player_fold_body": {
+  "w": 277,
+  "h": 449,
+  "sheet": "derived"
+ },
+ "player_idle": {
+  "w": 172,
+  "h": 490,
+  "sheet": "player_poses.png"
+ },
+ "player_idle_look": {
+  "w": 180,
+  "h": 489,
+  "sheet": "player_poses.png"
+ },
+ "player_load": {
+  "w": 281,
+  "h": 446,
+  "sheet": "player_poses.png"
+ },
+ "player_load_arms": {
+  "w": 281,
+  "h": 446,
+  "sheet": "derived"
+ },
+ "player_mop": {
+  "w": 300,
+  "h": 472,
+  "sheet": "player_poses.png"
+ },
+ "player_reach": {
+  "w": 244,
+  "h": 470,
+  "sheet": "player_poses.png"
+ },
+ "player_reach_clean": {
+  "w": 244,
+  "h": 470,
+  "sheet": "derived"
+ },
+ "player_sit": {
+  "w": 328,
+  "h": 421,
+  "sheet": "player_poses.png"
+ },
+ "player_stretch": {
+  "w": 195,
+  "h": 463,
+  "sheet": "player_poses.png"
+ },
+ "player_walk1": {
+  "w": 286,
+  "h": 484,
+  "sheet": "player_poses.png"
+ },
+ "player_walk2": {
+  "w": 272,
+  "h": 483,
+  "sheet": "player_poses.png"
+ },
+ "player_wave": {
+  "w": 193,
+  "h": 468,
+  "sheet": "player_poses.png"
+ },
+ "prop_bench": {
+  "w": 328,
+  "h": 421,
+  "sheet": "derived"
+ },
+ "prop_fold_table": {
+  "w": 277,
+  "h": 449,
+  "sheet": "derived"
+ },
+ "street_barrier": {
+  "w": 323,
+  "h": 331,
+  "sheet": "street.png"
+ },
+ "street_bicycle": {
+  "w": 382,
+  "h": 314,
+  "sheet": "street.png"
+ },
+ "street_billboard": {
+  "w": 326,
+  "h": 328,
+  "sheet": "street.png"
+ },
+ "street_brick_planter": {
+  "w": 364,
+  "h": 251,
+  "sheet": "street.png"
+ },
+ "street_bus_shelter": {
+  "w": 379,
+  "h": 337,
+  "sheet": "street.png"
+ },
+ "street_cafe_chair": {
+  "w": 230,
+  "h": 326,
+  "sheet": "street.png"
+ },
+ "street_cafe_table": {
+  "w": 286,
+  "h": 298,
+  "sheet": "street.png"
+ },
+ "street_flower_planter": {
+  "w": 352,
+  "h": 324,
+  "sheet": "street.png"
+ },
+ "street_garden_bed": {
+  "w": 338,
+  "h": 305,
+  "sheet": "street.png"
+ },
+ "street_lamp_post": {
+  "w": 93,
+  "h": 463,
+  "sheet": "street.png"
+ },
+ "street_mailbox": {
+  "w": 225,
+  "h": 334,
+  "sheet": "street.png"
+ },
+ "street_news_box": {
+  "w": 214,
+  "h": 356,
+  "sheet": "street.png"
+ },
+ "street_puddle": {
+  "w": 363,
+  "h": 212,
+  "sheet": "street.png"
+ },
+ "street_trash_can": {
+  "w": 189,
+  "h": 320,
+  "sheet": "street.png"
+ },
+ "street_tree_autumn": {
+  "w": 365,
+  "h": 485,
+  "sheet": "street.png"
+ },
+ "street_tree_green": {
+  "w": 355,
+  "h": 484,
+  "sheet": "street.png"
+ },
+ "ui_calendar": {
+  "w": 536,
+  "h": 405,
+  "sheet": "ui_panels.png"
+ },
+ "ui_notebook": {
+  "w": 592,
+  "h": 410,
+  "sheet": "ui_panels.png"
+ },
+ "ui_notice": {
+  "w": 538,
+  "h": 371,
+  "sheet": "ui_panels.png"
+ },
+ "ui_pill": {
+  "w": 531,
+  "h": 199,
+  "sheet": "ui_panels.png"
+ },
+ "ui_slots": {
+  "w": 572,
+  "h": 398,
+  "sheet": "ui_panels.png"
+ },
+ "ui_speech_panel": {
+  "w": 602,
+  "h": 291,
+  "sheet": "ui_panels.png"
+ }
+}
