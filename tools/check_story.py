@@ -74,6 +74,14 @@ for n, lines in lines_by_node.items():
             if who not in speakers:
                 problems.append(f'unknown speaker {who} at {os.path.basename(f)}:{i}')
 
+# every event trigger must be fired somewhere in the game code
+ev_src = open(os.path.join(DATA, 'events.js'), encoding='utf8').read()
+code = ''.join(open(f, encoding='utf8').read() for f in glob.glob(os.path.join(ROOT, 'web', 'js', '**', '*.js'), recursive=True) if not f.endswith('events.js'))
+fired = set(re.findall(r"trigger\(\s*'([a-z_]+)'", code))
+for on in sorted(set(re.findall(r"\bon:\s*'([a-z_]+)'", ev_src))):
+    if on not in fired:
+        problems.append(f"event trigger '{on}' is never fired by the game code")
+
 # command arguments must name things that exist
 def keys_of(file, table):
     t = open(os.path.join(DATA, file), encoding='utf8').read()
