@@ -9,6 +9,13 @@ becomes.
 
 A 2D life-sim and shop-management game for Android phones (landscape, touch).
 
+![Linden Street at night, in the rain: the title screen](docs/screenshots/title.jpg)
+
+| | |
+| --- | --- |
+| ![A shift in the laundromat](docs/screenshots/shift.jpg) | ![Meeting Remy outside the Corner Cup](docs/screenshots/dialogue.jpg) |
+| ![Rosa's flat at night](docs/screenshots/home_night.jpg) | ![Linden Park on a rainy evening](docs/screenshots/park.jpg) |
+
 - **Days in the shop.** Take in drop-off orders, then wash, dry, fold (a swipe mini-game) and
   shelve them before pickup time. Walk-in customers use the machines on their own and pay in
   coins. Fix breakdowns (a timing mini-game), mop puddles and clean lint traps. You can buy
@@ -49,6 +56,7 @@ it survives the WebView cache being cleared.
 | Repair a machine | Tap the glowing bolt, then tap again when the needle is in the green |
 | Put a load down to free your hands | Tap the counter |
 | Swap a finished load for the one you're holding | Tap the finished machine |
+| Close up early (after 4 PM) | 🏠 button during a shift |
 | Menu / settings / save & quit | ⚙ button, or the Android back button |
 
 The Journal (📓) holds friendships, your diary, collections and the ledger. The detergent
