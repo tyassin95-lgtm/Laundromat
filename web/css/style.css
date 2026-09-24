@@ -211,7 +211,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .pos { color: var(--good); } .neg { color: var(--bad); }
 
 /* notebook (journal / catalog) */
-.notebook { position: relative; width: min(86rem, 96vw, calc(94vh * 592 / 410)); aspect-ratio: 592 / 410;
+.notebook { position: relative; width: min(86rem, calc(100vw - 13rem), calc(94vh * 592 / 410)); aspect-ratio: 592 / 410;
   background: url('../assets/sprites/ui_notebook.webp') center/100% 100% no-repeat; filter: drop-shadow(0 .6rem 1.2rem rgba(0,0,0,.5)); }
 .notebook .page { position: absolute; top: 10.5%; bottom: 12.5%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 0 .4rem; }
 .notebook .page.l { left: 13%; right: 53.5%; }
@@ -304,7 +304,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 30%, rgba(0,0,0,.55) 100%),
     repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 .15rem, transparent .15rem 3.2rem),
     repeating-linear-gradient(0deg, #3b2a1d 0 .9rem, #362619 .9rem 1.4rem, #3f2d1f 1.4rem 2.6rem); }
-.map .sheet { position: relative; height: 100%; aspect-ratio: 16 / 9; max-width: 100%; background-size: 100% 100%; box-shadow: 0 0 1.6rem rgba(0,0,0,.7); }
+.map .sheet { position: relative; width: min(100%, calc(100vh * 16 / 9)); aspect-ratio: 16 / 9; background-size: 100% 100%; box-shadow: 0 0 1.6rem rgba(0,0,0,.7); }
 .map .pin { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; gap: .1rem; transition: transform .15s; }
 .map .pin:active { transform: translate(-50%, -100%) scale(.92); }
 .map .pin .bub { width: 4.4rem; height: 4.4rem; border-radius: 50%; background: #f6e7c8; border: .2rem solid var(--teal-d); display: flex; align-items: center; justify-content: center; box-shadow: 0 .25rem .6rem rgba(0,0,0,.45); position: relative; overflow: visible; }
