@@ -867,7 +867,7 @@ export class LaundromatScene extends Scene {
     const night = nightness(G.time);
     if (this.outside) {
       c.drawImage(this.outside, 0, 0, this.worldW, 720);
-      // lighting for the outdoor view is applied by the scene lightmap; add emissive windows at night
+      this.tintOutdoors(r);
       if (this.outsideLights && night > 0.05) { c.save(); c.globalAlpha = night; c.globalCompositeOperation = 'lighter'; c.drawImage(this.outsideLights, 0, 0, this.worldW, 720); c.restore(); }
     } else {
       const g = c.createLinearGradient(0, 0, 0, 480);

@@ -160,7 +160,9 @@ export class HomeScene extends Scene {
   drawOutsideGlow(r, night) {
     if (night < 0.05) return;
     const c = r.ctx;
-    c.save(); c.globalCompositeOperation = 'lighter';
+    c.save();
+    c.beginPath(); c.rect(WIN.x, WIN.y, WIN.w, WIN.h); c.clip();
+    c.globalCompositeOperation = 'lighter';
     for (const rf of this.roofs) if (rf.lit) { c.fillStyle = `rgba(255,200,120,${0.55 * night})`; c.fillRect(rf.x + 10, WIN.y + WIN.h - rf.h + 18, 12, 14); }
     if (G.weather === 'clear') { r.glow(WIN.x + 330, WIN.y + 60, 40, [230, 230, 255], 0.5 * night); c.fillStyle = `rgba(250,248,235,${night})`; c.beginPath(); c.arc(WIN.x + 330, WIN.y + 60, 14, 0, Math.PI * 2); c.fill(); }
     c.restore();
@@ -172,6 +174,8 @@ export class HomeScene extends Scene {
     r.clear('#1a1410');
     r.world();
     this.drawOutside(r);
+    this.tintOutdoors(r);
+    r.world();
     if (this.bg) c.drawImage(this.bg, 0, 0, this.worldW, 720);
     this.glass.draw(c);
     for (const { d } of this.sortedDrawables()) d.draw(r, this.t);

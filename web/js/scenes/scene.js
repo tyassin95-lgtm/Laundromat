@@ -8,7 +8,7 @@ export function ambientFor(time, weather, interior) {
   const h = time / 60;
   // keyframes: [hour, [r,g,b]]
   const ext = [[5, [70, 78, 120]], [6.5, [200, 170, 170]], [8, [250, 245, 235]], [16.5, [255, 250, 240]], [18.3, [255, 196, 150]], [19.5, [150, 120, 150]], [20.5, [72, 82, 128]], [24, [60, 70, 115]], [29, [70, 78, 120]]];
-  const inn = [[5, [140, 140, 175]], [7, [225, 215, 210]], [9, [255, 252, 245]], [16.5, [255, 250, 242]], [18.5, [238, 205, 175]], [20, [165, 160, 190]], [24, [140, 142, 180]], [29, [140, 140, 175]]];
+  const inn = [[5, [112, 112, 148]], [7, [225, 215, 210]], [9, [255, 252, 245]], [16.5, [255, 250, 242]], [18.5, [232, 200, 172]], [20, [150, 142, 172]], [21.5, [108, 108, 146]], [24, [98, 100, 138]], [29, [112, 112, 148]]];
   const keys = interior ? inn : ext;
   let hh = h < 5 ? h + 24 : h;
   let c = keys[keys.length - 1][1];
@@ -106,6 +106,18 @@ export class Scene {
   }
 
   ambient() { return ambientFor(G.time, G.weather, this.interior); }
+
+  // Darken whatever was drawn so far (the view out of the windows) to the outdoor light level.
+  tintOutdoors(r) {
+    const a = ambientFor(G.time, G.weather, false);
+    if (a[0] > 250 && a[1] > 250 && a[2] > 250) return;
+    const c = r.ctx;
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0);
+    c.globalCompositeOperation = 'multiply';
+    c.fillStyle = `rgb(${a[0] | 0},${a[1] | 0},${a[2] | 0})`;
+    c.fillRect(0, 0, r.canvas.width, r.canvas.height);
+    c.restore();
+  }
 
   update(dt) { this.t += dt; }
   draw() {}
