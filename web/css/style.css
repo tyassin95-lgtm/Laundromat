@@ -56,6 +56,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .paper { background: var(--paper); border-radius: .6rem; box-shadow: 0 .3rem 1rem rgba(0,0,0,.35); }
 .frame-speech { border-style: solid; border-width: 1.9rem 1.9rem 2.3rem 3.4rem;
   border-image: url('../assets/sprites/ui_speech_panel.webp') 60 60 72 110 fill / 1.9rem 1.9rem 2.3rem 3.4rem stretch; }
+.frame-speech.tail-r { border-width: 1.9rem 3.4rem 2.3rem 1.9rem;
+  border-image: url('../assets/sprites/ui_speech_panel_r.webp') 60 110 72 60 fill / 1.9rem 3.4rem 2.3rem 1.9rem stretch; }
+.frame-speech.no-tail { border-image-source: url('../assets/sprites/ui_speech_panel_n.webp'); }
 .frame-speech.flip { transform: scaleX(-1); }
 .frame-speech.flip > * { transform: scaleX(-1); }
 .frame-notice { border-style: solid; border-width: 3.3rem 2.4rem 2.4rem 2.4rem;
@@ -172,6 +175,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .dlg .name.right { left: auto; right: 2.5rem; }
 .dlg .name:empty { display: none; }
 .dlg .text { font-size: calc(1.55rem * var(--ts)); line-height: 1.32; min-height: 5.6rem; padding: .1rem .4rem 0 .2rem; color: var(--ink); }
+.dlg .box.tail-r .text { padding-left: 1.7rem; }
 .dlg .text.narration { font-style: italic; color: var(--ink-soft); text-align: center; font-family: 'Fraunces', serif; font-size: calc(1.3rem * var(--ts)); }
 .dlg .text .em { color: var(--rust); }
 .dlg .next { position: absolute; right: 1.2rem; bottom: .2rem; width: 1.4rem; height: 1.4rem; opacity: 0; transition: opacity .2s; }

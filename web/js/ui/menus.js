@@ -300,7 +300,7 @@ export class Menus {
     return new Promise(res => {
       const act = el('div', 'actions');
       let m;
-      act.appendChild(UI.button('Keep "' + G.shop + '"', () => { m.close(true); res(); }));
+      act.appendChild(UI.button('Keep "' + G.shop + '"', () => { res(); m.close(true); }));
       act.appendChild(UI.button('Hang it up', () => { const v = inp.value.trim(); if (v) G.shop = v; m.close(true); UI.toast(`"${G.shop}" — looks good.`, 'decor_hanging_sign'); res(); }, 'primary'));
       inner.appendChild(act); box.appendChild(inner);
       m = UI.modal(box, { close: false });
@@ -404,7 +404,7 @@ export class Menus {
           const it = ITEMS[k];
           const s = el('button', 'slot');
           s.innerHTML = `<img src="${S(it.sprite)}"><div>${it.name}</div><div class="q">×${n}</div>`;
-          s.addEventListener('click', e => { e.stopPropagation(); m.close(true); resolve(k); });
+          s.addEventListener('click', e => { e.stopPropagation(); resolve(k); m.close(true); });
           cells.appendChild(s);
         }
         pager.innerHTML = '';
@@ -570,6 +570,7 @@ export class Menus {
     UI.notice(`<h2>How to run a laundromat</h2>
       <p><b>Tap</b> anywhere on the floor to walk. <b>Tap things</b> to use them — you walk over and do it.</p>
       <p><b>Drop-offs:</b> bags appear on the counter. Carry one to a <b>washer</b>, then a <b>dryer</b>, then <b>fold</b> it at the folding table. It goes on the pickup shelf and the customer collects it at their pickup time. Gold arrows show where the laundry you're holding can go.</p>
+      <p><b>Hands full?</b> Tap a finished machine to swap loads, or tap the counter to set a bag down for later. Tap an order ticket to read its note.</p>
       <p><b>Walk-ins</b> use free washers on their own and pay coins. Keep a machine free for them.</p>
       <p><b>Chores:</b> mop puddles, clean dryer lint, fix broken machines (you'll need spare parts), and keep detergent stocked.</p>
       <p><b>Evenings</b> are yours: see friends, take photos, sketch, knit, explore. Talk to people every day and bring gifts they love.</p>

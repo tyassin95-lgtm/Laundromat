@@ -149,9 +149,13 @@ export const Dialogue = {
       nameEl.innerHTML = `<span>${escapeHtml(speakerName(who))}</span>`;
       nameEl.classList.toggle('right', side === 'right');
       textEl.classList.remove('narration');
+      box.classList.toggle('tail-r', side === 'right');
+      box.classList.remove('no-tail');
     } else {
       nameEl.innerHTML = '';
       textEl.classList.add('narration');
+      box.classList.remove('tail-r');
+      box.classList.add('no-tail');
       portraits.left.classList.add('dim'); portraits.right.classList.add('dim');
     }
     nextEl.classList.remove('show');

@@ -84,8 +84,8 @@ export const UI = {
       if (text) inner.appendChild(el('p', '', text));
       const act = el('div', 'actions');
       let m;
-      act.appendChild(UI.button(no, () => { m.close(true); resolve(false); }));
-      act.appendChild(UI.button(yes, () => { m.close(true); resolve(true); }, 'primary'));
+      act.appendChild(UI.button(no, () => { resolve(false); m.close(true); }));
+      act.appendChild(UI.button(yes, () => { resolve(true); m.close(true); }, 'primary'));
       inner.appendChild(act);
       box.appendChild(inner);
       m = UI.modal(box, { onClose: () => resolve(false), noBackdropClose: true });
@@ -101,7 +101,7 @@ export const UI = {
       const act = el('div', 'actions');
       let m;
       for (const b of opts.buttons || [{ label: opts.ok || 'OK', value: true, primary: true }]) {
-        act.appendChild(UI.button(b.label, () => { m.close(true); resolve(b.value); }, b.primary ? 'primary' : ''));
+        act.appendChild(UI.button(b.label, () => { resolve(b.value); m.close(true); }, b.primary ? 'primary' : ''));
       }
       inner.appendChild(act);
       box.appendChild(inner);

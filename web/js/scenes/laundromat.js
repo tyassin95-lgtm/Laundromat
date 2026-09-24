@@ -1183,8 +1183,11 @@ export class LaundromatScene extends Scene {
     if (o) {
       const step = L.nextStep(o);
       const hint = (x, y) => { c.save(); c.fillStyle = `rgba(232,176,78,${0.55 + 0.35 * Math.sin(t * 6)})`; c.beginPath(); c.moveTo(x - 12, y - 16); c.lineTo(x + 12, y - 16); c.lineTo(x, y); c.closePath(); c.fill(); c.strokeStyle = '#3a2a1e'; c.lineWidth = 1.5; c.stroke(); c.restore(); };
-      if (step === 'wash') for (const m of L.washers()) { if (L.isFree(m)) { const p = this.machineTop(m); hint(p.x, p.y - 8 + Math.sin(t * 5) * 4); } }
-      if (step === 'dry') for (const m of L.dryers()) { if (L.isFree(m)) { const p = this.machineTop(m); hint(p.x + 16, p.y + 4 + Math.sin(t * 5) * 4); } }
+      // free machines of the right kind, or (hands full) finished ones you can swap with
+      const full = !this.canCarryMore();
+      const ok = m => L.isFree(m) || (full && m.state === 'done' && m.load && m.load !== 'self' && !m.broken);
+      if (step === 'wash') for (const m of L.washers()) { if (ok(m)) { const p = this.machineTop(m); hint(p.x, p.y - 8 + Math.sin(t * 5) * 4); } }
+      if (step === 'dry') for (const m of L.dryers()) { if (ok(m)) { const p = this.machineTop(m); hint(p.x + 16, p.y + 4 + Math.sin(t * 5) * 4); } }
       if (step === 'fold') hint(FOLD.x, FOLD.base - 140 + Math.sin(t * 5) * 4);
       if (step === 'shelf') hint(SHELF.x, SHELF.base - SHELF.h - 10 + Math.sin(t * 5) * 4);
       // what the player is carrying

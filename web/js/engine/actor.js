@@ -52,11 +52,11 @@ export class Actor {
   stop() { this.target = null; this.moving = false; if (this.onArrive) { const f = this.onArrive; this.onArrive = null; f(false); } }
 
   setPose(p, secs) { this.pose = p; this.poseTimer = secs || 0; this.idleT = 0; }
-  say(emote, secs = 2.5) { this.emote = emote; this.emoteT = secs; }
+  say(emote, secs = 2.5) { if (this.emote !== emote) this.emoteAge = 0; this.emote = emote; this.emoteT = secs; }
 
   update(dt) {
     this.breath += dt;
-    if (this.emoteT > 0) { this.emoteT -= dt; if (this.emoteT <= 0) this.emote = null; }
+    if (this.emoteT > 0) { this.emoteT -= dt; this.emoteAge = (this.emoteAge || 0) + dt; if (this.emoteT <= 0) this.emote = null; }
     if (this.poseTimer > 0) { this.poseTimer -= dt; if (this.poseTimer <= 0) this.pose = 'idle'; }
     this.squash *= Math.pow(0.001, dt);
     if (this.target) {
@@ -142,7 +142,7 @@ export class Actor {
     const bub = Assets.img('icon_speech');
     const s = 46 * clamp(this.charScale * 1.2, 0.7, 1);
     c.save();
-    const pop = clamp((2.5 - this.emoteT) * 6, 0, 1);
+    const pop = clamp((this.emoteAge || 0) * 6, 0, 1);
     c.translate(x, y); c.scale(pop, pop);
     if (bub) c.drawImage(bub, -s / 2, -s, s, s * bub.naturalHeight / bub.naturalWidth);
     const icons = { heart: 'icon_heart', star: 'icon_star', coin: 'icon_coin', wrench: 'icon_wrench', clock: 'icon_clock', washer: 'icon_washer', basket: 'icon_basket' };

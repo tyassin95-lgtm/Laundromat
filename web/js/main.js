@@ -195,8 +195,8 @@ class App {
       const w = el('div'); w.style.textAlign = 'center'; w.appendChild(inp); inner.appendChild(w);
       const act = el('div', 'actions');
       let m;
-      act.appendChild(UI.button('Back', () => { m.close(true); res(null); }));
-      act.appendChild(UI.button('Begin', () => { const v = inp.value.trim().replace(/[<>{}*]/g, '') || 'Nora'; m.close(true); res(v); }, 'primary'));
+      act.appendChild(UI.button('Back', () => { res(null); m.close(true); }));
+      act.appendChild(UI.button('Begin', () => { const v = inp.value.trim().replace(/[<>{}*]/g, '') || 'Nora'; res(v); m.close(true); }, 'primary'));
       inner.appendChild(act); box.appendChild(inner);
       m = UI.modal(box, { close: false });
       setTimeout(() => { try { inp.focus(); inp.select(); } catch (e) { /* noop */ } }, 300);

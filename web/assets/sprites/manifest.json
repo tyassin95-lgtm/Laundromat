@@ -748,5 +748,17 @@
   "w": 602,
   "h": 291,
   "sheet": "ui_panels.png"
+ },
+ "ui_speech_panel_r": {
+  "w": 602,
+  "h": 291,
+  "sheet": "ui_panels.png",
+  "derived": true
+ },
+ "ui_speech_panel_n": {
+  "w": 602,
+  "h": 291,
+  "sheet": "ui_panels.png",
+  "derived": true
  }
 }
