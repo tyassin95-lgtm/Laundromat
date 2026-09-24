@@ -17,8 +17,6 @@ me.sad: Oh, you guys.
 
 === prices_reaction
 <<flag prices_reacted>>
-<<if var.none>>
-<<endif>>
 me.thinking: New prices on the board. People will notice.
 
 === first_sock
