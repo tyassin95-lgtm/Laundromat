@@ -94,13 +94,15 @@ me.thinking: People keep coming in out of the storm. It's getting late.
   <<rel walt 10>>
   <<rel maya 10>>
   <<rel remy 10>>
-: Around two in the morning, the power hums back on. Every machine in the shop beeps at once, and everybody cheers.
+: Just before midnight, the power hums back on. Every machine in the shop beeps at once, and everybody cheers.
+<<time 23:40>>
 <<power on>>
 <<sfx machine_done>>
 <<call dismiss>>
 <<resume_music>>
 <<weather rain>>
 <<diary "The storm took the power. The neighbourhood came to the laundromat anyway. Best night since I got here.">>
+<<goal "It's late. Go up to bed (back door).">>
 
 === grant_visit
 <<sfx shop_bell>>
