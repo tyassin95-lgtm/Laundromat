@@ -2,7 +2,7 @@
 import { Save } from './save.js';
 import { Sound } from '../engine/audio.js';
 
-const DEFAULTS = { music: 0.7, sfx: 0.9, amb: 0.8, voices: true, voiceVol: 0.6, textSpeed: 'normal', textSize: 1, vibrate: true, quality: 1, fastMachines: false };
+const DEFAULTS = { music: 0.7, sfx: 0.9, amb: 0.8, voices: true, voiceVol: 0.6, textSpeed: 'normal', textSize: 1, vibrate: true, quality: 1, pace: 'normal' };
 let s = Object.assign({}, DEFAULTS);
 
 export const Settings = {
