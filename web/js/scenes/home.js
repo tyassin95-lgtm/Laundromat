@@ -36,6 +36,10 @@ export class HomeScene extends Scene {
     this.updateSound();
     this.app.hud.setMode('home');
     this.app.day.sceneMusic();
+    // the after-work goal ("…or go upstairs to rest") no longer fits once you are upstairs
+    if ((G.phase === 'evening' || G.phase === 'night') && /upstairs/.test(G.goal || '') && !/back door/.test(G.goal || '')) {
+      this.app.hud.setGoal('A quiet evening at home. Sketch, knit, read by the window, or sleep when you\'re ready.');
+    }
   }
 
   updateSound() {
