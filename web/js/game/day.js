@@ -207,17 +207,15 @@ export class DayFlow {
   }
 
   billsFor(day) {
-    const wk = weekOf(day);
     const cycles = G.vars.weekCycles || 0;
     const items = [
-      ['Rosa\'s loan payment', 150],
-      ['Water & gas', 55 + Math.round(cycles * 0.7)],
-      ['Electric', 35 + Math.round(cycles * 0.4)],
+      ['Rosa\'s loan payment', 175],
+      ['Water & gas', 55 + Math.round(cycles * 0.8)],
+      ['Electric', 35 + Math.round(cycles * 0.45)],
       ['Insurance', 25],
     ];
     if (G.flags.tax_reassessed) items.push(['Property tax (reassessed)', 75]);
     if (G.flags.poster_deal) items.push(['Crestline window ad', -120]);
-    if (wk >= 5) items[0][1] = 150;
     return items;
   }
 
