@@ -123,7 +123,7 @@ engine is the same one the Android WebView uses.
 Static checks you can run any time (no browser needed):
 
 ```sh
-python3 tools/check_story.py    # every script node referenced exists; every <<command>> is known
+python3 tools/check_story.py    # nodes exist; commands, their arguments and {placeholders} are valid
 node tools/check_exprs.mjs      # every story condition compiles
 node tools/check_assets.mjs     # every sprite, background and sound named in code exists
 ```

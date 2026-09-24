@@ -74,6 +74,31 @@ for n, lines in lines_by_node.items():
             if who not in speakers:
                 problems.append(f'unknown speaker {who} at {os.path.basename(f)}:{i}')
 
+# command arguments must name things that exist
+def keys_of(file, table):
+    t = open(os.path.join(DATA, file), encoding='utf8').read()
+    start = t.index('export const ' + table)
+    body = t[start:t.index('\n};', start)]
+    return set(re.findall(r'^\s{2}(\w+)\s*(?::|\()', body, re.M))
+tables = {
+    'give': keys_of('items.js', 'ITEMS'), 'take': keys_of('items.js', 'ITEMS'),
+    'letter': keys_of('letters.js', 'LETTERS'), 'decor': keys_of('decor.js', 'DECOR'),
+    'upgrade': keys_of('decor.js', 'UPGRADES'), 'record': keys_of('items.js', 'RECORDS'),
+    'call': keys_of('calls.js', 'CALLS'),
+}
+people = {'walt', 'maya', 'june', 'remy'}
+for n, lines in lines_by_node.items():
+    for f, i, line in lines:
+        for cmd, arg in re.findall(r'<<\s*([a-z_]+)\s+([\w.-]+)', line):
+            where = f'{os.path.basename(f)}:{i}'
+            if cmd in tables and arg not in tables[cmd]:
+                problems.append(f'<<{cmd} {arg}>> names something that does not exist ({where})')
+            if cmd in ('visit', 'leave', 'pin', 'stay', 'await_arrival', 'rel') and arg not in people:
+                problems.append(f'<<{cmd} {arg}>>: unknown person ({where})')
+        m = re.search(r'<<place\s+(\w+)\s+(\w+)', line)
+        if m and m.group(2) not in tables['decor']:
+            problems.append(f'<<place>> unknown decor {m.group(2)} ({os.path.basename(f)}:{i})')
+
 # text placeholders the dialogue formatter understands (ui/dialogue.js formatText)
 fmt = open(os.path.join(ROOT, 'web', 'js', 'ui', 'dialogue.js'), encoding='utf8').read()
 known_ph = set(re.findall(r"\\\{(\w+)\\\}", fmt)) | {'var'}
