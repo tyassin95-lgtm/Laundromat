@@ -324,6 +324,8 @@ export class LaundromatScene extends Scene {
         if (m.state !== 'done') return;
         const swapping = !!swapIn && !this.canCarryMore() && this.carry.includes(swapIn.id);
         if (!swapping && !this.canCarryMore()) return;
+        // an earlier queued job may have used the last detergent: don't unload into a dead end
+        if (swapping && kind === 'washer' && (G.inv.detergent || 0) < L.modelOf(m).soap) { this.askDetergent(); return; }
         await this.machineAction(m, spot.pose, swapping ? 0.9 : 0.55);
         const id = L.unload(m);
         const o = L.order(id);
