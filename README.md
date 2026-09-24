@@ -134,9 +134,10 @@ Headless test tools (they need Node and Playwright with Chromium):
   taps and skipping dialogue.
 - `tools/test/bot.mjs` plays a shop shift through the game's own actions, including the
   fold and repair mini-games.
-- `node tools/test/campaign.mjs [--days N] [--sell] [--speed K] [--instant-text]` plays the
-  campaign day by day: shifts, evenings out, talking and gifting. It prints daily stats, the
-  ending reached, and any console errors. It expects the game served at
+- `node tools/test/campaign.mjs [--days N] [--sell] [--speed K] [--instant-text] [--resume snap.json]`
+  plays the campaign day by day: shifts, evenings out, talking and gifting. It prints daily
+  stats, the ending reached, and any console errors, and saves a `snap_dayN.json` save snapshot
+  each morning that `--resume` can continue from. It expects the game served at
   `http://127.0.0.1:8765/` (or set `GAME_URL`, keeping `?debug` on it); screenshots go to
   `SHOT_DIR`.
 

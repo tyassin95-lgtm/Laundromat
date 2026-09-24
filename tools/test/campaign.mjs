@@ -1,6 +1,8 @@
 // Full-campaign playthrough: plays every day of the story with the shift bot, spends evenings
 // visiting places (story events first), talks to and gifts friends, sleeps, and reports the ending.
 // Usage: SHOT_DIR=/tmp/shots node tools/test/campaign.mjs [--sell] [--days N] [--speed K]
+import fs from 'fs';
+import path from 'path';
 import { launch, shot, wait, clickText, skipDialogue, state } from './shot.mjs';
 import { playShift, setChooser } from './bot.mjs';
 
@@ -8,6 +10,8 @@ const args = process.argv.slice(2);
 const SELL = args.includes('--sell');
 const MAXD = +(args[args.indexOf('--days') + 1] || 0) || 28;
 const SPEED = +(args[args.indexOf('--speed') + 1] || 0) || 3;
+const RESUME = args.includes('--resume') ? args[args.indexOf('--resume') + 1] : null;   // a snap_dayN.json
+const SNAPS = process.env.SHOT_DIR || '/tmp/shots';
 
 const PREFER = [SELL ? /^Sell\./ : /^Keep it/, /^Decline politely/, /Don't\. They don't/, /Keep the doors open/, /Meet here/, /^Of course/, /We could fight/,
   /^Stay\. We need/, /cover the paint/, /neighbours/, /Get out of my/, /Go down and see/, /Come on in/];
@@ -93,20 +97,28 @@ async function morningHobby(page, day) {
   await wait(3500 / SPEED + 800); await skip(page);
 }
 
-const { browser, page, logs } = await launch();
+const { browser, page, logs } = await launch(RESUME ? { storage: RESUME } : {});
 page.setDefaultTimeout(8000);
 await wait(1200);
-await clickText(page, 'New game');
-await wait(500);
-await clickText(page, 'Begin');
-await wait(1200);
+if (RESUME) {
+  await clickText(page, 'Continue');
+  await wait(2500);
+} else {
+  await clickText(page, 'New game');
+  await wait(500);
+  await clickText(page, 'Begin');
+  await wait(1200);
+}
 await skip(page, 400);
 await page.evaluate(k => window.__game.speed(k), SPEED);
 if (args.includes('--instant-text')) await page.evaluate(async () => { const { Settings } = await import('./js/game/settings.js'); Settings.set('textSpeed', 'instant'); });
 const report = [];
 const V = process.env.VERBOSE;
 const log = (...a) => { if (V) console.log(new Date().toISOString().slice(11, 19), ...a); };
-for (let d = 1; d <= MAXD; d++) {
+const firstDay = await page.evaluate(() => window.__game.G.day);
+for (let d = firstDay; d <= MAXD; d++) {
+  // snapshot the save each morning so a late failure can be resumed with --resume
+  try { fs.writeFileSync(path.join(SNAPS, `snap_day${d}.json`), await page.evaluate(() => JSON.stringify(localStorage))); } catch (e) { /* ignore */ }
   log('morning', d, JSON.stringify(await state(page)));
   const st0 = await state(page);
   if (st0.day !== d) { console.log('!! expected day', d, 'got', st0.day); }
