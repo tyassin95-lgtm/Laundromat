@@ -47,8 +47,19 @@ export const UI = {
       x.classList.add('close');
       x.innerHTML = '<span style="font-size:2rem;line-height:1;color:#3a2a1e">✕</span>';
       wrap.appendChild(x);
-      if (!opts.noBackdropClose) wrap.addEventListener('click', e => { if (e.target === wrap) api.close(); });
     }
+    // Only clicks whose press started inside this modal count. A tap on the game canvas opens
+    // things on pointerup, and on touch screens the browser then sends that tap's click to
+    // whatever is under the finger — by then, this modal: it would close the modal (or press a
+    // button) the moment it appeared. Keyboard clicks (detail 0) have no press and are fine.
+    let pressed = null;
+    wrap.addEventListener('pointerdown', e => { pressed = e.target; }, true);
+    wrap.addEventListener('click', e => {
+      const from = pressed;
+      pressed = null;
+      if (from === null && e.detail !== 0) { e.stopPropagation(); e.preventDefault(); return; }
+      if (e.target === wrap && from === wrap && opts.close !== false && !opts.noBackdropClose) api.close();
+    }, true);
     root().appendChild(wrap);
     stack.push(api);
     Sound.play(opts.sound || 'open', { vol: 0.5 });
