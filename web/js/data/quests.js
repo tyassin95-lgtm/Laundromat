@@ -72,17 +72,17 @@ export const QUESTS = {
   },
   priya_care: {
     title: 'Care package', giver: 'priya', icon: 'item_coffee_mug',
-    blurb: 'Priya\'s night crew runs on vending-machine crackers and spite.',
+    blurb: 'Priya\'s night crew at the bakery runs on day-old croissants and spite.',
     minDay: 5, offer: 'hearts.priya >= 1',
     steps: [
       { text: 'Give Priya a Corner Cup coffee', done: 'gave("priya", "coffee", "priya_care")' },
       { text: 'Give Priya tea for the ones going home', done: 'gave("priya", "tea", "priya_care")' },
     ],
-    reward: { text: 'Priya\'s ER crew start bringing their scrubs: an extra drop-off on Tuesdays and Thursdays. +reputation', rep: 3, hearts: 40, flag: 'er_scrubs' },
+    reward: { text: 'The bakery crew start bringing their aprons: an extra drop-off on Tuesdays and Thursdays. +reputation', rep: 3, hearts: 40, flag: 'er_scrubs' },
   },
   haddad_lavender: {
     title: 'Lavender, always', giver: 'haddad', icon: 'item_softener',
-    blurb: 'Forty-five years of lavender sheets. Mrs. Haddad is not starting on "fresh linen scent" now.',
+    blurb: 'Forty-five years of lavender sheets. Sami\'s grandmother is not starting on "fresh linen scent" now.',
     offer: 'hearts.haddad >= 1',
     steps: [
       { text: 'Stock ten loads of lavender softener (Supplies)', done: 'item.softener >= 10' },

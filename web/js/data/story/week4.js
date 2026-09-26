@@ -98,7 +98,7 @@ remy.worried: Paint's expensive, though. Like, eighty bucks of expensive.
 <<diary "Remy's painting a new mural on the old factory fence. I'm apparently in it. Folding. Badly.">>
 
 === tenants_meeting_2
-: The Thursday meeting overflows onto the sidewalk. The Nguyens came back. Priya brought nurses from the hospital. Coach Dee brought the whole team.
+: The Thursday meeting overflows onto the sidewalk. The Nguyens came back. Priya brought the whole bakery night shift, and bread. Coach Dee brought the whole team.
 june.happy: Sixty-two people, dear. Sixty-two.
 <<petition 25>>
 <<community 6>>
@@ -136,12 +136,12 @@ delgado.neutral: Luis Delgado. Delgado's Market, thirty-one years, until the ren
 delgado.sad: When my father died, a woman at the laundromat washed the tablecloths for his wake and wouldn't take a cent. Let her granddaughter keep the lights on.
 <<endif>>
 <<if flag.speaks_priya>>
-priya.neutral: Priya Raman, ER nurse at St. Anne's, nine years on nights.
-priya.neutral: At three in the morning there are two places on Linden Street with the lights on. My emergency room, and Rosa's. You're voting on one of them.
+priya.smile: Priya Raman. I bake the bread at Ferrante's, nine years on the two a.m. shift.
+priya.sad: At three in the morning there are two places on Linden Street with the lights on. My ovens, and Rosa's. You're voting on one of them.
 <<endif>>
 <<if flag.speaks_haddad>>
-haddad.neutral: Fatima Haddad. Alder Arms, apartment 3C, forty-six years. I raised four children there, and they raised seven more.
-haddad.worried: Your plan has a "laundry concierge." I don't want a concierge. I want Rosa's, where they know I like lavender.
+haddad.smile: Sami Haddad. I'm reading this for my grandmother, Fatima Haddad, who is sitting right there and can't do stairs. Alder Arms, apartment 3C, forty-six years. She raised four children there, and they raised seven more.
+haddad.worried: She says: your plan has a "laundry concierge." She doesn't want a concierge. She wants Rosa's, where they know she likes lavender.
 <<endif>>
 <<if flag.speaks_kai>>
 kai.neutral: Kai. I deliver packages, including to Crestline's sales office, where there's a model of our street with a tiny espresso bar inside Rosa's.

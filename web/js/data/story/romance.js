@@ -227,9 +227,9 @@ kai.worried: It has one row. The row says "I really, really like you." It's not 
 
 // ================================================================== Priya
 === rom_priya_spark
-: Priya's scrubs come back folded like a present, with a mint on top. She stands at the counter longer than usual, just looking at them.
-priya.neutral: Do you know nobody's taken care of me in about six years?
-priya.tired: I take care of people for a living. Twelve hours a night. And then I come here, and somebody puts a mint on my scrubs.
+: Priya's aprons come back folded like a present, with a mint on top. She stands at the counter longer than usual, just looking at them.
+priya.thinking: Do you know nobody's taken care of me in about six years?
+priya.tired: I feed people for a living. Nine hours a night, eight hundred rolls. And then I come here, and somebody puts a mint on my aprons.
 priya.smile: It's ridiculous. It's the best part of my week.
 * Then let me be the best part of your week on purpose.
   priya.laugh: Oh, that's a line. That's a real line. Did you practise that?
@@ -254,7 +254,7 @@ priya.smile: Or — the community garden, tomorrow evening. It's the only quiet 
   -> rom_priya_date
   <<endif>>
 * Sleep. You need it more than a date.
-  priya.neutral: Correct, medically. Rude, romantically. Ask me again when I'm human.
+  priya.sly: Correct, technically. Rude, romantically. Ask me again when I'm human.
   <<romance priya later>>
 
 === rom_priya_date
@@ -263,13 +263,13 @@ priya.smile: Or — the community garden, tomorrow evening. It's the only quiet 
 priya.smile: You found me. Sit. There's a second crate. It's a very exclusive venue.
 <<pose me tea 3>>
 : You pour tea from Rosa's old thermos. The garden smells of wet earth and marigolds. Somewhere, a radio is playing the ball game.
-priya.neutral: At work everything's urgent. Every beep, every door. Here nothing is. The tomatoes don't care if I'm late.
+priya.content: At work everything's a timer. Every beep, every oven. Here nothing is. The tomatoes don't care if I'm late.
 * Then stay late. As late as you want.
-  priya.smile: Careful. I'm a night nurse. "Late" means sunrise.
+  priya.sly: Careful. I'm a night baker. "Late" means sunrise.
   <<rel priya 20>>
-* What made you want to be a nurse?
-  priya.neutral: My grandmother. She had a nurse called Theresa who sang to her. I decided I wanted to be a Theresa.
-  priya.smile: I don't sing. But I'm very good at finding veins.
+* What made you want to be a baker?
+  priya.content: My grandmother. She made jalebi every Diwali and let me do the swirls. I decided I wanted to smell like that forever.
+  priya.laugh: Mine never come out as round as hers. But I make a very good cardamom bun.
   <<rel priya 20>>
 : The streetlights come on one by one beyond the fence. Priya falls asleep on your shoulder at 8:47, and you let her.
 <<time +120>>
@@ -278,7 +278,7 @@ priya.neutral: At work everything's urgent. Every beep, every door. Here nothing
 
 === rom_priya_missed
 priya.tired: I sat in the garden for an hour. A squirrel judged me.
-priya.neutral: I'm not angry. I'm a nurse — emergencies happen. Just tell me. People not showing up is my whole job. I don't want it to be my evenings too.
+priya.thinking: I'm not angry. Things come up. Just tell me. People not picking up their bread orders is my whole job. I don't want it to be my evenings too.
 <<rel priya -12>>
 <<romance priya missed>>
 

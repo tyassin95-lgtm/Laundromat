@@ -1,19 +1,20 @@
 // The neighbours: regulars who come in with their laundry and stay to talk.
-// Luis Delgado (the market across the street), Priya Raman (ER nurse, nights),
-// Mrs. Fatima Haddad (Alder Arms, 3C) and Kai (bike courier, sock investigator).
+// Luis Delgado (the market across the street, his father's store), Priya Raman (night baker at
+// Ferrante's), Sami Haddad (brings his grandmother's laundry down from Alder Arms 3C) and Kai
+// (bike courier, sock investigator).
 // Story moments play when they come in (events.js, on: 'arrive'); otherwise a chat from their
 // pool in chatter.js. Gift reactions are used once they have in-world art.
 export default `
 // ------------------------------------------------------------------ Luis Delgado
 === delgado_intro
 <<flag met_delgado>>
-: The bell. A broad man in a green shop apron backs through the door, a hamper of folded tablecloths on his hip.
+: The bell. A broad, bearded man in a knit cap and a canvas work jacket backs through the door, a hamper of folded tablecloths on his hip.
 delgado.smile: So it's true. Rosa's granddaughter. Mija, you have her chin. The stubborn part.
 me.laugh: I'll take that as a compliment.
-delgado.laugh: It is one! Luis Delgado. Delgado's Market, right across the street. Thirty-one years.
-delgado.neutral: Store aprons and the good tablecloths. Rosa did them every week. She paid me in gossip and I paid her in limes.
+delgado.laugh: It is one! Luis Delgado. Delgado's Market, right across the street. My father opened it thirty-one years ago. I grew up behind that counter.
+delgado.neutral: Store aprons and the good tablecloths. Rosa did them every week since before I could see over the counter. She paid us in gossip and we paid her in limes.
 * I'll keep the gossip coming.
-  delgado.laugh: Good! Mrs. Haddad knows everything on this street, but she doesn't share.
+  delgado.laugh: Good! Mrs. Haddad upstairs knows everything on this street, but she only tells her grandson.
   <<rel delgado 25>>
 * Limes sound like a fair currency.
   delgado.smile: The fairest. Come by the store. The first bag is on me.
@@ -24,9 +25,9 @@ delgado.neutral: Store aprons and the good tablecloths. Rosa did them every week
 <<flag delgado_rent>>
 : Luis sets his hamper on the counter and doesn't let go of it right away.
 delgado.sad: New landlord, new lease. Five thousand a month, mija. For a corner store. For limes.
-delgado.neutral: My father opened that store with one fridge and a radio. I always said, Luis, you close when you're ready. Turns out a company decides when you're ready.
+delgado.neutral: My father opened that store with one fridge and a radio. He always said, Luis, you close when you're ready. Turns out a company decides when you're ready.
 * That's robbery. Can anyone do anything?
-  delgado.sad: June says fight. My wife says rest. My knees say rest, louder.
+  delgado.sad: June says fight. My wife says find a job with weekends. My back says both, louder.
   <<rel delgado 25>>
 * I'm scared the same thing is coming for Rosa's.
   delgado.neutral: It is. Don't let them tell you it isn't. They smile while they measure.
@@ -73,7 +74,7 @@ delgado.neutral: Rosa and I had a deal. Anybody who couldn't pay for a wash, she
 delgado.smile: Thirty years, never once did either of us say it out loud.
 
 === delgado_c3
-delgado.neutral: Advice from an old grocer, mija. Never trust a man who irons his jeans. Or a tomato in January.
+delgado.neutral: Advice from a grocer's son, mija. Never trust a man who irons his jeans. Or a tomato in January.
 
 === delgado_c4
 delgado.laugh: I sold the old cash register to a man from a movie studio. It's going to be in a film about the eighties. So am I, apparently. "Background grocer."
@@ -101,24 +102,24 @@ delgado.neutral: Ah. Well. Marisol will know what to do with it. She always does
 // ------------------------------------------------------------------ Priya Raman
 === priya_intro
 <<flag met_priya>>
-: The door bangs open. A woman in teal scrubs and an enormous yellow cardigan drops a tote bag on the counter like it owes her money.
-priya.tired: Scrubs. Rush, if the universe allows. I've been awake since yesterday.
+: The door bangs open. A young woman in a flour-dusted denim apron drops a tote bag on the counter like it owes her money.
+priya.tired: Aprons. Rush, if the universe allows. I've been up since two.
 me.surprised: ...Good morning?
-priya.neutral: Is it? I'll take your word for it. Priya. ER, nights, St. Anne's. You're Rosa's granddaughter.
-priya.smile: She used to fold my scrubs like little presents. Put a mint on top. I'd find it at four in the morning and nearly cry into the vending machine.
+priya.smile: Is it? I'll take your word for it. Priya. I bake the bread at Ferrante's, on Alder. Two in the morning till eleven. You're Rosa's granddaughter.
+priya.content: She used to fold my aprons like little presents. Put a mint on top. I'd find it at four in the morning, elbow-deep in dough, and nearly cry into the proofing drawer.
 * I'll find you a mint.
-  priya.smile: Careful. Don't make promises to a nurse. We remember everything.
+  priya.sly: Careful. Don't make promises to a baker. We remember everything, and we hold grudges in butter.
   <<rel priya 25>>
 * Rush it is. Go get some sleep.
   priya.laugh: Sleep. Ha. Cute.
   <<rel priya 20>>
-<<diary "Priya, ER nurse on nights, wants her scrubs folded like presents. With a mint on top. Rosa did it for years.">>
+<<diary "Priya bakes the bread at Ferrante's from two in the morning. She wants her aprons folded like presents, with a mint on top. Rosa did it for years.">>
 
 === priya_bench
 <<flag priya_bench>>
 : Priya drops off her bag, sits on the bench "for one second," and is asleep before the second is over.
 : A walk-in eyes the bench. Two kids with soccer bags peer at her like she's a museum exhibit.
-* Let her sleep. Hang a sign: QUIET PLEASE, HERO AT REST.
+* Let her sleep. Hang a sign: QUIET PLEASE, BAKER AT REST.
   : The kids tiptoe. The walk-in folds in total silence. For forty minutes, Rosa's is the quietest room on Linden Street.
   priya.tired: ...Did you put a sign on me? You put a sign on me.
   priya.laugh: Nobody's done anything that nice for me since my grandmother. Don't tell anyone.
@@ -134,142 +135,141 @@ priya.smile: She used to fold my scrubs like little presents. Put a mint on top.
 
 === priya_rosa_night
 <<flag priya_rosa_night>>
-priya.neutral: Can I tell you something weird? Rosa's is the only place I've ever cried in public.
-priya.tired: Three in the morning. I lost a kid on my shift. Seven years old. I couldn't go home, so I came here. Rosa was still open.
-priya.neutral: She didn't ask anything. Put the kettle on, folded my scrubs, and let me sit in the chair by the window until the sun came up.
+priya.smile: Can I tell you something weird? Rosa's is the only place I've ever cried in public.
+priya.sad: My dad died on a Tuesday. I went to work anyway, because the bread doesn't care. Three in the morning, I just... couldn't. I walked out, and Rosa was still open.
+priya.content: She didn't ask anything. Put the kettle on, folded my apron, and let me sit in the chair by the window until the sun came up. Then she sent me back with a thermos.
 * That's what she kept the lights on for.
   priya.smile: Yeah. I know. That's why I'm going to be a massive pain in Crestline's neck.
   <<rel priya 40>>
 * I'm so sorry, Priya.
-  priya.neutral: Don't be sorry. Just be open at three in the morning sometimes. That's all anybody needs.
+  priya.smile: Don't be sorry. Just be open at three in the morning sometimes. That's all anybody needs.
   <<rel priya 35>>
-<<diary "Priya told me about the night she lost a patient and came here, and Rosa let her sit by the window until sunrise.">>
+<<diary "Priya told me about the night after her dad died, when she walked out of the bakery and Rosa let her sit by the window until sunrise.">>
 
 === priya_petition
 <<flag priya_petition>>
-priya.neutral: I hear there's a petition. Give me a clipboard.
-: She takes three. Then a fourth, "for the pediatric floor. They're competitive."
-priya.smile: Nurses sign things. We also bring snacks, and we've seen far worse than a city council.
+priya.smile: I hear there's a petition. Give me a clipboard.
+: She takes three. Then a fourth, "for the six a.m. regulars at the bakery. They're competitive."
+priya.sly: Bakers sign things. We also bring snacks, and half this street eats our bread before they're awake.
 <<petition 30>>
 <<rel priya 30>>
 <<flag nurses_signed>>
 
 === priya_c1
-priya.tired: Full moon tonight, and a Friday. Pray for me.
+priya.tired: Full moon tonight, and a Friday. Somehow that means everybody wants croissants at six. Pray for me.
 
 === priya_c2
-priya.neutral: I drink coffee to stay awake so I can finish my shift so I can go home and not sleep. The system works.
+priya.smile: I drink coffee to stay awake so I can finish my shift so I can go home and not sleep. The system works.
 
 === priya_c3
-priya.smile: You know what's wild? You're the only person I talk to all week who isn't bleeding.
+priya.laugh: You know what's wild? You're the only person I talk to all week who isn't a sourdough starter.
 
 === priya_c4
-priya.laugh: Someone came in last night with a sock stuck on their — no. Patient confidentiality. Also, you're about to eat lunch.
+priya.content: A man proposed at the counter at six this morning. Ring inside a baguette. She said yes. I cried into the flour bin.
 
 === priya_c5
-priya.neutral: My mother calls every Sunday to ask when I'm going to get a day job. I tell her I have a day job. It's just at night.
+priya.sly: My mother calls every Sunday to ask when I'm going to get a day job. I tell her I have a day job. It's just at night.
 
 === priya_c6
-priya.tired: After the storm the ER was all people who fell off ladders clearing gutters. Stay off ladders. That's the whole lecture.
+priya.smile: After the storm half the street had no power, so we baked by headlamp and gave the rolls away on the steps. Best morning of my life. Worst back.
 
 === gift_priya_love
-priya.laugh: Are you serious? Okay, you're officially my favourite person on Linden Street. Don't tell the other nurses.
+priya.laugh: Are you serious? Okay, you're officially my favourite person on Linden Street. Don't tell the other bakers.
 
 === gift_priya_like
 priya.smile: For me? That's really sweet. Thank you.
 
 === gift_priya_neutral
-priya.neutral: Oh — thanks! I'll put it in my locker. It'll be the nicest thing in there.
+priya.smile: Oh — thanks! I'll put it in my locker. It'll be the nicest thing in there.
 
 === gift_priya_dislike
 priya.tired: Ah. I'm... allergic to that. Most of it. It's the thought that counts. Mostly.
 
-// ------------------------------------------------------------------ Mrs. Fatima Haddad
+// ------------------------------------------------------------------ Sami Haddad (for his grandmother, Fatima)
 === haddad_intro
 <<flag met_haddad>>
-: A small woman in a plum headscarf sets down a hamper of flowered sheets and inspects you over her reading glasses.
-haddad.neutral: So. You are the one. Rosa's granddaughter. Turn around.
+: A young man in glasses and a denim jacket sets down a hamper of flowered sheets and studies you like he's been sent to report back.
+haddad.smile: So. You're the one. Rosa's granddaughter. My teta told me to look at you properly.
 me.surprised: Sorry?
-haddad.smile: Too thin. Rosa was also too thin. I fed her for forty years and it did nothing. Fatima Haddad. Alder Arms, 3C.
-haddad.neutral: Sheets for my grandchildren. Lavender softener. Rosa kept a bottle just for me, on the top shelf, behind the bleach.
+haddad.laugh: She'll ask if you're too thin. Rosa was too thin, according to her. She fed Rosa for forty years and it did nothing. I'm Sami. Sami Haddad.
+haddad.smile: My grandmother is Fatima Haddad, Alder Arms, 3C. She can't do the stairs with a hamper any more, so I'm the hamper. Lavender softener. Rosa kept a bottle just for her, top shelf, behind the bleach.
 * I'll find the lavender.
-  haddad.smile: Good. You have her hands. Now eat something.
+  haddad.content: Good. She'll ask. She always asks.
   <<rel haddad 25>>
-* How many grandchildren?
-  haddad.laugh: Seven. In one bed, when there's thunder. One day I'll bring them, and you'll be sorry.
+* How many grandchildren does she have?
+  haddad.laugh: Seven. I'm the oldest, so I get the hamper. One day she'll send all of us, and you'll be sorry.
   <<rel haddad 20>>
-<<diary "Met Mrs. Haddad from the Alder Arms. She says I'm too thin, and that Rosa hid lavender softener behind the bleach for her.">>
+<<diary "Met Sami Haddad. His grandmother sends her sheets down with him from the Alder Arms, and apparently Rosa hid lavender softener behind the bleach for her.">>
 
 === haddad_grandkids
 <<flag haddad_grandkids>>
-: The door opens and seven children pour through it like a burst pipe. Mrs. Haddad follows, serene, carrying sheets.
-haddad.laugh: I warned you. All seven. Say hello to Rosa's granddaughter.
-: Seven hellos, not one of them together. The smallest girl presses her face to a washer and watches it spin.
-haddad.smile: This one says the machines are little oceans. Rosa used to let her press the start button.
+: The door opens and six children pour through it like a burst pipe. Sami follows, carrying sheets and the expression of a man who has been in charge since breakfast.
+haddad.tired: Teta's orders. Take them out, tire them out. Say hello to Rosa's granddaughter.
+: Six hellos, not one of them together. The smallest girl presses her face to a washer and watches it spin.
+haddad.smile: My littlest cousin says the machines are little oceans. Rosa used to let her press the start button.
 * Let her press the start button.
   : She presses it with enormous ceremony. The washer rumbles. She gasps like she's launched a rocket.
-  haddad.smile: Now you have a friend for life. Also, a responsibility.
+  haddad.content: Now you have a friend for life. Also, a responsibility.
   <<rel haddad 35>>
 * Put the older ones on lint-trap duty.
   : Three children fight over the lint brush. The dryers have never been so clean.
-  haddad.laugh: Rosa's trick exactly. She got a free afternoon of cleaning out of me once, and I was fifty.
+  haddad.laugh: Rosa's trick exactly. She got a free afternoon of cleaning out of me when I was nine.
   <<rel haddad 30>>
   <<community 2>>
-<<diary "Mrs. Haddad brought all seven grandchildren. The littlest one calls the washers little oceans.">>
+<<diary "Sami brought six of his cousins. The littlest one calls the washers little oceans.">>
 
 === haddad_letter
 <<flag haddad_letter>>
-haddad.worried: You heard. Everybody heard. Ninety days, the letter says. Like milk.
-haddad.neutral: My husband carried our refrigerator up three flights of stairs in 1979. Karim was a stubborn man. I am more stubborn.
+haddad.worried: You heard. Everybody heard. Ninety days, the letter says. "Like milk," Teta says.
+haddad.smile: My grandfather carried their refrigerator up three flights of stairs in 1979. Jiddo Karim was a stubborn man. Teta is more stubborn.
 <<if flag.tenants_meetings>>
-haddad.smile: And you gave us your shop on Thursday nights. June told me. I'm bringing ma'amoul. Don't argue. You'll lose.
+haddad.content: And you gave us your shop on Thursday nights. June told her. She's making ma'amoul. Don't argue. You'll lose.
 <<rel haddad 35>>
 <<else>>
-haddad.neutral: June holds the meetings in my living room. The chairs are good. Come, if you want to watch old people plan a revolution.
+haddad.smile: June holds the meetings in Teta's living room. The chairs are good. Come, if you want to watch old people plan a revolution. I make the tea.
 <<rel haddad 25>>
 <<endif>>
-<<diary "Mrs. Haddad got the Crestline letter too. “Ninety days. Like milk.”">>
+<<diary "The Haddads got the Crestline letter too. Ninety days. “Like milk,” says Sami's grandmother.">>
 
 === haddad_maamoul
 <<flag haddad_maamoul>>
-: Mrs. Haddad puts a tin on the counter before her laundry, which tells you which one matters more.
-haddad.smile: Ma'amoul. Dates and walnuts. My mother's recipe, and her mother's. Share them with the people who sit on your bench.
-haddad.neutral: In Beirut, when things were bad, we fed each other. That's all politics is, habibti. Who feeds who.
+: Sami puts a tin on the counter before the laundry, which tells you which one matters more.
+haddad.smile: Ma'amoul. Dates and walnuts. Teta's mother's recipe, and her mother's. She says share them with the people who sit on your bench.
+haddad.thinking: She says in Beirut, when things were bad, people fed each other. That's all politics is, she says. Who feeds who. I'm writing my thesis on less than that.
 <<give maamoul 3>>
 <<rel haddad 30>>
 
 === haddad_c1
-haddad.neutral: Eat something. You look like a question mark.
+haddad.sly: Teta says eat something. You look like a question mark. I'm just the messenger.
 
 === haddad_c2
-haddad.laugh: My granddaughter wants to be a laundromat when she grows up. Not to work in one. To be one.
+haddad.laugh: My littlest cousin wants to be a laundromat when she grows up. Not to work in one. To be one.
 
 === haddad_c3
-haddad.neutral: June and I agree about nothing. Except Crestline. And the correct way to fold a fitted sheet, which is mine.
+haddad.smile: Teta and June agree about nothing. Except Crestline. And the correct way to fold a fitted sheet, which is Teta's.
 
 === haddad_c4
-haddad.smile: My mother dried everything on the roof in the sun. Sheets so stiff you could stand them in a corner. That was a clean I've never found since. Until here, almost.
+haddad.content: Teta says her mother dried everything on the roof in the sun. Sheets so stiff you could stand them in a corner. She says this is the first place that comes close.
 
 === haddad_c5
-haddad.worried: I've started packing. Only the winter things. Only to be ready. Don't tell June.
+haddad.worried: Teta's started packing. Only the winter things. Only to be ready. Don't tell June. Actually... maybe tell June.
 
 === gift_haddad_love
-haddad.smile: Oh, habibti. Look at this. You didn't have to.
-haddad.laugh: Now I have to feed you twice as much. Those are the rules.
+haddad.laugh: Oh, wow. Teta's going to hear about this. Now she'll have to feed you twice as much. Those are the rules.
 
 === gift_haddad_like
-haddad.smile: How thoughtful. Rosa raised you well, even from far away.
+haddad.smile: That's thoughtful. Rosa raised you well, Teta says. Even from far away.
 
 === gift_haddad_neutral
-haddad.neutral: For me? Thank you, dear. I'll put it with my good things.
+haddad.smile: For me? Thanks. I'll put it with my good things.
 
 === gift_haddad_dislike
-haddad.worried: Hm. I'll give it to my son-in-law. He likes strange things.
+haddad.worried: Hm. I'll give it to my uncle. He likes strange things.
 
 // ------------------------------------------------------------------ Kai
 === kai_intro
 <<flag met_kai>>
-: A bike courier in a dripping orange rain jacket squelches up to the counter and slaps down a drawstring bag.
+: A bike courier in a soaked teal jacket, hair plastered flat by the rain, squelches up to the counter and slaps down a drawstring bag.
 kai.excited: Hi! Hello. Question. Where do the socks go?
 me.thinking: ...Into the washer?
 kai.neutral: In, yes. Out, no. I put in eight socks, I get back seven. Every time. Three laundromats, two years. I have a spreadsheet.

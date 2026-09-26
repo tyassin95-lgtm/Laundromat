@@ -5,6 +5,9 @@
 // Drop the files in (face_<portrait>_<expr>, npc_<name>) and they appear.
 import { Assets } from '../engine/assets.js';
 
+// The nine portraits every character sheet has (tools/import_character.py cuts them in this order).
+export const EXPRS9 = ['smile', 'laugh', 'worried', 'thinking', 'tired', 'surprised', 'content', 'sad', 'sly'];
+
 export const CHARACTERS = {
   me: {
     name: '{name}', portrait: 'player', side: 'left', voice: 1.12, color: '#3f6c74',
@@ -13,28 +16,28 @@ export const CHARACTERS = {
   },
   walt: {
     name: 'Walt', full: 'Walt Szymanski', portrait: 'walt', side: 'right', voice: 0.72, color: '#b7773a',
-    exprs: ['neutral', 'smile', 'sad', 'laugh', 'angry', 'content'], defaultExpr: 'neutral',
-    sprite: 'npc_walt', h: 288, faces: 1,
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_walt', h: 290, faces: 1,
     blurb: 'Retired machinist. Tuesdays and Fridays, 9 a.m. sharp, since 1981.',
     loves: ['scarf', 'coffee', 'photo_rosa', 'toolkit'], likes: ['tea', 'sketch', 'photo', 'lemon_bars', 'record'], dislikes: ['flowers'],
   },
   maya: {
     name: 'Maya', full: 'Maya Okafor', portrait: 'maya', side: 'right', voice: 1.25, color: '#d9a02e',
-    exprs: ['neutral', 'content', 'worried', 'laugh', 'annoyed', 'sly'], defaultExpr: 'neutral',
-    sprite: 'npc_maya', h: 270, faces: 1,
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_maya', h: 272, faces: 1,
     blurb: 'Music student. Night shifts at the pharmacy. Headphones always on.',
     loves: ['record', 'photo_night', 'coffee'], likes: ['sketch', 'tea', 'lemon_bars', 'photo', 'scarf'], dislikes: ['knit_hat'],
   },
   june: {
     name: 'June', full: 'June Ito', portrait: 'june', side: 'right', voice: 1.02, color: '#c0562a',
-    exprs: ['neutral', 'sly', 'thinking', 'worried', 'gentle', 'happy'], defaultExpr: 'neutral',
-    sprite: 'npc_june', h: 250, faces: 1,
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_june', h: 252, faces: 1,
     blurb: 'Taught third grade for 38 years. Runs the community garden. Lives next door.',
     loves: ['flowers', 'cutting', 'scarf', 'photo_garden'], likes: ['tea', 'sketch', 'photo', 'record', 'lemon_bars'], dislikes: ['coffee'],
   },
   remy: {
     name: 'Remy', full: 'Remy Castillo', portrait: 'remy', side: 'right', voice: 1.18, color: '#d77a9a',
-    exprs: ['neutral', 'excited', 'skeptical', 'worried', 'shy', 'wink'], defaultExpr: 'neutral',
+    exprs: EXPRS9, defaultExpr: 'smile',
     sprite: 'npc_remy', h: 268, faces: 1,
     blurb: 'Barista at the Corner Cup. Paints murals. Knows everyone on Linden Street.',
     loves: ['sketch', 'photo', 'spray_paint'], likes: ['record', 'coffee', 'scarf', 'lemon_bars'], dislikes: ['tea'],
@@ -45,29 +48,29 @@ export const CHARACTERS = {
   // stories, and a voice at the council hearing if they like you enough.
   delgado: {
     name: 'Luis', full: 'Luis Delgado', portrait: 'luis', side: 'right', voice: 0.8, color: '#5f7f3a',
-    exprs: ['neutral', 'smile', 'sad', 'laugh'], defaultExpr: 'neutral',
-    sprite: 'npc_luis', h: 276, neighbour: true, icon: 'item_apron',
-    blurb: 'Ran Delgado\'s Market across the street for thirty-one years. Calls everyone mija.',
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_luis', h: 286, neighbour: true, icon: 'item_apron',
+    blurb: 'Runs Delgado\'s Market across the street, the corner store his father opened thirty-one years ago. Calls everyone mija.',
     loves: ['coffee', 'record'], likes: ['photo', 'lemon_bars', 'tea', 'sketch'], dislikes: ['spray_paint'],
   },
   priya: {
     name: 'Priya', full: 'Priya Raman', portrait: 'priya', side: 'right', voice: 1.14, color: '#2f8a86',
-    exprs: ['neutral', 'smile', 'tired', 'laugh'], defaultExpr: 'neutral',
+    exprs: EXPRS9, defaultExpr: 'smile',
     sprite: 'npc_priya', h: 262, neighbour: true, icon: 'item_coffee_mug',
-    blurb: 'ER nurse at St. Anne\'s, permanent nights. Wants her scrubs folded like presents.',
+    blurb: 'Bakes the bread at Ferrante\'s on Alder Street, from two in the morning. Wants her aprons folded like presents.',
     loves: ['coffee', 'lemon_bars'], likes: ['tea', 'scarf', 'record'], dislikes: ['flowers'],
   },
   haddad: {
-    name: 'Mrs. Haddad', full: 'Fatima Haddad', portrait: 'haddad', side: 'right', voice: 0.96, color: '#7a4a86',
-    exprs: ['neutral', 'smile', 'worried', 'laugh'], defaultExpr: 'neutral',
-    sprite: 'npc_haddad', h: 244, neighbour: true, icon: 'item_hamper',
-    blurb: 'Alder Arms, apartment 3C, since 1979. Seven grandchildren. Lavender softener only.',
+    name: 'Sami', full: 'Sami Haddad', portrait: 'haddad', side: 'right', voice: 0.98, color: '#7a4a86',
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_haddad', h: 280, neighbour: true, icon: 'item_hamper',
+    blurb: 'Grad student. Brings his grandmother\'s laundry down from Alder Arms 3C every week. Lavender softener only: her orders.',
     loves: ['flowers', 'cutting'], likes: ['tea', 'photo', 'scarf', 'lemon_bars'], dislikes: ['coffee'],
   },
   kai: {
-    name: 'Kai', full: 'Kai', portrait: 'kai', side: 'right', voice: 1.22, color: '#d9772e',
-    exprs: ['neutral', 'grin', 'worried', 'excited'], defaultExpr: 'neutral',
-    sprite: 'npc_kai', h: 264, neighbour: true, icon: 'item_drawstring_bag',
+    name: 'Kai', full: 'Kai', portrait: 'kai', side: 'right', voice: 1.22, color: '#3f7f86',
+    exprs: EXPRS9, defaultExpr: 'smile',
+    sprite: 'npc_kai', h: 266, neighbour: true, icon: 'item_drawstring_bag',
     blurb: 'Bike courier, always soaked. Investigating where the socks go.',
     loves: ['spray_paint', 'coffee'], likes: ['photo', 'sketch', 'record'], dislikes: ['tea'],
   },
@@ -109,16 +112,14 @@ export const ROUTINES = {
 };
 
 // Expressions a script may ask for that a character doesn't have map to the closest one.
+// Everyone but the player has the nine portraits in EXPRS9.
+const NINE = {
+  neutral: 'smile', happy: 'laugh', excited: 'laugh', grin: 'smile', gentle: 'content', shy: 'content',
+  wink: 'sly', smug: 'sly', skeptical: 'sly', annoyed: 'tired', angry: 'sad', surprised: 'surprised',
+};
 const ALIASES = {
-  me: { content: 'wink', happy: 'laugh', excited: 'laugh', smile: 'neutral', gentle: 'neutral', angry: 'smug', shy: 'worried' },
-  walt: { happy: 'laugh', thinking: 'neutral', worried: 'sad', gentle: 'content', excited: 'laugh', surprised: 'smile', shy: 'content' },
-  maya: { sad: 'worried', thinking: 'sly', excited: 'laugh', happy: 'laugh', gentle: 'content', smile: 'content', surprised: 'worried', shy: 'content' },
-  june: { sad: 'worried', excited: 'happy', laugh: 'happy', smile: 'gentle', content: 'gentle', surprised: 'thinking', shy: 'gentle' },
-  remy: { sad: 'worried', thinking: 'skeptical', laugh: 'excited', happy: 'excited', content: 'wink', smile: 'wink', angry: 'skeptical', surprised: 'excited' },
-  delgado: { happy: 'smile', content: 'smile', gentle: 'smile', excited: 'laugh', worried: 'sad', tired: 'sad', thinking: 'neutral', surprised: 'laugh' },
-  priya: { happy: 'smile', content: 'smile', gentle: 'smile', excited: 'laugh', worried: 'tired', sad: 'tired', thinking: 'neutral', surprised: 'laugh' },
-  haddad: { happy: 'smile', content: 'smile', gentle: 'smile', excited: 'laugh', sad: 'worried', tired: 'worried', thinking: 'neutral', surprised: 'laugh' },
-  kai: { happy: 'grin', content: 'grin', smile: 'grin', laugh: 'excited', sad: 'worried', tired: 'worried', thinking: 'neutral', surprised: 'excited' },
+  me: { content: 'wink', happy: 'laugh', excited: 'laugh', smile: 'neutral', gentle: 'neutral', angry: 'smug', shy: 'worried', sly: 'smug', grin: 'laugh', annoyed: 'tired', skeptical: 'smug' },
+  walt: NINE, maya: NINE, june: NINE, remy: NINE, delgado: NINE, priya: NINE, haddad: NINE, kai: NINE,
 };
 
 export function portraitFor(id, expr) {

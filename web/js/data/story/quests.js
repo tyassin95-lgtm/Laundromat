@@ -113,10 +113,10 @@ kai.grin: This changes everything. Here — consultancy fee. Twenty-five dollars
 <<quest done kai_socks>>
 
 === q_priya_care_offer
-priya.tired: Nine patients, one working blood-pressure cuff, and a man who swallowed a key. His own key. To his own apartment.
-priya.neutral: The whole night crew is running on vending-machine crackers and spite.
+priya.tired: Eight hundred rolls, one working oven, and a mixer that screams like a jet engine. Every night.
+priya.smile: The whole night crew is running on day-old croissants and spite.
 * What if I sent over a care package? Coffee, and tea for the end of the shift.
-  priya.smile: For the ER? You'd be a legend. We'd name a bed after you. Bed four. It's the good one.
+  priya.laugh: For the bakery? You'd be a legend. We'd name a loaf after you. The good one, with the seeds.
   <<quest start priya_care>>
 * That sounds brutal. Go and sleep.
   priya.laugh: Sleep. You keep saying that word like it's a real thing.
@@ -124,26 +124,26 @@ priya.neutral: The whole night crew is running on vending-machine crackers and s
 
 === q_priya_care_done
 priya.smile: So. Funny story. The night crew has a shrine now.
-priya.laugh: Your coffee cup, on the break-room shelf, with a battery candle. Dr. Okonkwo bows to it on the way in.
-priya.neutral: And they all want to know where the laundromat with the care packages is. Expect scrubs. So many scrubs.
+priya.laugh: Your coffee cup, on the flour shelf, with a battery candle. Old Mr. Ferrante bows to it on the way in.
+priya.sly: And they all want to know where the laundromat with the care packages is. Expect aprons. So many aprons.
 <<quest done priya_care>>
-<<diary "The St. Anne's night crew has a shrine to my coffee cup. I've never been prouder of anything.">>
+<<diary "The Ferrante's night crew has a shrine to my coffee cup. I've never been prouder of anything.">>
 
 === q_haddad_lavender_offer
-haddad.worried: Habibti, a question. The lavender softener. Last week you were out.
-haddad.neutral: Forty-five years I use lavender. My husband said our sheets smelled like a garden in Zahle. I am not starting to smell like "fresh linen scent" at my age.
+haddad.worried: A question from my grandmother, who is watching from her balcony to make sure I ask it. The lavender softener. Last week you were out.
+haddad.smile: Forty-five years she's used lavender. Jiddo said their sheets smelled like a garden in Zahle. She is not starting to smell like "fresh linen scent" at her age. Her words.
 * I'll keep the shelf stocked. Ten loads, always.
-  haddad.smile: Ten! A woman with a plan. Rosa never had more than two.
+  haddad.laugh: Ten! "A woman with a plan," she'll say. Rosa never had more than two.
   <<quest start haddad_lavender>>
 * I'll try, but money's tight.
-  haddad.neutral: Everything is tight. Tight is how you know it's holding.
+  haddad.content: She'd say everything is tight. Tight is how you know it's holding.
   <<quest later haddad_lavender>>
 
 === q_haddad_lavender_done
-: Mrs. Haddad inspects the supply shelf, counts the lavender twice, and nods like a general reviewing troops.
-haddad.smile: Good. Very good. Now I can die happy. Not soon. But happy.
-: She presses a tin into your hands. The lid says CHRISTMAS 1998.
-haddad.laugh: The tin lies. The ma'amoul is from this morning.
+: Sami inspects the supply shelf, counts the lavender twice, and photographs it for his grandmother like evidence.
+haddad.smile: Good. Very good. She says now she can die happy. Not soon. But happy.
+: He presses a tin into your hands. The lid says CHRISTMAS 1998.
+haddad.laugh: The tin lies. The ma'amoul is from this morning. She was up at five.
 <<quest done haddad_lavender>>
 
 === q_biscuit_offer

@@ -13,9 +13,9 @@ export const REGULARS = [
     id: 'priya', name: 'Priya', icon: 'item_coffee_mug', services: ['wash_fold', 'rush'], bags: ['item_tote_bag'],
     thanks: ['Like little presents. You\'re a lifesaver.', 'Late, but clean. I\'ll live. Probably.'],
     notes: [
-      'Night shift again. Scrubs by 4 if you can — you are a lifesaver. ♥ P',
-      'Sorry about the coffee stain. It was a long, long night.',
-      { text: 'Rosa always folded my scrubs like little presents. No pressure. (Some pressure.) — P', until: 6 },
+      'Aprons again. By 4 if you can — the 2 a.m. shift waits for no one. ♥ P',
+      'Sorry about the flour. It gets everywhere. It is in my soul now.',
+      { text: 'Rosa always folded my aprons like little presents. No pressure. (Some pressure.) — P', until: 6 },
       { text: 'Heard Crestline is sniffing around Linden St. If you need signatures, count me in. — P', from: 9 },
       { text: 'Tell the old guy with the cap he was right about the dryer. Don\'t tell him I said so.', from: 14 },
     ],
@@ -74,12 +74,12 @@ export const REGULARS = [
     ],
   },
   {
-    id: 'haddad', name: 'Mrs. Haddad', icon: 'item_hamper', services: ['wash_fold'], bags: ['item_hamper'], softener: 0.85,
-    thanks: ['It smells of lavender. Good girl.', 'Late. Rosa was never late. Eat something.'],
+    id: 'haddad', name: 'Sami Haddad', icon: 'item_hamper', services: ['wash_fold'], bags: ['item_hamper'], softener: 0.85,
+    thanks: ['Lavender. Teta will be pleased. (She says: good girl.)', 'Late. Teta says Rosa was never late. Also, eat something.'],
     notes: [
-      'Sheets for the grandchildren\'s visit. Lavender softener if you have it!',
-      'The grandchildren are gone. The sheets remember them. Wash gently.',
-      { text: 'Apt 3C, Alder Arms. We got the letter too. June says we meet Thursdays? — F. Haddad', from: 11 },
+      'Teta\'s sheets, for the cousins\' visit. Lavender softener if you have it! — S.',
+      'The cousins are gone. Teta says the sheets remember them. Wash gently.',
+      { text: 'Apt 3C, Alder Arms. We got the letter too. June says we meet Thursdays? — S. (for F. Haddad)', from: 11 },
     ],
   },
   {
@@ -101,8 +101,8 @@ export const REGULARS = [
 
 // Named friends' personal orders (created when they visit on their laundry days).
 export const FRIEND_ORDERS = {
-  walt: { service: 'wash_fold', icon: 'face_walt_neutral', bag: 'item_hamper', note: 'Warm water. No bleach. No nonsense. — W.S.' },
-  maya: { service: 'wash_dry', icon: 'face_maya_neutral', bag: 'item_tote_bag', note: 'hoodies + the lucky jeans. do NOT shrink the lucky jeans' },
-  june: { service: 'delicate', icon: 'face_june_neutral', bag: 'item_wicker_basket', note: 'Cardigans and Hiro\'s old handkerchiefs. Cool water, dear.' },
-  remy: { service: 'wash_fold', icon: 'face_remy_neutral', bag: 'item_drawstring_bag', note: 'Café aprons + paint rags. Yes the paint is permanent. Yes I know.' },
+  walt: { service: 'wash_fold', icon: 'face_walt_smile', bag: 'item_hamper', note: 'Warm water. No bleach. No nonsense. — W.S.' },
+  maya: { service: 'wash_dry', icon: 'face_maya_smile', bag: 'item_tote_bag', note: 'hoodies + the lucky jeans. do NOT shrink the lucky jeans' },
+  june: { service: 'delicate', icon: 'face_june_smile', bag: 'item_wicker_basket', note: 'Cardigans and Hiro\'s old handkerchiefs. Cool water, dear.' },
+  remy: { service: 'wash_fold', icon: 'face_remy_smile', bag: 'item_drawstring_bag', note: 'Café aprons + paint rags. Yes the paint is permanent. Yes I know.' },
 };

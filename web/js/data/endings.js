@@ -10,39 +10,39 @@ function waltCard(G, sold) {
     : 'Walt stopped coming to Linden Street after the fences went up. Priya says she saw him feeding pigeons two neighbourhoods over, alone.' };
   if (h('walt') >= 8) return { img: 'face_walt_laugh', title: 'Walt', text: 'Walt fixes the machines on Tuesdays and Fridays, 9 a.m. sharp, and refuses payment in anything but coffee. There\'s a brass plaque on dryer two now: "Peg & Walter, 1974."' };
   if (h('walt') >= 4) return { img: 'face_walt_smile', title: 'Walt', text: 'Walt still brings his laundry every Tuesday and Friday. He still says Rosa folded tighter. He still stays an hour longer than he needs to.' };
-  return { img: 'face_walt_neutral', title: 'Walt', text: 'Walt still comes twice a week. He doesn\'t talk much. But he comes.' };
+  return { img: 'face_walt_content', title: 'Walt', text: 'Walt still comes twice a week. He doesn\'t talk much. But he comes.' };
 }
 
 function mayaCard(G, sold) {
   const left = G.flags.maya_goes;
   if (left) return { img: 'face_maya_laugh', title: 'Maya', text: `Maya's first record came out in the spring. The opening track is called "${G.vars.trackName || 'Spin Cycle'}," and it starts with the sound of a washing machine on Linden Street. She sends you a postcard from every city she plays.` };
   if (h('maya') >= 6) return { img: 'face_maya_content', title: 'Maya', text: 'Maya stayed. She teaches beat-making to kids in the back of the shop on Thursday nights, and her album — recorded between midnight and 3 a.m. — is almost done.' };
-  return { img: 'face_maya_neutral', title: 'Maya', text: sold ? 'Maya does her laundry in the big new place by the highway now. She says the machines there have no groove.' : 'Maya still comes in late, headphones on, nodding along to the dryers.' };
+  return { img: 'face_maya_smile', title: 'Maya', text: sold ? 'Maya does her laundry in the big new place by the highway now. She says the machines there have no groove.' : 'Maya still comes in late, headphones on, nodding along to the dryers.' };
 }
 
 function juneCard(G, sold) {
   if (sold || (G.flags.hearing_lost && h('june') < 6)) return { img: 'face_june_worried', title: 'June', text: 'June moved to Portland to live with her daughter. She writes long letters in perfect cursive and asks, every time, whether the persimmon tree in the garden made it through the winter.' };
-  if (G.flags.hearing_won) return { img: 'face_june_happy', title: 'June', text: 'The Alder Arms tenants won rent protection in the spring. June still lives in 4B, still runs the garden, and still grades everyone\'s handwriting, including yours. You get a B+.' };
-  return { img: 'face_june_gentle', title: 'June', text: 'June is fighting her eviction in court. She knits in the laundromat window while she waits, and every week there are a few more signatures on her petition.' };
+  if (G.flags.hearing_won) return { img: 'face_june_laugh', title: 'June', text: 'The Alder Arms tenants won rent protection in the spring. June still lives in 4B, still runs the garden, and still grades everyone\'s handwriting, including yours. You get a B+.' };
+  return { img: 'face_june_content', title: 'June', text: 'June is fighting her eviction in court. She knits in the laundromat window while she waits, and every week there are a few more signatures on her petition.' };
 }
 
 function remyCard(G, sold) {
   if (G.flags.commission_taken && !G.flags.commission_refused) return { img: 'face_remy_worried', title: 'Remy', text: 'Remy\'s murals hang in the lobby of the Linden. They\'re beautiful. She paid off her mother\'s hospital bills. She doesn\'t walk past the building if she can help it.' };
-  if (G.flags.new_mural && !sold) return { img: 'face_remy_wink', title: 'Remy', text: 'Remy\'s new mural covers the whole Cap & Seal fence now — Linden Street at sunrise, and in the corner, painted small, an old woman folding a shirt. People take wedding photos in front of it.' };
-  return { img: 'face_remy_neutral', title: 'Remy', text: sold ? 'Remy left the Corner Cup when the rent tripled. She paints somewhere else now. You haven\'t seen the new walls yet.' : 'Remy still pulls espresso at the Corner Cup and still tags the Crestline hoardings when she thinks no one is looking. Everyone is looking. Everyone cheers.' };
+  if (G.flags.new_mural && !sold) return { img: 'face_remy_sly', title: 'Remy', text: 'Remy\'s new mural covers the whole Cap & Seal fence now — Linden Street at sunrise, and in the corner, painted small, an old woman folding a shirt. People take wedding photos in front of it.' };
+  return { img: 'face_remy_smile', title: 'Remy', text: sold ? 'Remy left the Corner Cup when the rent tripled. She paints somewhere else now. You haven\'t seen the new walls yet.' : 'Remy still pulls espresso at the Corner Cup and still tags the Crestline hoardings when she thinks no one is looking. Everyone is looking. Everyone cheers.' };
 }
 
 // One card for the neighbours you got to know (the three you're closest to).
 function neighboursCard(G, sold) {
   const lost = sold || G.flags.hearing_lost;
   const lines = {
-    delgado: sold ? 'Luis moved in with his daughter in Queens. He mails you limes. They arrive bruised and perfect.'
+    delgado: sold ? 'Luis moved his family to Queens and drives a produce truck now. He mails you limes. They arrive bruised and perfect.'
       : G.flags.delgado_stall ? 'Luis has a fruit stall at the Sunday market, under a sign June painted. He saves the ugliest limes for you, out of love.'
         : 'Luis still drinks his morning coffee on the stoop of his old store and says good morning to everybody who passes.',
-    priya: sold ? 'Priya found another laundromat. She says it\'s fine, the way nurses say fine.'
-      : 'Priya still drops her scrubs off at eight in the morning. There is always a mint on top.',
-    haddad: lost ? 'Mrs. Haddad moved in with her son in Dearborn. She calls on Sundays to ask if you\'re eating.'
-      : 'Mrs. Haddad hosts Thursday dinners at the shop now. Attendance is mandatory. So is the ma\'amoul.',
+    priya: sold ? 'Priya found another laundromat. She says it\'s fine, the way bakers say fine: covered in flour.'
+      : 'Priya still drops her aprons off at eleven, straight from the ovens. There is always a mint on top.',
+    haddad: lost ? 'Mrs. Haddad moved in with her son in Dearborn, and Sami went too, to finish his thesis there. She calls on Sundays to ask if you\'re eating.'
+      : 'Mrs. Haddad hosts Thursday dinners at the shop now, and Sami carries the pots down three flights. Attendance is mandatory. So is the ma\'amoul.',
     kai: sold ? 'Kai still rides past the old corner every day. The sock spreadsheet has a memorial row for Rosa\'s.'
       : 'Kai\'s sock spreadsheet went viral in a very small corner of the internet. Rosa\'s is listed as "the only honest laundromat in the city."',
   };
@@ -63,7 +63,7 @@ function partnerCard(G, sold) {
       : 'Remy paints in the back of the shop on Mondays, when it\'s quiet. There\'s a portrait of you on the wall by the dryers, folding a shirt, frowning in concentration. You hate it. Everyone else loves it.',
     kai: sold ? 'Kai still rides past the old corner every day, then rides on to your new place with two coffees and a new theory. The sock spreadsheet has a tab with your name on it. It is forty rows long now.'
       : 'Kai runs the shop\'s pickups and deliveries now, and stops by every evening with clementines and a new theory. The sock spreadsheet has a tab with your name on it. It is forty rows long now.',
-    priya: sold ? 'Priya works days now. She says she wanted to see you in daylight at least once. She still folds her scrubs like presents — for you — and leaves a mint on top.'
+    priya: sold ? 'Priya bakes days now. She says she wanted to see you in daylight at least once. She still folds her aprons like presents — for you — and leaves a mint on top.'
       : 'Priya switched to days in the spring. On her nights off you lock up together and sit on the bench in the dark with a pot of tea until one of you falls asleep. It\'s usually her. There\'s always a mint on her pillow.',
   };
   return [{ img: faceOrIcon(p, 'smile'), title: `${CHARACTERS[p].name} & ${G.name}`, text: T[p] || `${CHARACTERS[p].name} is still here. So are you.` }];
