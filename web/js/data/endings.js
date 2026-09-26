@@ -73,7 +73,7 @@ export const ENDINGS = {
   sold: {
     title: 'The Last Load', tagline: 'Rosa\'s Laundromat closed on October 1st.', music: 'bittersweet',
     cards: G => [
-      { img: 'machine_washer_idle', title: 'Rosa\'s', text: 'The machines went to a scrapyard in Jersey. The sign went into your closet. The Linden opened eighteen months later: 212 residences, a gym, a "laundry concierge." The lobby smells like expensive candles.' },
+      { img: 'washer_classic', title: 'Rosa\'s', text: 'The machines went to a scrapyard in Jersey. The sign went into your closet. The Linden opened eighteen months later: 212 residences, a gym, a "laundry concierge." The lobby smells like expensive candles.' },
       { img: 'face_player_sad', title: G.name, text: 'The money paid Rosa\'s debts, and yours, and then some. You went back to school. Some nights you still dream about the rhythm of number two.' },
       ...partnerCard(G, true),
       waltCard(G, true), juneCard(G, true), mayaCard(G, true), remyCard(G, true), ...neighboursCard(G, true),
@@ -83,7 +83,7 @@ export const ENDINGS = {
   holdout: {
     title: 'Keep the Lights On', tagline: 'Rosa\'s stayed open. Just barely. Just enough.', music: 'home_night',
     cards: G => [
-      { img: 'machine_stack_unit', title: 'Rosa\'s', text: `The Linden went up next door, glass and steel and a "laundry concierge." ${G.shop} stayed exactly where it was, squat and stubborn and warm, the last laundromat on Linden Street. The new tenants started coming in by November. Their machines broke. Ours didn't.` },
+      { img: 'dryer_stack', title: 'Rosa\'s', text: `The Linden went up next door, glass and steel and a "laundry concierge." ${G.shop} stayed exactly where it was, squat and stubborn and warm, the last laundromat on Linden Street. The new tenants started coming in by November. Their machines broke. Ours didn't.` },
       { img: 'face_player_smug', title: G.name, text: 'Money is still tight. The roof still leaks over dryer two. You still sketch the machines on slow afternoons. You\'ve never been so tired, or so sure.' },
       ...partnerCard(G, false),
       waltCard(G, false), juneCard(G, false), mayaCard(G, false), remyCard(G, false), ...neighboursCard(G, false),
@@ -94,7 +94,7 @@ export const ENDINGS = {
     title: 'Rosa\'s Commons', tagline: 'The last laundromat on Linden Street became the first of something new.', music: 'ending',
     cards: G => [
       { img: 'furn_bulletin_board', title: 'The Council', text: `Rezoning application #2291 was denied, ${G.vars.speakers > 1 ? G.vars.speakers + ' neighbours' : 'the neighbours'} having spoken and ${G.petition >= 20 ? G.petition + ' people' : 'half the street'} having signed. Crestline built on the old lot anyway — smaller, with a line of affordable units the city insisted on. Linden Street kept its face.` },
-      { img: 'machine_washer_blue', title: G.shop, text: 'Rosa\'s became a co-op in the spring: the regulars own a share, the Night Wash happens on the last Saturday of every month, and there\'s a pay-what-you-can shelf of detergent by the door. The lights stay on until midnight.' },
+      { img: 'washer_eco', title: G.shop, text: 'Rosa\'s became a co-op in the spring: the regulars own a share, the Night Wash happens on the last Saturday of every month, and there\'s a pay-what-you-can shelf of detergent by the door. The lights stay on until midnight.' },
       { img: 'face_player_laugh', title: G.name, text: 'You run the place, sort of. Mostly you fold, and fix, and listen, and draw the regulars on the backs of tickets. Your sketches cover a whole wall now. Abuela would say you finally found the right crayon.' },
       ...partnerCard(G, false),
       waltCard(G, false), juneCard(G, false), mayaCard(G, false), remyCard(G, false), ...neighboursCard(G, false),

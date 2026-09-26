@@ -282,51 +282,110 @@ export class Menus {
     r.insertBefore(el('h2', '', '&nbsp;'), r.firstChild);
   }
 
+  // The upgrade tree: pick washers or dryers on the left, a model in the tree, and install it in
+  // an empty bay or upgrade a machine that it grows out of on the right.
   pageMachines(l, r, refresh) {
-    l.appendChild(el('h2', '', 'Washers'));
-    const ws = L.washers();
-    const free = [0, 1, 2, 3, 4].filter(i => !ws.find(m => m.slot === i));
-    for (const [key, m] of Object.entries(L.MODELS)) {
-      if (m.kind !== 'washer') continue;
-      const can = free.length > 0;
-      l.appendChild(this.row(m.sprite, `${m.name} · ${money(m.price)}`, `${m.blurb} Cycle ${m.cycle} min.`, can ? 'Install' : 'Full', () => {
-        if (!this.spend(m.price, 'New washer: ' + m.name)) return;
-        const slot = free[0];
-        G.machines.push({ id: 'W' + (slot + 1) + '_' + (Date.now() % 1000), kind: 'washer', slot, model: key, cond: 100, broken: false });
-        L.ensureMachineFields();
-        UI.toast(`${m.name} installed in bay ${slot + 1}!`, 'icon_washer'); Sound.play('sparkle', { vol: 0.6 });
-        refresh();
-      }, !can));
+    const kind = this.machineKind || 'washer';
+    const keys = Object.keys(L.MODELS).filter(k => L.MODELS[k].kind === kind);
+    const sel = keys.includes(this.machineSel) ? this.machineSel : keys[0];
+    const units = () => kind === 'washer' ? L.washers() : L.dryers().filter(d => d.slot % 2 === 0);
+    const tog = el('div', 'kind-toggle');
+    for (const [k, label] of [['washer', 'Washers'], ['dryer', 'Dryers']]) {
+      const b = el('button', 'kt' + (k === kind ? ' on' : ''), label);
+      b.addEventListener('click', e => { e.stopPropagation(); this.machineKind = k; this.machineSel = null; Sound.play('page', { vol: 0.4 }); refresh(); });
+      tog.appendChild(b);
     }
-    // replace a classic with a better model
-    const classics = ws.filter(m => m.model === 'classic');
-    if (classics.length) {
-      l.appendChild(el('h3', '', 'Trade in an old washer'));
-      for (const key of ['eco', 'speed']) {
-        const m = L.MODELS[key];
-        const price = m.price - 70;
-        l.appendChild(this.row(m.sprite, `Swap for ${m.name} · ${money(price)}`, 'Trade in your oldest classic (−$70).', 'Swap', () => {
-          const old = classics.slice().sort((a, b) => a.cond - b.cond)[0];
-          if (old.state) { UI.toast('That machine is busy right now.', 'icon_washer', 'bad'); return; }
-          if (!this.spend(price, 'Washer trade-in: ' + m.name)) return;
-          old.model = key; old.cond = 100; old.broken = false;
-          UI.toast(`Swapped for a ${m.name}!`, 'icon_washer'); refresh();
-        }));
+    l.appendChild(tog);
+    const tree = el('div', 'mtree');
+    const tiers = [...new Set(keys.map(k => L.MODELS[k].tier))].sort((a, b) => a - b);
+    for (const t of tiers) {
+      const row = el('div', 'mrow');
+      for (const k of keys.filter(k => L.MODELS[k].tier === t)) {
+        const M = L.MODELS[k];
+        const n = units().filter(m => m.model === k).length, open = L.unlocked(k);
+        const node = el('button', 'mnode' + (k === sel ? ' sel' : '') + (open ? '' : ' locked') + (n ? ' have' : ''));
+        node.dataset.k = k;
+        node.innerHTML = `<img src="${S(M.sprite)}" alt=""><span class="nm">${M.name}</span><span class="st">${n ? '×' + n + ' in the shop' : open ? money(M.price) : 'locked'}</span>`;
+        node.addEventListener('click', e => { e.stopPropagation(); this.machineSel = k; Sound.play('click', { vol: 0.5 }); refresh(); });
+        row.appendChild(node);
+      }
+      tree.appendChild(row);
+    }
+    l.appendChild(tree);
+    requestAnimationFrame(() => this.treeLines(tree, keys));
+
+    // details of the selected model
+    const M = L.MODELS[sel];
+    const open = L.unlocked(sel);
+    r.appendChild(el('h2', '', M.name));
+    const d = el('div', 'mdetail');
+    d.innerHTML = `<img class="big${open ? '' : ' locked'}" src="${S(M.sprite)}" alt=""><p class="ds">${M.blurb}</p>`;
+    const rate = (v, lo, hi) => v <= lo ? 'low' : v >= hi ? 'high' : 'medium';
+    const stats = [['Cycle', M.cycle + ' min'], kind === 'washer' ? ['Detergent', M.soap + (M.soap === 1 ? ' load' : ' of a load') + ' per wash'] : ['Lint', rate(M.lint, 0.6, 1.3)], ['Wear', rate(M.wear, 2, 4)]];
+    const perks = [M.gentle && 'Gentle with delicates', M.care && 'Everything comes out a little nicer', M.selfPay && 'Walk-ins pay more to use it'].filter(Boolean);
+    d.innerHTML += `<div class="mstats">${stats.map(([a, b]) => `<span>${a}</span><b>${b}</b>`).join('')}</div>` + (perks.length ? `<ul class="mperks">${perks.map(p => `<li>${p}</li>`).join('')}</ul>` : '');
+    r.appendChild(d);
+    const act = el('div', 'mact');
+    if (!open) {
+      act.appendChild(el('p', 'ds', `Grows out of the ${M.from.map(k => L.MODELS[k].name).join(' or the ')}. Put one in the shop to unlock it.`));
+    } else {
+      const bays = kind === 'washer' ? L.WASHER_SLOTS : L.DRYER_UNITS;
+      const taken = new Set(units().map(m => kind === 'washer' ? m.slot : Math.floor(m.slot / 2)));
+      const free = [...Array(bays).keys()].find(i => !taken.has(i));
+      if (free !== undefined) {
+        act.appendChild(UI.button(`${kind === 'washer' ? 'Install in bay ' + (free + 1) : 'Install a new tower'} · ${money(M.price)}`, () => {
+          if (!this.spend(M.price, `New ${kind}: ${M.name}`)) return;
+          L.installModel(kind, free, sel);
+          UI.toast(`${M.name} installed!`, kind === 'washer' ? 'icon_washer' : 'icon_dryer'); Sound.play('sparkle', { vol: 0.6 });
+          refresh();
+        }, 'small primary'));
+      }
+      for (const m of units().filter(m => (M.from || []).includes(m.model))) {
+        const cost = L.upgradeCost(m.model, sel);
+        const label = kind === 'washer' ? `washer ${m.slot + 1}` : `dryer tower ${Math.floor(m.slot / 2) + 1}`;
+        const busy = L.unitBusy(m);
+        act.appendChild(UI.button(busy ? `Upgrade ${label} (busy)` : `Upgrade ${label} · ${money(cost)}`, () => {
+          if (L.unitBusy(m)) { UI.toast('That machine is busy right now.', 'icon_washer', 'bad'); return; }
+          if (!this.spend(cost, `Upgrade: ${M.name}`)) return;
+          const old = L.modelOf(m).name;
+          L.upgradeUnit(m, sel);
+          UI.toast(`${old} → ${M.name}`, kind === 'washer' ? 'icon_washer' : 'icon_dryer'); Sound.play('sparkle', { vol: 0.6 });
+          refresh();
+        }, 'small' + (busy ? ' disabled' : '')));
+      }
+      if (free === undefined && !act.children.length) act.appendChild(el('p', 'ds', (M.from ? 'Upgrade a machine it grows out of to get one.' : 'Every bay is full.') + ' Trade-ins are worth 40% of the old machine.'));
+    }
+    r.appendChild(act);
+    // what's in the shop now
+    r.appendChild(el('h3', '', kind === 'washer' ? 'Your washers' : 'Your dryer towers'));
+    const bays = kind === 'washer' ? L.WASHER_SLOTS : L.DRYER_UNITS;
+    for (let i = 0; i < bays; i++) {
+      const m = units().find(q => (kind === 'washer' ? q.slot : Math.floor(q.slot / 2)) === i);
+      r.appendChild(el('div', 'summary-row', m ? `<span>${i + 1}. ${L.modelOf(m).name}</span><span class="${m.broken ? 'neg' : ''}">${m.broken ? 'broken' : Math.round(m.cond) + '%'}</span>` : `<span>${i + 1}. empty</span><span></span>`));
+    }
+  }
+
+  // Lines from each model to the ones that grow out of it.
+  treeLines(tree, keys) {
+    if (!tree.isConnected) return;
+    const box = tree.getBoundingClientRect();
+    const node = k => tree.querySelector(`.mnode[data-k="${k}"]`);
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    for (const k of keys) {
+      for (const p of L.MODELS[k].from || []) {
+        const a = node(p), b = node(k);
+        if (!a || !b) continue;
+        const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        const x1 = ra.left + ra.width / 2 - box.left, y1 = ra.bottom - box.top, x2 = rb.left + rb.width / 2 - box.left, y2 = rb.top - box.top;
+        const path = document.createElementNS(ns, 'path');
+        const my = (y1 + y2) / 2;
+        path.setAttribute('d', `M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`);
+        path.setAttribute('class', L.unlocked(k) ? 'open' : '');
+        svg.appendChild(path);
       }
     }
-    r.appendChild(el('h2', '', 'Dryers & more'));
-    const units = new Set(L.dryers().map(d => Math.floor(d.slot / 2)));
-    const stack = L.MODELS.stack;
-    const canStack = units.size < 2;
-    r.appendChild(this.row(stack.sprite, `${stack.name} · ${money(stack.price)}`, stack.blurb, canStack ? 'Install' : 'Full', () => {
-      if (!this.spend(stack.price, 'New dryer stack')) return;
-      const u = units.has(0) ? 1 : 0;
-      G.machines.push({ id: 'D' + (u * 2 + 1) + 'x', kind: 'dryer', slot: u * 2, model: 'stack', cond: 100, broken: false });
-      G.machines.push({ id: 'D' + (u * 2 + 2) + 'x', kind: 'dryer', slot: u * 2 + 1, model: 'stack', cond: 100, broken: false });
-      L.ensureMachineFields();
-      UI.toast('A second dryer tower! Two more drums.', 'icon_dryer'); refresh();
-    }, !canStack));
-    r.appendChild(el('p', 'ds', 'Carts, lint screens, Wi-Fi and more are on the Upgrades page.'));
+    tree.insertBefore(svg, tree.firstChild);
   }
 
   pageUpgrades(l, r, refresh) {

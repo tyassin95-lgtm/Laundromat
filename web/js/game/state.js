@@ -33,6 +33,7 @@ export function newState(name) {
     decor: [],               // owned decor ids (not yet placed or placed)
     placed: {},              // slotId -> decor id (laundromat) ; home slots prefixed "h:"
     upgrades: [],
+    unlocked: ['classic', 'stack'],   // machine models owned at some point (the upgrade tree)
     quests: {},              // errands: id -> { state, day, at, steps } (game/quests.js)
     machines: [
       { id: 'W1', kind: 'washer', slot: 0, model: 'classic', cond: 62, broken: false },

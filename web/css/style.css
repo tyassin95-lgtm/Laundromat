@@ -275,10 +275,17 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* gift picker (slots panel) */
 .slots { position: relative; width: min(46rem, 90vw, calc(80vh * 572 / 398)); aspect-ratio: 572 / 398;
   background: url('../assets/sprites/ui_slots.webp') center/100% 100% no-repeat; filter: drop-shadow(0 .6rem 1.2rem rgba(0,0,0,.5)); }
-.slots .cellz { position: absolute; left: 7.4%; top: 10.4%; width: 85.6%; height: 78.6%; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2.4% 3.2%; }
-.slots .slot { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--cream); font-size: calc(1rem * var(--ts)); text-align: center; line-height: 1.05; border-radius: .6rem; transition: background .15s; }
+/* each item sits exactly in one of the six wells painted on ui_slots.webp (measured from the art) */
+.slots .cellz { position: absolute; inset: 0; }
+.slots .slot { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; color: var(--cream); font-size: calc(.95rem * var(--ts)); text-align: center; line-height: 1.05; border-radius: .6rem; transition: background .15s; padding: .2rem; overflow: hidden; }
+.slots .slot:nth-child(1) { left: 11.71%; top: 18.09%; width: 20.98%; height: 28.39%; }
+.slots .slot:nth-child(2) { left: 38.81%; top: 18.09%; width: 21.5%; height: 28.39%; }
+.slots .slot:nth-child(3) { left: 66.43%; top: 18.09%; width: 21.5%; height: 28.39%; }
+.slots .slot:nth-child(4) { left: 11.89%; top: 54.52%; width: 20.98%; height: 28.39%; }
+.slots .slot:nth-child(5) { left: 38.99%; top: 54.52%; width: 21.15%; height: 28.39%; }
+.slots .slot:nth-child(6) { left: 66.43%; top: 54.52%; width: 21.33%; height: 28.39%; }
 .slots .slot:active { background: rgba(232,176,78,.25); }
-.slots .slot img { width: 58%; height: 58%; object-fit: contain; filter: drop-shadow(0 .2rem .3rem rgba(0,0,0,.5)); }
+.slots .slot img { width: 62%; height: 52%; object-fit: contain; filter: drop-shadow(0 .2rem .3rem rgba(0,0,0,.5)); }
 .slots .slot .q { font-size: .9rem; opacity: .8; }
 .slots .title { position: absolute; top: -3.2rem; left: 0; right: 0; text-align: center; color: var(--cream); font-family: 'Fraunces', serif; font-size: 1.5rem; text-shadow: 0 .15rem .4rem #000; }
 .slots .pager { position: absolute; bottom: -3.4rem; left: 0; right: 0; display: flex; justify-content: center; gap: 1rem; }
@@ -400,3 +407,24 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .scroll-hint { position: absolute; bottom: .4rem; left: 50%; transform: translateX(-50%); font-size: .95rem; color: var(--ink-soft); }
 .hidden { display: none !important; }
+
+/* machine upgrade tree (catalog) */
+.kind-toggle { display: flex; gap: .4rem; justify-content: center; margin: .1rem 0 .5rem; }
+.kind-toggle .kt { font-family: 'Fraunces', serif; font-size: calc(1rem * var(--ts)); padding: .3rem .9rem; border-radius: 1rem; border: .12rem solid var(--teal); background: transparent; color: var(--teal-d); }
+.kind-toggle .kt.on { background: var(--teal); color: var(--cream); }
+.mtree { position: relative; display: flex; flex-direction: column; gap: 1.2rem; padding: .2rem 0 .6rem; }
+.mtree svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.mtree svg path { fill: none; stroke: rgba(58,42,30,.28); stroke-width: 2.5; stroke-dasharray: 5 5; }
+.mtree svg path.open { stroke: var(--rust); stroke-dasharray: none; }
+.mrow { display: flex; justify-content: center; gap: .9rem; position: relative; z-index: 1; }
+.mnode { display: flex; flex-direction: column; align-items: center; width: 6.4rem; padding: .35rem .2rem .3rem; border-radius: .6rem; border: .12rem solid rgba(58,42,30,.25); background: rgba(255,250,235,.7); font: inherit; color: var(--ink); cursor: pointer; }
+.mnode img { height: 3.8rem; width: auto; max-width: 5rem; object-fit: contain; }
+.mnode .nm { font-family: 'Fraunces', serif; font-size: calc(.8rem * var(--ts)); line-height: 1.05; text-align: center; margin-top: .2rem; }
+.mnode .st { font-size: calc(.75rem * var(--ts)); color: var(--ink-soft); }
+.mnode.have { background: rgba(232,211,138,.55); }
+.mnode.sel { border-color: var(--rust); box-shadow: 0 0 0 .15rem rgba(196,105,46,.35); }
+.mnode.locked img, .mdetail img.locked { filter: grayscale(1) brightness(.8) opacity(.5); }
+.mdetail img.big { display: block; margin: 0 auto .3rem; height: 7.5rem; max-width: 60%; object-fit: contain; }
+.mstats { display: grid; grid-template-columns: auto 1fr; gap: .1rem .8rem; font-size: calc(1rem * var(--ts)); margin: .3rem 0; }
+.mperks { margin: .2rem 0 .2rem 1.1rem; padding: 0; color: var(--teal-d); }
+.mact { display: flex; flex-direction: column; gap: .35rem; margin: .5rem 0; }

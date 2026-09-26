@@ -11,50 +11,75 @@ import * as L from '../game/laundry.js';
 import { SHOP_SLOTS, DECOR, SUPPLIES } from '../data/decor.js';
 import { SERVICES, FRIEND_ORDERS, REGULARS } from '../data/regulars.js';
 import { CHARACTERS, ROUTINES, hasSprite, faceOrIcon } from '../data/characters.js';
+import { MACHINE_ART } from '../data/machine_art.js';
 import { UI } from '../ui/ui.js';
 import { foldGame, repairGame } from '../ui/minigames.js';
 import { vibrate, Settings } from '../game/settings.js';
+import { StreetView } from './views.js';
 
-const WASHER_X = i => 600 + i * 150;
-const WASHER_BASE = 508, WASHER_H = 212;
-const DRYER_X = u => 1340 + u * 140;
-const DRYER_H = 300;
-// Left wall, left to right: the UPSTAIRS door (4-104), the pickup shelf against the wall, the
-// counter under the price chalkboard (213-409), the folding table, then the washers. Each stands
-// clear of its neighbours; the wall shelf of supplies hangs between the chalkboard and the window.
-const COUNTER = { x: 330, base: 578, h: 150 };
-const SHELF = { x: 178, base: 488, h: 236 };
-const FOLD = { x: 490, base: 604, h: 240 };
-const BENCH = { x: 1682, base: 646, h: 225 };
-const SUPPLY = { x: 486, y: 264, w: 132 };
-export const COUNTER_SPOT = { x: COUNTER.x + 116, y: 628 };   // where a customer stands to talk
-const CLOCK = { x: 1270, y: 152, s: 62 };
-const PK = 262 / 490;     // player pose scale
-
-const GEOM = {
-  machine_washer_idle: [{ cx: 0.635, cy: 0.548, r: 0.2 }],
-  machine_washer_running: [{ cx: 0.635, cy: 0.548, r: 0.2 }],
-  machine_washer_open: [{ cx: 0.574, cy: 0.55, r: 0.18 }],
-  machine_washer_orange: [{ cx: 0.63, cy: 0.486, r: 0.19 }],
-  machine_washer_blue: [{ cx: 0.636, cy: 0.485, r: 0.19 }],
-  machine_stack_unit: [{ cx: 0.614, cy: 0.247, r: 0.175 }, { cx: 0.614, cy: 0.685, r: 0.175 }],
+// The room is flat 2D (bg/laundromat.webp, 2080 x 720 world px): the back wall meets the floor at
+// y 612, so everything against the wall stands on FLOOR, and people walk in the band WALK. Things
+// out in the room (the counter, the folding table, the bench) stand lower, and whoever is behind
+// them is drawn first. Left to right:
+//   the UPSTAIRS door (12-140), the pick-up shelf against the wall, the counter under the price
+//   chalkboard (258-467 x 172-300), the folding table under the wall shelf of supplies;
+//   five washer bays under the copper hook-ups, the clock between the lamps;
+//   two dryer towers under the vent ducts, the lounge by the front window (glass 1700-1909 x
+//   248-530) and the front door (1934-2080).
+const FLOOR = 614;
+const WALK = [618, 694];
+const WASHER_X = i => 681 + i * 150;
+const WASHER_H = 206;
+const DRYER_X = u => 1419 + u * 145;
+const DRYER_H = 296;
+// top = where things stand on it, as a fraction of the sprite's height from its top edge
+const SHELF = { x: 202, base: FLOOR, h: 220, boards: [0.113, 0.383, 0.658] };
+const COUNTER = { x: 345, base: 654, h: 124, top: 0.047 };
+const FOLD = { x: 540, base: 668, h: 118, top: 0.064 };
+const SUPPLY = { x: 546, y: 312, w: 118, boards: [0.14, 0.613] };
+const LOUNGE_H = 88;                                   // the little cafe table in the lounge
+export const COUNTER_SPOT = { x: 452, y: 688 };        // where a customer stands to talk
+// The seat under the front window, where you catch your breath: the shop's bench, or the seat
+// you've placed there instead. top = the seat's surface; h keeps each within the lounge.
+const BENCH = { x: 1860, base: 668 };
+const SEATS = {
+  bench: { s: 'prop_bench', h: 72, top: 0.031 },
+  plastic_chair: { s: 'furn_plastic_chair', h: 130, top: 0.406 },
+  stool: { s: 'furn_stool', h: 84, top: 0.056 },
+  double_bench: { s: 'furn_double_bench', h: 87, top: 0.427 },
 };
+const SIT_H = 450 * 262 / 490, SIT_SEAT = 0.37;       // the sitting pose: its seat line, up from its feet
+const STAFF = { x: 345, y: 628 };                      // behind the counter
+const CLOCK = { x: 1006, y: 196, s: 74 };
+const LAMPS = [352, 831, 1188, 1816];
+const BACK_DOOR = { x: 18, y: 250, w: 118, h: 362, at: [80, 636] };
+const FRONT_DOOR = { x: 1934, y: 150, w: 146, h: 462, at: [2004, 650] };
+const PK = 262 / 490;     // player pose scale
+// scene sprites for the bags customers bring (the item_* ones are the UI's icons)
+const BAGS = { item_drawstring_bag: 'scn_bag_drawstring', item_tote_bag: 'scn_bag_tote', item_hamper: 'scn_bag_hamper', item_wicker_basket: 'scn_bag_basket' };
 
 export const GLASS = [
-  { x: 567, y: 103, w: 286, h: 104 },
-  { x: 1569, y: 89, w: 222, h: 342 },
-  { x: 1820, y: 158, w: 78, h: 236 },
-  { x: 1822, y: 84, w: 74, h: 44 },
+  { x: 1701, y: 169, w: 64, h: 65 }, { x: 1776, y: 169, w: 61, h: 65 }, { x: 1848, y: 169, w: 61, h: 65 },
+  { x: 1700, y: 248, w: 209, h: 282 },
+  { x: 1947, y: 169, w: 114, h: 64 }, { x: 1959, y: 268, w: 92, h: 275 },
 ];
 
 const LAUNDRY_COLORS = ['#7fa0b0', '#c9b88f', '#b86a4a', '#6f8f6a', '#d9cfbf', '#5f6f8f', '#c48fa0', '#e0c070', '#8a6a9a'];
+// The bundles of washing seen tumbling in a drum: mostly the load's own colour, and a towel.
+const BUNDLES = { red: 'drum_red', white: 'drum_white', blue: 'drum_blue', yellow: 'drum_yellow' };
+function bundlesFor(hex) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const main = Math.max(r, g, b) - Math.min(r, g, b) < 26 ? 'white' : b >= r && b >= g - 10 ? 'blue' : r > g + 30 ? 'red' : 'yellow';
+  const other = main === 'blue' ? 'yellow' : 'blue';
+  return [BUNDLES[main], BUNDLES.white, BUNDLES[main], BUNDLES[other], BUNDLES[main]];
+}
 
 export class LaundromatScene extends Scene {
   constructor(app) {
-    super(app, { worldW: 1920, interior: true, walkBand: [540, 692] });
+    super(app, { worldW: 2080, interior: true, walkBand: WALK });
     this.name = 'laundromat';
     this.counterSpot = COUNTER_SPOT;
-    this.player = new Actor({ id: 'me', player: true, h: 262, x: 60, y: 560, speed: 330 });
+    this.player = new Actor({ id: 'me', player: true, h: 262, x: BACK_DOOR.at[0], y: BACK_DOOR.at[1], speed: 330 });
     this.player.hitW = 90;
     this.carry = [];               // order ids in hand
     this.jobs = [];
@@ -63,7 +88,9 @@ export class LaundromatScene extends Scene {
     this.visitors = new Map();     // id -> {actor, leaveAt, state}
     this.glass = new GlassRain(GLASS);
     this.ripples = [];
-    this.machineAnim = {};         // machine id -> {open: seconds}
+    this.machineAnim = {};         // machine id -> {t, dur}: the door swings open, then shut
+    this.drum = {};                // machine id -> {ang, dir}: drum rotation
+    this.view = new StreetView({ x: 1440, y: -30, w: 640, h: 600, follow: 0.2 });
     this.clockTicked = -1;
     this.shiftRunning = false;
     this.warnedClosing = false;
@@ -72,8 +99,7 @@ export class LaundromatScene extends Scene {
   // ------------------------------------------------------------------ lifecycle
   async enter(opts = {}) {
     this.bg = await Assets.bg('laundromat');
-    this.outside = await Assets.bg('outside');
-    this.outsideLights = await Assets.bg('outside_lights');
+    await this.view.load();
     L.ensureMachineFields();
     this.buildEntities();
     this.actors = [this.player];
@@ -84,9 +110,9 @@ export class LaundromatScene extends Scene {
     this.player.carrying = false;
     this.player.stop();
     const from = opts.from || 'backdoor';
-    if (from === 'backdoor') { this.player.x = 58; this.player.y = 552; this.player.facing = 1; }
-    else if (from === 'front') { this.player.x = 1858; this.player.y = 590; this.player.facing = -1; }
-    else { this.player.x = opts.x || 900; this.player.y = opts.y || 620; }
+    if (from === 'backdoor') { [this.player.x, this.player.y] = BACK_DOOR.at; this.player.facing = 1; }
+    else if (from === 'front') { [this.player.x, this.player.y] = FRONT_DOOR.at; this.player.facing = -1; }
+    else { this.player.x = opts.x || 900; this.player.y = opts.y || 650; }
     this.follow(this.player, 0, true);
     this.shiftRunning = G.phase === 'shift';
     this.placeNightVisitors();
@@ -119,49 +145,51 @@ export class LaundromatScene extends Scene {
   buildEntities() {
     this.ents = [];
     const E = e => { this.ents.push(e); return e; };
-    // washers (5 slots)
+    // washers (5 bays)
     for (let i = 0; i < L.WASHER_SLOTS; i++) {
       const x = WASHER_X(i);
       E({
-        id: 'wslot' + i, z: WASHER_BASE,
+        id: 'wslot' + i, z: FLOOR,
         m: () => L.washers().find(m => m.slot === i),
         draw: (r) => this.drawWasherSlot(r, i, x),
-        hit: () => ({ x: x - 75, y: WASHER_BASE - WASHER_H, w: 150, h: WASHER_H }),
+        hit: () => ({ x: x - 64, y: FLOOR - WASHER_H, w: 128, h: WASHER_H }),
         tap: () => this.tapWasherSlot(i),
       });
     }
-    // dryer units (2)
+    // dryer towers (2)
     for (let u = 0; u < L.DRYER_UNITS; u++) {
       const x = DRYER_X(u);
-      E({ id: 'dunit' + u, z: WASHER_BASE + 1, draw: (r) => this.drawDryerUnit(r, u, x),
-        hit: () => ({ x: x - 68, y: WASHER_BASE - DRYER_H, w: 136, h: DRYER_H }),
+      E({ id: 'dunit' + u, z: FLOOR + 1, draw: (r) => this.drawDryerUnit(r, u, x),
+        hit: () => ({ x: x - 56, y: FLOOR - DRYER_H, w: 112, h: DRYER_H }),
         tap: (wx, wy) => this.tapDryerUnit(u, wy) });
     }
-    // pickup shelf (behind the counter)
+    // pick-up shelf against the wall
     E({ id: 'shelf', z: SHELF.base, draw: (r) => this.drawShelf(r),
-      hit: () => ({ x: SHELF.x - 70, y: SHELF.base - SHELF.h, w: 140, h: SHELF.h }), tap: () => this.tapShelf() });
+      hit: () => ({ x: SHELF.x - 80, y: SHELF.base - SHELF.h, w: 160, h: SHELF.h }), tap: () => this.tapShelf() });
     // counter with bags waiting
     E({ id: 'counter', z: COUNTER.base, draw: (r) => this.drawCounter(r),
-      hit: () => ({ x: COUNTER.x - 85, y: COUNTER.base - COUNTER.h - 40, w: 170, h: COUNTER.h + 40 }), tap: () => this.tapCounter() });
+      hit: () => ({ x: COUNTER.x - 85, y: COUNTER.base - COUNTER.h - 50, w: 170, h: COUNTER.h + 50 }), tap: () => this.tapCounter() });
     // folding table
     E({ id: 'fold', z: FOLD.base, draw: (r) => this.drawFold(r),
-      hit: () => ({ x: FOLD.x - 75, y: FOLD.base - 130, w: 150, h: 130 }), tap: () => this.tapFold() });
-    // bench
+      hit: () => ({ x: FOLD.x - 78, y: FOLD.base - FOLD.h, w: 156, h: FOLD.h }), tap: () => this.tapFold() });
+    // the seat under the window
     E({ id: 'bench', z: BENCH.base, draw: (r) => this.drawBench(r),
-      hit: () => ({ x: BENCH.x - 88, y: BENCH.base - 95, w: 176, h: 95 }), tap: () => this.tapBench() });
+      hit: () => { const b = this.seatBox(); return { x: b.x - 6, y: b.y - 20, w: b.w + 12, h: b.h + 20 }; }, tap: () => this.tapBench() });
     // supply shelf on the wall
     E({ id: 'supply', z: 60, draw: (r) => this.drawSupply(r),
-      hit: () => ({ x: SUPPLY.x - SUPPLY.w / 2, y: SUPPLY.y - 110, w: SUPPLY.w, h: 112 }), tap: () => this.tapSupply() });
-    // wall clock + price board text
-    // the coin changer (an upgrade) hangs between the third and fourth water hook-ups
-    E({ id: 'changer', z: 54, draw: (r) => { if (G.upgrades.includes('coin_changer')) r.sprite('upg_coin_changer', 975, 293, { h: 62 }); } });
-    E({ id: 'clock', z: 55, draw: (r) => this.drawClock(r), hit: () => ({ x: CLOCK.x - 32, y: CLOCK.y - 32, w: 64, h: 64 }),
+      hit: () => ({ x: SUPPLY.x - SUPPLY.w / 2, y: SUPPLY.y - 80, w: SUPPLY.w, h: 82 }), tap: () => this.tapSupply() });
+    // upgrades that live on the wall: the coin changer between the third and fourth hook-ups,
+    // the tankless heater at the end of the copper line
+    E({ id: 'changer', z: 54, draw: (r) => { if (G.upgrades.includes('coin_changer')) r.sprite('upg_coin_changer', 1056, 406, { h: 64 }); } });
+    E({ id: 'heater', z: 54, draw: (r) => { if (G.upgrades.includes('water_heater')) r.sprite('upg_water_heater', 638, 322, { h: 104 }); } });
+    // wall clock and the price board
+    E({ id: 'clock', z: 55, draw: (r) => this.drawClock(r), hit: () => ({ x: CLOCK.x - 38, y: CLOCK.y - 38, w: 76, h: 76 }),
       tap: () => UI.toast(`${clockStr(G.time)} — ${this.shiftRunning ? 'open until 6:00 PM' : 'closed'}`, 'icon_clock') });
-    E({ id: 'prices', z: 54, draw: (r) => this.drawPriceBoard(r), hit: () => ({ x: 222, y: 120, w: 180, h: 112 }),
+    E({ id: 'prices', z: 54, draw: (r) => this.drawPriceBoard(r), hit: () => ({ x: 258, y: 172, w: 209, h: 128 }),
       tap: () => this.app.menus.openCatalog('prices') });
     // doors
-    E({ id: 'backdoor', z: 50, hit: () => ({ x: 8, y: 196, w: 92, h: 276 }), tap: () => this.tapBackDoor() });
-    E({ id: 'frontdoor', z: 50, hit: () => ({ x: 1808, y: 150, w: 100, h: 322 }), tap: () => this.tapFrontDoor() });
+    E({ id: 'backdoor', z: 50, hit: () => BACK_DOOR, tap: () => this.tapBackDoor() });
+    E({ id: 'frontdoor', z: 50, hit: () => FRONT_DOOR, tap: () => this.tapFrontDoor() });
     // decor slots
     for (const [slot, pos] of Object.entries(SHOP_SLOTS)) {
       const e = E({
@@ -174,30 +202,30 @@ export class LaundromatScene extends Scene {
       });
       e.tapZ = slot === 'rug' ? 1 : undefined;
     }
-    // puddles & litter (dynamic, flat on floor)
-    E({ id: 'floorstuff', z: 480, draw: (r) => this.drawFloorStuff(r) });
-    E({ id: 'floorhits', z: 481, hit: () => ({ x: 0, y: 0, w: 0, h: 0 }), tap: null });
+    // puddles & litter (dynamic, flat on the floor)
+    E({ id: 'floorstuff', z: FLOOR + 2, draw: (r) => this.drawFloorStuff(r) });
   }
 
   slotZ(slot) {
-    if (slot === 'rug') return 470;
-    const p = SHOP_SLOTS[slot];
+    if (slot === 'rug') return FLOOR + 3;
     if (['hang1', 'hang2', 'lights', 'wall_a', 'wall_b'].includes(slot)) return 52;
-    if (slot === 'sill' || slot === 'sill2' || slot === 'counter_top') return slot === 'counter_top' ? COUNTER.base + 1 : 470;
-    return p.y;
+    if (slot === 'sill') return FLOOR - 1;
+    if (slot === 'sill2') return FLOOR - 1;
+    if (slot === 'counter_top') return COUNTER.base + 1;
+    return SHOP_SLOTS[slot].y;
   }
 
   slotHit(slot, pos) {
     const id = G.placed[slot];
-    if (!id) return null;
+    if (!id || slot === 'seat') return null;       // the seat is the bench (tap it to sit)
     const d = DECOR[id];
     const im = Assets.img(d.sprite);
     if (!im) return null;
     const k = d.h ? d.h / im.naturalHeight : d.w / im.naturalWidth;
     const w = im.naturalWidth * k, h = im.naturalHeight * k;
-    const ay = d.ay ?? 1;
+    const ay = (slot === 'hang1' || slot === 'hang2') ? 1 : (d.ay ?? 1);
     let y = pos.y - h * ay;
-    if (slot === 'lounge_table') y -= 96;
+    if (slot === 'lounge_table') y -= LOUNGE_H - 2;
     return { x: pos.x - w / 2, y, w, h };
   }
 
@@ -217,7 +245,7 @@ export class LaundromatScene extends Scene {
     for (const l of L.Sim.litter) if (Math.abs(w.x - l.x) < 34 && Math.abs(w.y - l.y) < 30) { this.pickLitter(l); return; }
     const e = this.hitTest(w.x, w.y);
     if (e) { e.tap(w.x, w.y); return; }
-    if (w.y > 470) this.walkFloor(w.x, w.y);
+    if (w.y > 560) this.walkFloor(w.x, w.y);
   }
 
   walkFloor(x, y) {
@@ -265,7 +293,7 @@ export class LaundromatScene extends Scene {
       const o = held[held.length - 1];
       if (!o) return;
       if (L.nextStep(o) === 'shelf') return this.tapShelf();
-      this.queue({ x: COUNTER.x + 10, y: 548, face: 1, run: async () => {
+      this.queue({ x: STAFF.x, y: STAFF.y, face: 1, run: async () => {
         if (!this.carry.includes(o.id)) return;
         this.player.setPose('load', 0.4);
         o.stage = 'counter';
@@ -277,7 +305,7 @@ export class LaundromatScene extends Scene {
     }
     if (!waiting.length) { UI.toast('No bags waiting at the counter.', 'icon_basket'); return; }
     if (!this.canCarryMore()) { UI.toast('Your hands are full.', 'icon_basket', 'bad'); return; }
-    this.queue({ x: COUNTER.x + 10, y: 548, face: 1, run: async () => {
+    this.queue({ x: STAFF.x, y: STAFF.y, face: 1, run: async () => {
       const o = this.pickFromCounter();
       if (!o || !this.canCarryMore()) return;
       o.stage = 'carried';
@@ -307,22 +335,28 @@ export class LaundromatScene extends Scene {
   tapWasherSlot(i) {
     const m = L.washers().find(q => q.slot === i);
     if (!m) { this.app.menus.openCatalog('machines'); return; }
-    const x = WASHER_X(i);
-    this.tapMachine(m, { x: x - 44, y: 522, face: 1, pose: 'load' });
+    this.tapMachine(m, this.machineSpot(m));
   }
 
   tapDryerUnit(u, wy) {
     const drums = L.dryers().filter(d => Math.floor(d.slot / 2) === u);
     if (!drums.length) { this.app.menus.openCatalog('machines'); return; }
-    const x = DRYER_X(u);
     // pick the drum the player most likely meant
-    const mid = WASHER_BASE - DRYER_H * 0.5;
+    const mid = FLOOR - DRYER_H * 0.5;
     let drum = drums.find(d => (d.slot % 2 === 0) === (wy < mid)) || drums[0];
     // if carrying something that needs drying and the tapped drum is busy, use the other one
     const needs = this.firstNeeding('dry');
     if (needs && !L.isFree(drum)) drum = drums.find(L.isFree) || drum;
-    const top = drum.slot % 2 === 0;
-    this.tapMachine(drum, top ? { x: x - 14, y: 522, face: 1, pose: 'reach' } : { x: x - 50, y: 522, face: 1, pose: 'load' });
+    this.tapMachine(drum, this.machineSpot(drum));
+  }
+
+  // Where to stand to work a machine: beside it, hands at the door (the first washer from its
+  // right, since the folding table is on its left); the top dryer drum is a reach up.
+  machineSpot(m) {
+    const d = this.doorGeom(m);
+    if (m.kind === 'dryer' && m.slot % 2 === 0) return { x: d.cx - 64, y: 628, face: 1, pose: 'reach' };
+    if (m.kind === 'washer' && m.slot === 0) return { x: d.cx + 96, y: 628, face: -1, pose: 'load' };
+    return { x: d.cx - 96, y: 628, face: 1, pose: 'load' };
   }
 
   tapMachine(m, spot) {
@@ -391,7 +425,9 @@ export class LaundromatScene extends Scene {
     const kind = m.kind;
     if (kind === 'washer' && o.softener && (G.inv.softener || 0) >= 1) { G.inv.softener -= 1; o.softenerOk = true; }
     if (kind === 'washer' && o.softener) o.softenerWanted = true;
-    if (kind === 'washer' && o.gentle && m.model === 'eco') o.gentleOk = true;
+    const model = L.modelOf(m);
+    if (o.gentle && model.gentle) o.gentleOk = true;
+    if (model.care) o.care = Math.min(0.1, (o.care || 0) + model.care);
     o.machine = m.id;
     o.stage = kind === 'washer' ? 'washing' : 'drying';
     Sound.play('machine_door', { vol: 0.8 });
@@ -408,14 +444,15 @@ export class LaundromatScene extends Scene {
   }
 
   async machineAction(m, pose, secs) {
-    this.machineAnim[m.id] = { open: secs + 0.2 };
+    this.machineAnim[m.id] = { t: 0, dur: secs + 0.35 };
     Sound.play('latch', { vol: 0.5 });
     this.player.setPose(pose || 'load', secs);
     await tweens.wait(secs);
   }
 
   offerTuneUp(m, spot) {
-    this.app.menus.contextMenu(this.r.toScreen(spot.x + 60, WASHER_BASE - 230), `${L.modelOf(m).name} · ${Math.round(m.cond)}%`, [
+    const top = this.machineTop(m);
+    this.app.menus.contextMenu(this.r.toScreen(top.x, top.y - 20), `${L.modelOf(m).name} · ${Math.round(m.cond)}%`, [
       { label: 'Tune up (20 min)', icon: 'icon_wrench', run: () => this.queue(Object.assign({}, spot, { run: () => this.doTuneUp(m) })) },
     ]);
   }
@@ -443,7 +480,7 @@ export class LaundromatScene extends Scene {
     L.repair(m, q);
     G.time += 25;
     addStat('energy', -6);
-    this.particles.emit('sparkle', this.machineTop(m).x, this.machineTop(m).y + 40, 10);
+    { const d = this.doorGeom(m); this.particles.emit('sparkle', d.cx, d.cy, 10); }
     UI.toast(`Repaired! ${L.modelOf(m).name} is running again.`, 'icon_wrench');
     if (q > 0.8 && G.skills.repair < 5) { G.vars.repairXp = (G.vars.repairXp || 0) + 1; }
     this.app.story.trigger('repaired', { m, q });
@@ -453,8 +490,8 @@ export class LaundromatScene extends Scene {
     this.player.setPose('load', 0.8);
     await tweens.wait(0.8);
     L.cleanLint(m);
-    const p = this.machineTop(m);
-    this.particles.emit('lint', p.x, p.y + 120, 14);
+    const box = this.unitBox(m);
+    this.particles.emit('lint', box.x + box.w * 0.5, box.y + box.h * 0.9, 14);
     Sound.play('cloth4', { vol: 0.7 });
     addStat('cleanliness', 2);
     UI.toast('Lint trap cleaned. Dryer runs faster.', 'icon_dryer');
@@ -469,7 +506,7 @@ export class LaundromatScene extends Scene {
       else UI.toast('The folding table. Bring dry laundry here.', 'icon_towels');
       return;
     }
-    this.queue({ x: FOLD.x, y: FOLD.base + 12, face: 1, run: async () => {
+    this.queue({ x: FOLD.x, y: FOLD.base - 18, face: 1, run: async () => {
       if (!this.carry.includes(o.id)) return;
       this.mode = 'fold';
       this.player.visible = false;
@@ -485,7 +522,7 @@ export class LaundromatScene extends Scene {
       this.player.visible = true;
       o.stage = 'carried';
       // straight to the pickup shelf
-      await this.player.walkTo(SHELF.x + 26, 548, -1);
+      await this.player.walkTo(SHELF.x + 78, 628, -1);
       await this.placeOnShelf(o);
     } });
   }
@@ -497,7 +534,7 @@ export class LaundromatScene extends Scene {
       UI.toast(ready ? `${ready} order${ready > 1 ? 's' : ''} waiting for pickup.` : 'The pickup shelf is empty.', 'icon_towels');
       return;
     }
-    this.queue({ x: SHELF.x + 26, y: 548, face: -1, run: () => this.placeOnShelf(o) });
+    this.queue({ x: SHELF.x + 78, y: 628, face: -1, run: () => this.placeOnShelf(o) });
   }
 
   async placeOnShelf(o) {
@@ -508,14 +545,14 @@ export class LaundromatScene extends Scene {
     await tweens.wait(0.6);
     this.setCarry(this.carry.filter(id => id !== o.id));
     L.finishOrder(o);
-    this.particles.emit('sparkle', SHELF.x, SHELF.base - 150, 6);
+    this.particles.emit('sparkle', SHELF.x, SHELF.base - SHELF.h * 0.6, 6);
     this.app.story.trigger('ready', { o });
   }
 
   // ------------------------------------------------------------------ bench & rest
   tapBench() {
     if (this.carry.length) { UI.toast('Put the laundry somewhere first.', 'icon_basket'); return; }
-    this.queue({ x: BENCH.x, y: BENCH.base + 10, run: async () => {
+    this.queue({ x: BENCH.x, y: BENCH.base + 12, run: async () => {
       this.mode = 'sit';
       this.player.visible = false;
       this.sitT = 0;
@@ -531,6 +568,12 @@ export class LaundromatScene extends Scene {
     this.player.setPose('stretch', 0.9);
   }
 
+  seat() { return SEATS[G.placed.seat] || SEATS.bench; }
+  seatBox() {
+    const st = this.seat(), w = this.r.size(st.s, { h: st.h }).w;
+    return { x: BENCH.x - w / 2, y: BENCH.base - st.h, w, h: st.h };
+  }
+
   // ------------------------------------------------------------------ supplies, doors, slots
   tapSupply() { this.app.menus.openCatalog('supplies'); }
 
@@ -539,7 +582,7 @@ export class LaundromatScene extends Scene {
       UI.toast('Upstairs has to wait — the shop is open.', 'icon_home');
       return;
     }
-    this.queue({ x: 62, y: 548, run: () => this.app.day.leaveLaundromat('home') });
+    this.queue({ x: BACK_DOOR.at[0], y: BACK_DOOR.at[1], run: () => this.app.day.leaveLaundromat('home') });
   }
 
   tapFrontDoor() {
@@ -548,7 +591,7 @@ export class LaundromatScene extends Scene {
       UI.toast('The shop is open until 6. Customers come in through here.', 'icon_clock');
       return;
     }
-    this.queue({ x: 1856, y: 580, run: () => this.app.day.leaveLaundromat('street') });
+    this.queue({ x: FRONT_DOOR.at[0], y: FRONT_DOOR.at[1], run: () => this.app.day.leaveLaundromat('street') });
   }
 
   tapSlot(slot) {
@@ -556,7 +599,7 @@ export class LaundromatScene extends Scene {
     if (!id) return;
     const d = DECOR[id];
     if (d.fn === 'music') { this.app.menus.recordPicker(); return; }
-    if (d.fn === 'tea') { this.queue({ x: SHOP_SLOTS[slot].x - 60, y: 650, face: 1, run: () => this.makeTea() }); return; }
+    if (d.fn === 'tea') { this.queue({ x: SHOP_SLOTS[slot].x - 70, y: clamp(SHOP_SLOTS[slot].y - 20, WALK[0], WALK[1]), face: 1, run: () => this.makeTea() }); return; }
     if (d.fn === 'community' || d.fn === 'notes') { this.app.menus.communityBoard(); return; }
     UI.toast(`${d.name} — ${d.blurb}`, null);
   }
@@ -570,7 +613,7 @@ export class LaundromatScene extends Scene {
     this.player.setPose('tea', 2.2);
     addStat('energy', 14);
     G.time += 10;
-    this.particles.emit('steam', SHOP_SLOTS.lounge_table.x, SHOP_SLOTS.lounge_table.y - 150, 8);
+    this.particles.emit('steam', SHOP_SLOTS.lounge_table.x, SHOP_SLOTS.lounge_table.y - LOUNGE_H - 50, 8);
     UI.toast('A cup of tea. +energy', 'item_teacup');
   }
 
@@ -595,7 +638,7 @@ export class LaundromatScene extends Scene {
       await tweens.wait(0.5);
       L.Sim.litter = L.Sim.litter.filter(q => q !== l);
       if (l.kind === 'sock') this.app.menus.foundSock('shop');
-      else { addStat('cleanliness', 3); UI.toast('Lint bunny caught.', 'icon_dryer'); }
+      else { addStat('cleanliness', 3); UI.toast('Lint bunny caught.', 'scn_lint'); }
       Sound.play('pop', { vol: 0.6 });
     } });
   }
@@ -606,7 +649,7 @@ export class LaundromatScene extends Scene {
     const c = CHARACTERS[id];
     // pop in just inside the door (side by side if two people come in together), then hop over
     const entering = [...this.visitors.values()].filter(o => o.state === 'enter').length;
-    const a = new Actor({ id, sprite: c.sprite, h: c.h, x: 1846 - entering * 80, y: 590 + entering * 14, speed: 190 });
+    const a = new Actor({ id, sprite: c.sprite, h: c.h, x: FRONT_DOOR.at[0] - entering * 80, y: FRONT_DOOR.at[1] + entering * 12, speed: 190 });
     a.facing = -1;
     this.actors.push(a);
     const v = { id, actor: a, state: 'enter', leaveAt: G.time + (opts.stay || 60), order: null };
@@ -642,7 +685,7 @@ export class LaundromatScene extends Scene {
     const nights = ROUTINES.maya.evening.laundromat_night || [];
     if (forced ? forced !== 'laundromat' : !nights.includes(weekday(G.day))) return;
     const c = CHARACTERS.maya;
-    const a = new Actor({ id: 'maya', sprite: c.sprite, h: c.h, x: 820, y: 604, speed: 190 });
+    const a = new Actor({ id: 'maya', sprite: c.sprite, h: c.h, x: 1520, y: 676, speed: 190 });
     a.facing = -1;
     this.actors.push(a);
     this.visitors.set('maya', { id: 'maya', actor: a, state: 'here', leaveAt: 26 * 60, order: null, pinned: true });
@@ -651,7 +694,7 @@ export class LaundromatScene extends Scene {
   }
 
   freeLoungeSpot() {
-    const spots = [{ x: 1600, y: 668, face: -1 }, { x: 1470, y: 652, face: -1 }, { x: 1760, y: 690, face: -1 }, { x: 1290, y: 668, face: -1 }];
+    const spots = [{ x: 1690, y: 690, face: -1 }, { x: 1545, y: 682, face: -1 }, { x: 1405, y: 688, face: -1 }, { x: 1250, y: 680, face: -1 }];
     for (const s of spots) {
       let taken = false;
       for (const v of this.visitors.values()) if (Math.abs(v.actor.x - s.x) < 60 && Math.abs(v.actor.y - s.y) < 30) taken = true;
@@ -674,8 +717,8 @@ export class LaundromatScene extends Scene {
     if (v.state !== 'here') return;
     // hand over finished laundry in person
     const o = v.order && L.order(v.order);
-    const talkX = clamp(a.x + (a.x > 1000 ? -110 : 110), 60, 1860);
-    if (!await this.player.walkTo(talkX, clamp(a.y + 6, 540, 692), a.x > talkX ? 1 : -1)) return;
+    const talkX = clamp(a.x + (a.x > 1000 ? -110 : 110), 60, 2020);
+    if (!await this.player.walkTo(talkX, clamp(a.y + 6, WALK[0], WALK[1]), a.x > talkX ? 1 : -1)) return;
     if (v.state !== 'here') return;
     this.player.facing = a.x > this.player.x ? 1 : -1;
     a.facing = -this.player.facing;
@@ -709,7 +752,7 @@ export class LaundromatScene extends Scene {
     const o = v.order && L.order(v.order);
     if (o && o.stage !== 'done') { o.personal = false; v.order = null; this.app.hud.refreshTickets(); }
     (async () => {
-      await v.actor.walkTo(1846, 590);
+      await v.actor.walkTo(FRONT_DOOR.at[0], FRONT_DOOR.at[1]);
       Sound.play('shop_bell', { vol: 0.5 });
       this.doorOpen = 0.8;
       await v.actor.vanish();
@@ -802,17 +845,25 @@ export class LaundromatScene extends Scene {
     this.applyFatigue(330, this.shiftRunning ? 'Running on fumes. Sit on the bench or make a cup of tea to catch your breath.' : null);
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
+    this.view.update(dt, G.time, G.weather);
     this.follow(this.player, dt);
     this.ripples = this.ripples.filter(r => (r.t += dt) < 0.45);
     if (this.doorOpen > 0) this.doorOpen -= dt;
-    for (const k in this.machineAnim) { this.machineAnim[k].open -= dt; if (this.machineAnim[k].open <= 0) delete this.machineAnim[k]; }
-    // ambient particles
-    if (Math.random() < dt * 1.5 && nightness(G.time) < 0.6) this.particles.emit('dust', 1560 + Math.random() * 240, 250 + Math.random() * 300, 1);
+    for (const k in this.machineAnim) { const a = this.machineAnim[k]; a.t += dt; if (a.t >= a.dur) delete this.machineAnim[k]; }
     for (const m of G.machines) {
-      if (m.broken && Math.random() < dt * 0.8) { const p = this.machineTop(m); this.particles.emit('smoke', p.x + 20, p.y + 20, 1); }
-      if (m.state === 'running' && m.kind === 'washer' && Math.random() < dt * 0.35) { const p = this.machineTop(m); this.particles.emit('bubble', p.x + 10, p.y + 110, 1); }
+      const run = m.state === 'running' && !m.broken;
+      const d = this.drum[m.id] || (this.drum[m.id] = { ang: rand() * 6, dir: 1, flip: 3 });
+      if (run) {
+        const ph = this.phase(m);
+        d.flip -= dt;
+        if (ph.name === 'wash' && d.flip <= 0) { d.dir = -d.dir; d.flip = rand.range(2.5, 4.5); }
+        if (ph.name !== 'wash') d.dir = 1;
+        d.ang += d.dir * ph.speed * dt;
+      }
+      if (m.broken && Math.random() < dt * 0.8) { const g = this.doorGeom(m); this.particles.emit('smoke', g.cx + 10, g.cy - g.r, 1); }
+      if (run && m.kind === 'washer' && this.phase(m).water > 0.2 && Math.random() < dt * 0.6) { const g = this.doorGeom(m); this.particles.emit('bubble', g.cx + (rand() - 0.5) * g.r, g.cy - g.r * 0.2, 1, { override: { life: 0.8 } }); }
     }
-    if (G.record && G.placed.lounge_table === 'record_player' && Math.random() < dt * 0.6) this.particles.emit('note', SHOP_SLOTS.lounge_table.x, SHOP_SLOTS.lounge_table.y - 170, 1);
+    if (G.record && G.placed.lounge_table === 'record_player' && Math.random() < dt * 0.6) this.particles.emit('note', SHOP_SLOTS.lounge_table.x, SHOP_SLOTS.lounge_table.y - LOUNGE_H - 60, 1);
   }
 
   processEvents() {
@@ -867,10 +918,52 @@ export class LaundromatScene extends Scene {
     }
   }
 
+  // The sprite box of a washer, or of the dryer tower a drum belongs to.
+  unitBox(m) {
+    const sprite = L.modelOf(m).sprite;
+    const art = MACHINE_ART[sprite] || { w: 200, h: 330 };
+    const h = m.kind === 'washer' ? WASHER_H : DRYER_H;
+    const w = h * art.w / art.h;
+    const x = m.kind === 'washer' ? WASHER_X(m.slot) : DRYER_X(Math.floor(m.slot / 2));
+    return { x: x - w / 2, y: FLOOR - h, w, h, cx: x, sprite, art };
+  }
+
+  // A machine's round door, in world px: centre, glass radius, ring colour, hinge side. With
+  // open set, the drum opening of the open-door art instead (it sits a little differently).
+  doorGeom(m, box, open) {
+    box = box || this.unitBox(m);
+    const art = box.art || {};
+    const i = m.kind === 'washer' ? 0 : m.slot % 2;
+    if (open && art.open) {
+      const o = art.open, d = o.doors[Math.min(o.doors.length - 1, i)];
+      const x0 = box.x + o.dx * box.w, w = o.w * box.w;
+      return { cx: x0 + d.cx * w, cy: box.y + d.cy * box.h, r: d.r * w, open: true };
+    }
+    const doors = art.doors || [{ cx: 0.5, cy: 0.55, r: 0.27, ring: '#999', hinge: -1 }];
+    const d = doors[Math.min(doors.length - 1, i)];
+    return { cx: box.x + d.cx * box.w, cy: box.y + d.cy * box.h, r: d.r * box.w, ring: d.ring, hinge: d.hinge };
+  }
+
+  machineDoorOpen(m) { const a = this.machineAnim[m.id]; return !!a && a.t < a.dur; }
+
+  // Top middle of a machine (or of its drum, for dryers): where its indicator floats.
   machineTop(m) {
-    if (m.kind === 'washer') return { x: WASHER_X(m.slot), y: WASHER_BASE - WASHER_H };
-    const u = Math.floor(m.slot / 2);
-    return { x: DRYER_X(u), y: WASHER_BASE - DRYER_H + (m.slot % 2 ? DRYER_H * 0.45 : 0) };
+    const box = this.unitBox(m);
+    if (m.kind === 'washer') return { x: box.cx, y: box.y };
+    const g = this.doorGeom(m, box);
+    return { x: box.cx, y: g.cy - g.r * 1.9 };
+  }
+
+  // Where a running machine is in its cycle. Washers fill, wash (back and forth), drain and
+  // spin; dryers tumble, then cool down.
+  phase(m) {
+    const p = m.dur ? m.t / m.dur : 0;
+    if (m.kind === 'dryer') return p < 0.88 ? { name: 'tumble', water: 0, speed: 3.1, heat: 1 } : { name: 'cool', water: 0, speed: 1.8, heat: 1 - (p - 0.88) / 0.12 };
+    if (p < 0.08) return { name: 'fill', water: p / 0.08 * 0.42, speed: 1.2 };
+    if (p < 0.62) return { name: 'wash', water: 0.42, speed: 2.3 };
+    if (p < 0.7) return { name: 'drain', water: 0.42 * (1 - (p - 0.62) / 0.08), speed: 1.5 };
+    if (p < 0.96) return { name: 'spin', water: 0, speed: 3 + Math.min(1, (p - 0.7) / 0.06) * 15 };
+    return { name: 'stop', water: 0, speed: 3 * (1 - (p - 0.96) / 0.04) };
   }
 
   // ------------------------------------------------------------------ drawing
@@ -878,7 +971,8 @@ export class LaundromatScene extends Scene {
     const r = this.r, c = r.ctx;
     r.clear('#1a1410');
     r.world();
-    this.drawOutside(r);
+    this.view.draw(r, this.t, G.time, G.weather, () => { this.tintOutdoors(r); r.world(); });
+    this.glass.drawOutside(c);
     if (this.bg) c.drawImage(this.bg, 0, 0, this.worldW, 720);
     this.glass.draw(c);
     this.drawGlassDecal(r);
@@ -888,21 +982,21 @@ export class LaundromatScene extends Scene {
     const night = nightness(G.time);
     const lights = [];
     const lampI = 0.3 + 0.7 * night;
-    for (const lx of [250, 720, 1070, 1500]) {
-      lights.push({ x: lx, y: 150, r: 430, c: [255, 214, 160], i: lampI * 0.8 });
-      lights.push({ x: lx, y: 600, r: 340, c: [255, 200, 150], i: lampI * 0.45, sy: 0.55 });
+    for (const lx of LAMPS) {
+      lights.push({ x: lx, y: 160, r: 430, c: [255, 214, 160], i: lampI * 0.8 });
+      lights.push({ x: lx, y: 640, r: 340, c: [255, 200, 150], i: lampI * 0.45, sy: 0.55 });
     }
-    lights.push({ x: 1680, y: 330, r: 560, c: [215, 228, 255], i: 0.55 * (1 - night) });
-    lights.push({ x: 710, y: 160, r: 330, c: [215, 228, 255], i: 0.35 * (1 - night) });
-    if (G.placed.lights) lights.push({ x: SHOP_SLOTS.lights.x, y: 170, r: 300, c: [255, 190, 110], i: 0.5 * night + 0.1 });
+    lights.push({ x: 1805, y: 380, r: 560, c: [215, 228, 255], i: 0.55 * (1 - night) });
+    lights.push({ x: 2005, y: 400, r: 300, c: [215, 228, 255], i: 0.4 * (1 - night) });
+    if (G.placed.lights) lights.push({ x: SHOP_SLOTS.lights.x, y: 190, r: 300, c: [255, 190, 110], i: 0.5 * night + 0.1 });
     if (G.placed.floor_l1 === 'floor_lamp') lights.push({ x: SHOP_SLOTS.floor_l1.x + 30, y: 470, r: 260, c: [255, 196, 120], i: 0.4 + 0.4 * night });
-    for (const s of ['sill', 'sill2']) if (G.placed[s] === 'lantern') lights.push({ x: SHOP_SLOTS[s].x, y: 420, r: 200, c: [255, 180, 90], i: 0.5 * night });
-    if (this.powerOut) { lights.length = 0; for (const s of ['sill', 'sill2', 'counter_top']) lights.push({ x: SHOP_SLOTS[s].x, y: 430, r: 360, c: [255, 170, 80], i: 0.9 }); }
+    for (const s of ['sill', 'sill2']) if (G.placed[s] === 'lantern') lights.push({ x: SHOP_SLOTS[s].x, y: 510, r: 200, c: [255, 180, 90], i: 0.5 * night });
+    if (this.powerOut) { lights.length = 0; for (const s of ['sill', 'sill2', 'counter_top']) lights.push({ x: SHOP_SLOTS[s].x, y: 500, r: 360, c: [255, 170, 80], i: 0.9 }); }
     r.applyLighting(this.ambientColor(), lights, r.cam.x);
-    // bloom
-    if (!this.powerOut) for (const lx of [250, 720, 1070, 1500]) r.glow(lx, 128, 70, [255, 225, 160], 0.35 * lampI);
+    // bloom under the lamp shades
+    if (!this.powerOut) for (const lx of LAMPS) r.glow(lx, 150, 70, [255, 225, 160], 0.35 * lampI);
     if (G.placed.lights) this.drawStringGlow(r, night);
-    if (this.powerOut) r.glow(SHOP_SLOTS.sill.x, 420, 90, [255, 190, 100], 0.4);
+    if (this.powerOut) r.glow(SHOP_SLOTS.sill.x, 505, 90, [255, 190, 100], 0.4);
     this.drawIndicators(r);
     for (const a of this.actors) a.drawEmote(r, this.t);
     for (const rp of this.ripples) {
@@ -918,99 +1012,47 @@ export class LaundromatScene extends Scene {
     return a;
   }
 
-  drawOutside(r) {
-    const c = r.ctx;
-    const night = nightness(G.time);
-    if (this.outside) {
-      c.drawImage(this.outside, 0, 0, this.worldW, 720);
-      this.tintOutdoors(r);
-      if (this.outsideLights && night > 0.05) { c.save(); c.globalAlpha = night; c.globalCompositeOperation = 'lighter'; c.drawImage(this.outsideLights, 0, 0, this.worldW, 720); c.restore(); }
-    } else {
-      const g = c.createLinearGradient(0, 0, 0, 480);
-      g.addColorStop(0, night > 0.5 ? '#1c2640' : '#9fb7c6'); g.addColorStop(1, night > 0.5 ? '#3a4660' : '#d8d2bf');
-      c.fillStyle = g; c.fillRect(0, 0, this.worldW, 480);
-    }
-    // passers-by with umbrellas behind the storefront
-    if (this.walkInGhost > 0) this.walkInGhost -= 1 / 60;
-    const tt = this.t;
-    for (let i = 0; i < 2; i++) {
-      const period = 17 + i * 6;
-      const ph = ((tt + i * 9) % period) / period;
-      const x = 1540 + ph * 300, y = 430;
-      c.save(); c.globalAlpha = 0.35 + 0.2 * night; c.fillStyle = '#1b2230';
-      c.beginPath(); c.ellipse(x, y - 60, 12, 16, 0, 0, Math.PI * 2); c.fill();
-      c.fillRect(x - 13, y - 48, 26, 52);
-      if (G.weather !== 'clear') { c.beginPath(); c.ellipse(x, y - 86, 34, 14, 0, Math.PI, 0); c.fill(); c.fillRect(x - 1, y - 86, 2, 30); }
-      c.restore();
-    }
-  }
-
+  // The shop's name painted on the big window (seen from inside, so mirrored), and the sign on
+  // the door glass.
   drawGlassDecal(r) {
     const c = r.ctx;
     c.save();
-    c.translate(1680, 190);
+    c.translate(1805, 322);
     c.scale(-1, 1);
-    c.font = '46px Pacifico';
+    c.font = '44px Pacifico';
     c.textAlign = 'center';
-    c.fillStyle = 'rgba(240,210,150,0.55)';
+    c.fillStyle = 'rgba(240,210,150,0.6)';
     c.strokeStyle = 'rgba(80,40,20,0.35)'; c.lineWidth = 3;
     c.strokeText(G.shop, 0, 0);
     c.fillText(G.shop, 0, 0);
-    c.font = '700 17px Fraunces';
-    c.fillStyle = 'rgba(240,220,180,0.5)';
-    c.fillText('LAUNDROMAT · WASH & FOLD', 0, 34);
+    c.font = '700 15px Fraunces';
+    c.fillStyle = 'rgba(240,220,180,0.55)';
+    c.fillText('LAUNDROMAT · WASH & FOLD', 0, 30);
     c.restore();
-    // door sign
-    c.save();
-    const open = this.shiftRunning;
-    c.translate(1859, 262);
-    c.fillStyle = open ? '#e8b04e' : '#8a7a6a';
-    c.strokeStyle = '#3a2a1e'; c.lineWidth = 2;
-    c.beginPath(); c.roundRect(-30, -13, 60, 26, 5); c.fill(); c.stroke();
-    c.fillStyle = '#3a2a1e'; c.font = '700 15px Fraunces'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText(open ? 'OPEN' : 'CLOSED', 0, 1);
-    c.restore();
+    // the sign hanging in the door glass, turned to OPEN during business hours
+    r.sprite(this.shiftRunning ? 'sign_open' : 'sign_closed', 2005, 272, { h: 50, ay: 0, rot: Math.sin(this.t * 1.7) * 0.015 });
   }
 
   drawStringGlow(r, night) {
     const pos = SHOP_SLOTS.lights;
     for (let i = 0; i < 6; i++) {
-      const x = pos.x - 100 + i * 40, y = pos.y + 22 + Math.sin(i * 1.1) * 8;
-      r.glow(x, y, 26, [255, 200, 120], 0.25 + 0.4 * night * (0.85 + 0.15 * Math.sin(this.t * 2 + i)));
+      const x = pos.x - 104 + i * 41.6, y = pos.y + 30 + Math.sin((i / 5) * Math.PI) * 22;
+      r.glow(x, y, 24, [255, 200, 120], 0.25 + 0.4 * night * (0.85 + 0.15 * Math.sin(this.t * 2 + i)));
     }
   }
 
-  machineSprite(m) {
-    const model = L.modelOf(m);
-    if (m.kind === 'dryer') return 'machine_stack_unit';
-    if (m.model !== 'classic') return model.sprite;
-    if (this.machineAnim[m.id]) return 'machine_washer_open';
-    if (m.state === 'running' && !m.broken) return 'machine_washer_running';
-    return 'machine_washer_idle';
-  }
-
+  // ------------------------------------------------------------------ machines
   drawWasherSlot(r, i, x) {
     const c = r.ctx;
     const m = L.washers().find(q => q.slot === i);
     if (!m) {
-      // empty bay: hose marks and a dust outline
+      // empty bay: the hook-ups wait over a dusty outline
       c.save(); c.globalAlpha = 0.5; c.strokeStyle = '#5a4a3a'; c.setLineDash([6, 6]); c.lineWidth = 2;
-      c.strokeRect(x - 66, WASHER_BASE - 190, 132, 186); c.setLineDash([]);
-      c.fillStyle = 'rgba(40,30,20,0.25)'; c.beginPath(); c.ellipse(x, WASHER_BASE + 2, 70, 9, 0, 0, Math.PI * 2); c.fill();
-      c.restore();
-      this.drawAddBadge(r, x, WASHER_BASE - 96);
+      c.strokeRect(x - 60, FLOOR - WASHER_H + 6, 120, WASHER_H - 8); c.setLineDash([]); c.restore();
+      this.drawAddBadge(r, x, FLOOR - WASHER_H / 2);
       return;
     }
-    const sprite = this.machineSprite(m);
-    const shake = m.state === 'running' && !m.broken ? Math.sin(this.t * 38 + i) * 0.9 : 0;
-    const k = WASHER_H / (Assets.img(sprite)?.naturalHeight || 458);
-    c.save(); c.globalAlpha = 0.3; c.fillStyle = '#1a120c'; c.beginPath(); c.ellipse(x + 8, WASHER_BASE - 2, 76, 10, 0, 0, Math.PI * 2); c.fill(); c.restore();
-    const box = r.sprite(sprite, x + shake, WASHER_BASE, { h: WASHER_H, ax: sprite === 'machine_washer_open' ? 0.42 : 0.5 });
-    if (!box) return;
-    if (m.state === 'running' && !m.broken) this.drawDrum(r, box, (GEOM[sprite] || GEOM.machine_washer_idle)[0], m, 1);
-    if (m.state === 'done' && m.load !== 'self') this.drawDrum(r, box, (GEOM[sprite] || GEOM.machine_washer_idle)[0], m, 0);
-    if (m.broken) this.drawOutOfOrder(r, x, WASHER_BASE - WASHER_H * 0.55);
-    void k;
+    this.drawMachine(r, m, [m]);
   }
 
   drawDryerUnit(r, u, x) {
@@ -1018,31 +1060,148 @@ export class LaundromatScene extends Scene {
     const drums = L.dryers().filter(d => Math.floor(d.slot / 2) === u);
     if (!drums.length) {
       c.save(); c.globalAlpha = 0.5; c.strokeStyle = '#5a4a3a'; c.setLineDash([6, 6]); c.lineWidth = 2;
-      c.strokeRect(x - 62, WASHER_BASE - 280, 124, 276); c.setLineDash([]); c.restore();
-      this.drawAddBadge(r, x, WASHER_BASE - 140);
+      c.strokeRect(x - 52, FLOOR - DRYER_H + 6, 104, DRYER_H - 8); c.setLineDash([]); c.restore();
+      this.drawAddBadge(r, x, FLOOR - DRYER_H / 2);
       return;
     }
-    const running = drums.some(d => d.state === 'running' && !d.broken);
-    const shake = running ? Math.sin(this.t * 30 + u) * 0.7 : 0;
-    c.save(); c.globalAlpha = 0.3; c.fillStyle = '#1a120c'; c.beginPath(); c.ellipse(x + 6, WASHER_BASE - 2, 70, 10, 0, 0, Math.PI * 2); c.fill(); c.restore();
-    const box = r.sprite('machine_stack_unit', x + shake, WASHER_BASE, { h: DRYER_H });
+    const box = this.drawMachine(r, drums[0], drums);
     if (!box) return;
-    for (const d of drums) {
-      const g = GEOM.machine_stack_unit[d.slot % 2];
-      if (d.state === 'running' && !d.broken) this.drawDrum(r, box, g, d, 1);
-      else if (d.state === 'done' && d.load !== 'self') this.drawDrum(r, box, g, d, 0);
-      if (d.broken) this.drawOutOfOrder(r, x, box.y + box.h * g.cy);
-      if (d.lint >= 5 && !d.broken) {
-        c.save(); c.fillStyle = 'rgba(210,205,195,0.9)'; c.beginPath();
-        const lx = box.x + box.w * 0.25, ly = box.y + box.h * (g.cy + 0.12);
-        for (let k2 = 0; k2 < 5; k2++) c.arc(lx + k2 * 5, ly + Math.sin(k2) * 3, 5, 0, Math.PI * 2);
-        c.fill(); c.restore();
-      }
+    // a lint bunny peeks out of the lint trap when the screens are full
+    if (drums.some(d => d.lint >= 5 && !d.broken)) {
+      const wob = Math.sin(this.t * 2.2 + u) * 0.05;
+      r.sprite('scn_lint', box.x + box.w * 0.72, box.y + box.h * 0.95, { h: 30, rot: wob });
     }
     // the cat naps on warm dryers some days
-    if (u === 0 && G.flags.cat_in_shop && running) {
-      r.sprite('item_cat_bed', x - 4, box.y + 6, { h: 44 });
+    if (u === 0 && G.flags.cat_in_shop && drums.some(d => d.state === 'running' && !d.broken)) r.sprite('item_cat_bed', box.cx, box.y + 4, { h: 46 });
+  }
+
+  // One washer, or one dryer tower with its two drums. The drums are drawn first, behind the
+  // machine (they show through the glass). While you load or unload, the door is open: the
+  // open-door art takes over (for a dryer tower, just the half with that drum).
+  drawMachine(r, m, drums) {
+    const c = r.ctx;
+    const box = this.unitBox(m);
+    const running = drums.some(d => d.state === 'running' && !d.broken);
+    let shake = 0;
+    if (running) {
+      const ph = this.phase(drums.find(d => d.state === 'running') || m);
+      const amp = ph.name === 'spin' ? 1.5 : m.kind === 'washer' ? 0.6 : 0.45;
+      shake = Math.sin(this.t * (ph.name === 'spin' ? 55 : 30) + m.slot) * amp;
     }
+    c.save(); c.globalAlpha = 0.28; c.fillStyle = '#1a120c';
+    c.beginPath(); c.ellipse(box.cx, FLOOR + 1, box.w * 0.52, 5, 0, 0, Math.PI * 2); c.fill(); c.restore();
+    c.save(); c.translate(shake, 0);
+    const open = drums.map(d => this.machineDoorOpen(d) && !!(box.art && box.art.open));
+    drums.forEach((d, i) => this.drawDrum(r, d, this.doorGeom(d, box, open[i])));
+    const art = box.art && box.art.open;
+    const openArt = art && { x: box.x + art.dx * box.w, w: art.w * box.w };
+    if (!open.some(Boolean)) r.sprite(box.sprite, box.cx, FLOOR, { h: box.h });
+    else if (m.kind === 'washer') r.sprite(art.sprite, openArt.x + openArt.w / 2, FLOOR, { h: box.h });
+    else {
+      // a tower: each half shows its own door, open or shut
+      const mid = box.y + box.h * 0.465;
+      drums.forEach((d, i) => {
+        const top = d.slot % 2 === 0;
+        c.save();
+        c.beginPath(); c.rect(box.x - 40, top ? box.y - 10 : mid, box.w + 80, top ? mid - box.y + 10 : FLOOR - mid + 10); c.clip();
+        if (open[i]) r.sprite(art.sprite, openArt.x + openArt.w / 2, FLOOR, { h: box.h });
+        else r.sprite(box.sprite, box.cx, FLOOR, { h: box.h });
+        c.restore();
+      });
+    }
+    drums.forEach((d, i) => {
+      const g = this.doorGeom(d, box, open[i]);
+      if (!open[i]) this.drawGlass(c, g, d);
+      if (d.broken) r.sprite('scn_out_of_order', g.cx - 2, g.cy + g.r * 0.55, { h: g.r * 1.2, rot: -0.08 });
+    });
+    c.restore();
+    return box;
+  }
+
+  // Inside a drum: the steel drum turning, the laundry tumbling (or plastered to the wall while
+  // it spins), water sloshing with suds on top while a washer fills and washes.
+  drawDrum(r, m, g) {
+    const c = r.ctx;
+    const R = g.r * 1.06;
+    const running = m.state === 'running' && !m.broken;
+    const has = !!m.load;
+    const ph = running ? this.phase(m) : { name: 'still', water: 0, speed: 0, heat: 0 };
+    const d = this.drum[m.id] || { ang: 0 };
+    const ang = d.ang;
+    c.save();
+    c.beginPath(); c.arc(g.cx, g.cy, R, 0, Math.PI * 2); c.clip();
+    const dryer = m.kind === 'dryer';
+    // the steel drum (sprites/drum_interior), turning; a little darker, it's inside the machine
+    c.fillStyle = '#1d2429'; c.fillRect(g.cx - R, g.cy - R, R * 2, R * 2);
+    r.sprite('drum_interior', g.cx, g.cy, { w: R * 2.3, ay: 0.5, rot: ang, alpha: 0.9 });
+    // laundry: crumpled bundles, in the colours of the load
+    if (has) {
+      const o = m.load !== 'self' ? L.order(m.load) : null;
+      const col = (o && o.color) || (m.selfColor || (m.selfColor = rand.pick(LAUNDRY_COLORS)));
+      const load = bundlesFor(col);
+      const size = R * (dryer ? 0.86 : 0.78);
+      if (ph.name === 'spin') {
+        // pressed to the wall by the spin, a blur going round
+        for (let i = 0; i < load.length; i++) {
+          const a = ang + i * Math.PI * 2 / load.length;
+          for (const [lag, al] of [[0.28, 0.25], [0.14, 0.45], [0, 1]]) {
+            c.globalAlpha = al;
+            r.sprite(load[i], g.cx + Math.cos(a - lag) * R * 0.58, g.cy + Math.sin(a - lag) * R * 0.58, { w: size * 0.8, ay: 0.5, rot: a - lag + Math.PI / 2 });
+          }
+        }
+        c.globalAlpha = 1;
+      } else if (running) {
+        // tumbling: carried up the wall by the lifters, then dropping back down
+        for (let i = 0; i < load.length; i++) {
+          const a = ang + i * 1.4;
+          const lift = (Math.sin(a) + 1) / 2;
+          const fall = Math.max(0, Math.sin(a * 2 + i)) * 0.18;
+          const bx = g.cx + Math.cos(a) * R * 0.42;
+          const by = g.cy + R * 0.4 - lift * R * (dryer ? 0.9 : 0.66) + fall * R;
+          r.sprite(load[i], bx, by, { w: size, ay: 0.5, rot: a * 0.7 });
+        }
+      } else {
+        // resting in a heap at the bottom
+        load.slice(0, 3).forEach((b, i) => r.sprite(b, g.cx + (i - 1) * R * 0.46, g.cy + R * 0.98, { w: size, rot: (i - 1) * 0.25 }));
+      }
+    }
+    // water and suds
+    if (ph.water > 0) {
+      const level = g.cy + R - ph.water * R * 2;
+      c.fillStyle = 'rgba(120,172,205,0.5)';
+      c.beginPath(); c.moveTo(g.cx - R, g.cy + R);
+      for (let x = -R; x <= R; x += R / 8) c.lineTo(g.cx + x, level + Math.sin(this.t * 5 + x * 0.12 + ang) * R * 0.06 * (ph.name === 'wash' ? 1.6 : 1));
+      c.lineTo(g.cx + R, g.cy + R); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(245,250,252,0.85)';
+      for (let k = 0; k < 7; k++) {
+        const x = g.cx - R * 0.8 + k * R * 0.27 + Math.sin(this.t * 3 + k) * 2;
+        c.beginPath(); c.arc(x, level + Math.sin(this.t * 5 + k) * 2, R * (0.07 + (k % 3) * 0.03), 0, Math.PI * 2); c.fill();
+      }
+    }
+    // a dryer's warm glow
+    if (dryer && running && ph.heat > 0) {
+      c.fillStyle = `rgba(255,150,70,${(0.16 + 0.06 * Math.sin(this.t * 3 + m.slot)) * ph.heat})`;
+      c.fillRect(g.cx - R, g.cy - R, R * 2, R * 2);
+    }
+    c.restore();
+  }
+
+  // The closed door's glass: a faint tint and a curved highlight (a little steam when washing).
+  drawGlass(c, g, m) {
+    c.save();
+    c.beginPath(); c.arc(g.cx, g.cy, g.r, 0, Math.PI * 2); c.clip();
+    c.fillStyle = 'rgba(200,225,240,0.12)'; c.fillRect(g.cx - g.r, g.cy - g.r, g.r * 2, g.r * 2);
+    if (m.kind === 'washer' && m.state === 'running' && !m.broken) {
+      c.fillStyle = 'rgba(235,242,248,0.16)';
+      c.fillRect(g.cx - g.r, g.cy - g.r, g.r * 2, g.r * 0.9);
+    }
+    c.restore();
+    c.save();
+    c.strokeStyle = 'rgba(255,255,255,0.5)'; c.lineWidth = g.r * 0.09; c.lineCap = 'round';
+    c.beginPath(); c.arc(g.cx, g.cy, g.r * 0.74, Math.PI * 1.1, Math.PI * 1.42); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,0.55)';
+    c.beginPath(); c.arc(g.cx - g.r * 0.18, g.cy - g.r * 0.62, g.r * 0.06, 0, Math.PI * 2); c.fill();
+    c.restore();
   }
 
   // A soft "+" on an empty bay: tap to buy a machine for it.
@@ -1056,73 +1215,34 @@ export class LaundromatScene extends Scene {
     c.restore();
   }
 
-  // Tumbling laundry inside a drum window.
-  drawDrum(r, box, g, m, spin) {
-    const c = r.ctx;
-    const cx = box.x + box.w * g.cx, cy = box.y + box.h * g.cy, rad = box.w * g.r;
-    const o = m.load && m.load !== 'self' ? L.order(m.load) : null;
-    const col = (o && o.color) || (m.selfColor || (m.selfColor = rand.pick(LAUNDRY_COLORS)));
-    c.save();
-    c.beginPath(); c.arc(cx, cy, rad, 0, Math.PI * 2); c.clip();
-    c.fillStyle = 'rgba(30,34,40,0.55)'; c.fillRect(cx - rad, cy - rad, rad * 2, rad * 2);
-    const rot = spin ? this.t * (m.kind === 'washer' ? 5.5 : 3.2) : 0;
-    const blobs = [col, '#e9e2d4', col, '#8aa0b8', col];
-    for (let i = 0; i < blobs.length; i++) {
-      const a = rot + i * 1.26;
-      const rr = rad * (spin ? 0.45 : 0.3);
-      const bx = cx + Math.cos(a) * rr * (spin ? 1 : 0.6), by = cy + (spin ? Math.sin(a) * rr : rad * 0.45);
-      c.fillStyle = blobs[i];
-      c.globalAlpha = 0.85;
-      c.beginPath(); c.ellipse(bx, by, rad * 0.45, rad * 0.3, a, 0, Math.PI * 2); c.fill();
-    }
-    if (spin && m.kind === 'washer') {
-      c.globalAlpha = 0.35; c.fillStyle = '#bcd8e8';
-      c.fillRect(cx - rad, cy + rad * 0.25 + Math.sin(this.t * 3) * 3, rad * 2, rad);
-    }
-    c.globalAlpha = 0.35; c.fillStyle = '#ffffff';
-    c.beginPath(); c.ellipse(cx - rad * 0.35, cy - rad * 0.4, rad * 0.35, rad * 0.18, -0.6, 0, Math.PI * 2); c.fill();
-    c.restore();
-  }
-
-  drawOutOfOrder(r, x, y) {
-    const c = r.ctx;
-    c.save();
-    c.translate(x - 6, y - 10); c.rotate(-0.08);
-    c.fillStyle = '#f3e3c3'; c.strokeStyle = '#3a2a1e'; c.lineWidth = 1.5;
-    c.fillRect(-40, -18, 80, 36); c.strokeRect(-40, -18, 80, 36);
-    c.fillStyle = 'rgba(200,190,150,0.8)'; c.fillRect(-46, -22, 14, 8); c.fillRect(32, -22, 14, 8);
-    c.fillStyle = '#b3402f'; c.font = '700 12px Fraunces'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('OUT OF', 0, -5); c.fillText('ORDER', 0, 9);
-    c.restore();
-  }
-
+  // ------------------------------------------------------------------ furniture
   drawShelf(r) {
     const box = r.sprite('furn_tall_shelf', SHELF.x, SHELF.base, { h: SHELF.h });
     if (!box) return;
     if (G.upgrades.includes('wifi')) {
-      r.sprite('upg_wifi', SHELF.x + 42, box.y + 6, { h: 32 });
-      if (Math.sin(this.t * 3) > 0.6) r.glow(SHELF.x + 48, box.y - 4, 6, [140, 255, 150], 0.5);
+      r.sprite('upg_wifi', SHELF.x + 50, box.y + 2, { h: 30 });
+      if (Math.sin(this.t * 3) > 0.6) r.glow(SHELF.x + 56, box.y - 6, 6, [140, 255, 150], 0.5);
     }
-    const levels = [0.33, 0.61, 0.9];
+    // ready orders wait on the three boards, three to a board
     const ready = G.shelf.map(id => L.order(id)).filter(Boolean);
-    ready.forEach((o, i) => {
-      const lv = levels[Math.floor(i / 3) % 3];
-      const x = box.x + box.w * (0.26 + (i % 3) * 0.24);
-      const y = box.y + box.h * lv - 2;
-      r.sprite(o.service === 'wash_dry' ? 'item_drawstring_bag' : 'item_towels', x, y, { h: 34 });
+    ready.slice(0, 9).forEach((o, i) => {
+      const board = SHELF.boards[2 - Math.floor(i / 3)];
+      const x = box.x + box.w * (0.24 + (i % 3) * 0.26);
+      const y = box.y + box.h * board + 1;
+      const folded = parseInt(o.id.slice(1), 10) % 2 ? 'scn_towels' : 'scn_folded';
+      r.sprite(o.service === 'wash_dry' ? (BAGS[o.bag] || 'scn_bag_drawstring') : folded, x, y, { h: o.service === 'wash_dry' ? 38 : 26 });
     });
   }
 
   drawCounter(r) {
-    r.sprite('furn_counter', COUNTER.x, COUNTER.base, { h: COUNTER.h });
-    // a little bell on the counter
-    const c = r.ctx;
-    c.save(); c.fillStyle = '#d9a441'; c.strokeStyle = '#3a2a1e'; c.lineWidth = 1.5;
-    c.beginPath(); c.arc(COUNTER.x - 40, COUNTER.base - COUNTER.h + 14, 9, Math.PI, 0); c.fill(); c.stroke();
-    c.fillRect(COUNTER.x - 52, COUNTER.base - COUNTER.h + 14, 24, 3); c.restore();
+    const box = r.sprite('furn_counter', COUNTER.x, COUNTER.base, { h: COUNTER.h });
+    if (!box) return;
+    const top = box.y + box.h * COUNTER.top + 1;
+    this.counterTop = top;
+    r.sprite('scn_bell', box.x + box.w - 20, top, { h: 20 });
     const waiting = G.orders.filter(o => o.stage === 'counter');
     waiting.slice(0, 3).forEach((o, i) => {
-      r.sprite(o.bag, COUNTER.x + 10 + i * 34 - (waiting.length - 1) * 17, COUNTER.base - COUNTER.h + 16 + (i % 2) * 3, { h: 58 });
+      r.sprite(BAGS[o.bag] || 'scn_bag_drawstring', COUNTER.x + 18 + i * 38 - (Math.min(3, waiting.length) - 1) * 19, top, { h: 56 });
     });
   }
 
@@ -1130,37 +1250,42 @@ export class LaundromatScene extends Scene {
     if (this.mode === 'fold') {
       this.foldAnim = (this.foldAnim || 0) + 1 / 60;
       const bob = Math.sin(this.foldAnim * 6) * 1.5;
-      r.sprite('player_fold_body', FOLD.x, FOLD.base + bob * 0.3, { h: FOLD.h });
+      r.sprite('player_fold_clean', FOLD.x, FOLD.base - 18 + bob * 0.3, { h: 499 * PK });
     }
-    r.sprite('prop_fold_table', FOLD.x, FOLD.base, { h: FOLD.h });
+    const box = r.sprite('prop_fold_table', FOLD.x, FOLD.base, { h: FOLD.h });
+    // a neat stack of what's been folded today
+    if (box && G.today && G.today.orders) r.sprite('scn_folded', box.x + box.w * 0.8, box.y + box.h * FOLD.top + 1, { h: 20 });
   }
 
+  // The seat under the window, and you on it while you rest.
   drawBench(r) {
-    if (this.mode === 'sit') r.sprite('player_sit', BENCH.x, BENCH.base, { h: BENCH.h });
-    else r.sprite('prop_bench', BENCH.x, BENCH.base, { h: BENCH.h });
+    const st = this.seat();
+    r.sprite(st.s, BENCH.x, BENCH.base, { h: st.h });
+    if (this.mode === 'sit') {
+      const top = BENCH.base - st.h * (1 - st.top);
+      r.sprite('player_sit_clean', BENCH.x, top + SIT_H * SIT_SEAT, { h: SIT_H });
+    }
   }
 
   drawSupply(r) {
     const box = r.sprite('decor_wall_shelf', SUPPLY.x, SUPPLY.y, { w: SUPPLY.w });
     if (!box) return;
+    const top = box.y + box.h * SUPPLY.boards[0] + 1, low = box.y + box.h * SUPPLY.boards[1] + 1;
     const n = Math.ceil(G.inv.detergent || 0);
     const jugs = Math.min(4, Math.ceil(n / 5));
-    for (let i = 0; i < jugs; i++) r.sprite('item_detergent', box.x + 22 + i * 26, box.y + box.h * 0.36, { h: 38 });
-    if ((G.inv.softener || 0) > 0) r.sprite('item_softener', box.x + 30, box.y + box.h * 0.9, { h: 34 });
-    if ((G.inv.parts || 0) > 0) r.sprite('item_coin_tray', box.x + 84, box.y + box.h * 0.9, { h: 20 });
-    if ((G.inv.tea || 0) > 0) r.sprite('item_teacup', box.x + 108, box.y + box.h * 0.9, { h: 22 });
+    for (let i = 0; i < jugs; i++) r.sprite('scn_detergent', box.x + 20 + i * 24, top, { h: 30 });
+    if ((G.inv.softener || 0) > 0) r.sprite('scn_softener', box.x + 18, low, { h: 28 });
+    if ((G.inv.parts || 0) > 0) r.sprite('scn_coin_tray', box.x + 56, low, { h: 12 });
+    if ((G.inv.tea || 0) > 0) r.sprite('scn_teacup', box.x + 94, low, { h: 16 });
   }
 
+  // The wall clock tells the game's time: an hour hand and a minute hand, nothing else.
   drawClock(r) {
-    const c = r.ctx;
-    r.sprite('icon_clock', CLOCK.x, CLOCK.y, { h: CLOCK.s, ay: 0.5 });
-    const t = G.time;
-    const hA = ((t / 60) % 12) / 12 * Math.PI * 2 - Math.PI / 2;
-    const mA = (t % 60) / 60 * Math.PI * 2 - Math.PI / 2;
-    c.save(); c.strokeStyle = '#2a1c14'; c.lineCap = 'round';
-    c.lineWidth = 3.2; c.beginPath(); c.moveTo(CLOCK.x, CLOCK.y); c.lineTo(CLOCK.x + Math.cos(hA) * 12, CLOCK.y + Math.sin(hA) * 12); c.stroke();
-    c.lineWidth = 2; c.beginPath(); c.moveTo(CLOCK.x, CLOCK.y); c.lineTo(CLOCK.x + Math.cos(mA) * 18, CLOCK.y + Math.sin(mA) * 18); c.stroke();
-    c.restore();
+    const x = CLOCK.x, y = CLOCK.y, s = CLOCK.s, t = G.time;
+    r.sprite('prop_clock', x, y, { h: s, ay: 0.5 });
+    const hA = ((t / 60) % 12) / 12 * Math.PI * 2, mA = (t % 60) / 60 * Math.PI * 2;
+    r.sprite('clock_hand_hour', x, y, { h: s * 0.25, ax: 0.488, ay: 0.839, rot: hA });
+    r.sprite('clock_hand_minute', x, y, { h: s * 0.38, ax: 0.492, ay: 0.881, rot: mA });
   }
 
   drawPriceBoard(r) {
@@ -1169,11 +1294,11 @@ export class LaundromatScene extends Scene {
     c.save();
     c.fillStyle = 'rgba(240,236,220,0.85)';
     c.font = '700 17px Caveat'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-    c.fillText('Self-serve wash  $3.50', 234, 146);
-    c.fillText('Dry (40 min)  $2.50', 234, 168);
-    c.fillText(`Wash & fold  $${Math.round(16 * mul)}`, 234, 190);
-    c.fillText(`Rush  $${Math.round(24 * mul)}`, 234, 212);
-    if (G.policies.pwyc) { c.fillStyle = 'rgba(240,200,120,0.95)'; c.fillText('Sundays: pay what you can ♥', 234, 229); }
+    c.fillText('Self-serve wash  $3.50', 276, 200);
+    c.fillText('Dry (40 min)  $2.50', 276, 224);
+    c.fillText(`Wash & fold  $${Math.round(16 * mul)}`, 276, 248);
+    c.fillText(`Rush  $${Math.round(24 * mul)}`, 276, 272);
+    if (G.policies.pwyc) { c.fillStyle = 'rgba(240,200,120,0.95)'; c.fillText('Sundays: pay what you can ♥', 276, 294); }
     c.restore();
   }
 
@@ -1185,25 +1310,36 @@ export class LaundromatScene extends Scene {
     const opt = d.h ? { h: d.h } : { w: d.w };
     if (d.ay !== undefined) opt.ay = d.ay;
     let y = pos.y;
-    if (slot === 'lounge_table') { r.sprite('street_cafe_table', pos.x, pos.y, { h: 104 }); y = pos.y - 96; }
+    if (slot === 'seat') return;                    // drawn as the bench (drawBench)
+    if (slot === 'lounge_table') {
+      const t = r.sprite('street_cafe_table', pos.x, pos.y, { h: LOUNGE_H });
+      y = t ? t.y + t.h * 0.022 + 1 : pos.y - LOUNGE_H;
+    }
     if (slot === 'hang1' || slot === 'hang2') {
       const sway = Math.sin(this.t * 1.3 + pos.x) * 0.02;
-      r.sprite(d.sprite, pos.x, y - (d.h || 100), { h: d.h, ay: 0, rot: sway });
+      const s = r.size(d.sprite, opt);
+      r.sprite(d.sprite, pos.x, y - s.h, { h: s.h, ay: 0, rot: sway });
       return;
     }
-    if (d.flat) { r.ctx.save(); r.ctx.globalAlpha = 0.95; r.sprite(d.sprite, pos.x, y, { w: d.w, sy: 0.55 }); r.ctx.restore(); return; }
+    if (d.flat) { r.sprite(d.sprite, pos.x, y, { w: d.w, alpha: 0.96 }); return; }
     r.sprite(d.sprite, pos.x, y, opt);
     if (d.fn === 'tea' && Math.random() < 0.02) this.particles.emit('steam', pos.x - 10, y - (d.h || 50), 1);
   }
 
+  // Puddles lie flat on the tiles; socks and lint bunnies turn up on the floor.
   drawFloorStuff(r) {
-    for (const p of L.Sim.puddles) {
-      r.sprite('street_puddle', p.x, p.y + 12, { w: 120 * p.size, sy: 0.6, alpha: 0.75 });
-    }
+    for (const p of L.Sim.puddles) r.sprite(p.size > 0.95 ? 'scn_puddle_l' : 'scn_puddle_s', p.x, p.y + 6, { w: 120 * p.size, alpha: 0.92 });
     for (const l of L.Sim.litter) {
-      if (l.kind === 'sock') r.sprite('item_sock', l.x, l.y, { h: 30, rot: 0.9 });
-      else { const c = r.ctx; c.save(); c.fillStyle = '#cfc8b8'; c.strokeStyle = 'rgba(60,50,40,0.5)'; c.beginPath(); c.arc(l.x, l.y - 6, 9, 0, Math.PI * 2); c.arc(l.x + 8, l.y - 9, 7, 0, Math.PI * 2); c.fill(); c.stroke(); c.restore(); }
+      if (l.kind === 'sock') r.sprite('scn_sock', l.x, l.y, { h: 28, rot: 0.9 });
+      else r.sprite('scn_lint', l.x, l.y, { h: 30, rot: Math.sin(this.t * 1.5 + l.id) * 0.04 });
     }
+  }
+
+  // Where a machine's progress ring or status bubble floats: over a washer; beside a dryer drum.
+  indicatorAt(m) {
+    if (m.kind === 'washer') { const p = this.machineTop(m); return { x: p.x, y: p.y - 24 }; }
+    const g = this.doorGeom(m);
+    return { x: g.cx + g.r + 22, y: g.cy - g.r * 0.35 };
   }
 
   // Progress rings, "ready" bubbles and hints for where the carried laundry can go.
@@ -1229,15 +1365,14 @@ export class LaundromatScene extends Scene {
       c.restore();
     };
     for (const m of G.machines) {
-      const p = this.machineTop(m);
-      const x = p.x + (m.kind === 'dryer' ? 52 : 0), y = p.y - 24 + (m.kind === 'dryer' ? 20 : 0);
+      const { x, y } = this.indicatorAt(m);
       if (m.broken) bubble(x, y, 'icon_wrench', '#f4c9b8', null, true);
       else if (m.state === 'running') { if (m.load !== 'self' || true) ring(x, y, m.t / m.dur, m.load === 'self' ? 'icon_coin' : (m.kind === 'washer' ? 'icon_washer' : 'icon_dryer')); }
       else if (m.state === 'done' && m.load !== 'self') bubble(x, y, null, '#e8d38a', '✓', true);
       else if (m.kind === 'dryer' && m.lint >= 5) bubble(x, y, 'icon_dryer', '#ddd7cc', null, false);
     }
     // counter bell
-    if (G.orders.some(o => o.stage === 'counter')) bubble(COUNTER.x + 10, COUNTER.base - COUNTER.h - 58, 'icon_basket', '#f7ecd4', null, true);
+    if (G.orders.some(o => o.stage === 'counter')) bubble(COUNTER.x + 10, COUNTER.base - COUNTER.h - 76, 'icon_basket', '#f7ecd4', null, true);
     // hints for carried laundry
     const o = this.carried()[0];
     if (o) {
@@ -1247,8 +1382,8 @@ export class LaundromatScene extends Scene {
       const full = !this.canCarryMore();
       const ok = m => L.isFree(m) || (full && m.state === 'done' && m.load && m.load !== 'self' && !m.broken);
       if (step === 'wash') for (const m of L.washers()) { if (ok(m)) { const p = this.machineTop(m); hint(p.x, p.y - 8 + Math.sin(t * 5) * 4); } }
-      if (step === 'dry') for (const m of L.dryers()) { if (ok(m)) { const p = this.machineTop(m); hint(p.x + 16, p.y + 4 + Math.sin(t * 5) * 4); } }
-      if (step === 'fold') hint(FOLD.x, FOLD.base - 140 + Math.sin(t * 5) * 4);
+      if (step === 'dry') for (const m of L.dryers()) { if (ok(m)) { const g = this.doorGeom(m); hint(g.cx - g.r - 16, g.cy + Math.sin(t * 5) * 4); } }
+      if (step === 'fold') hint(FOLD.x, FOLD.base - FOLD.h - 12 + Math.sin(t * 5) * 4);
       if (step === 'shelf') hint(SHELF.x, SHELF.base - SHELF.h - 10 + Math.sin(t * 5) * 4);
       // what the player is carrying
       const icon = step === 'wash' ? 'icon_washer' : step === 'dry' ? 'icon_dryer' : step === 'fold' ? 'icon_towels' : 'icon_basket';

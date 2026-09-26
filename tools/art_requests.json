@@ -8,7 +8,11 @@
   "<name>_body": "the generated full-body image of that character: keeps the portraits consistent with the sprite",
   "ref_items": "item_coffee_mug, item_teacup, item_picnic_basket, item_camera and item_novel side by side on white: item style",
   "ref_player_poses": "art/source/player_poses.png on white, 1280 px: the player character's look, style and scale",
-  "ref_furniture": "art/source/furniture.png on white, 1280 px: furniture style (linework, texture, three-quarter view)"
+  "ref_furniture": "art/source/furniture.png on white, 1280 px: furniture style (linework, texture, three-quarter view)",
+  "style_laundromat": "the new laundromat background (web/assets/bg/laundromat.webp, world x 560-2080), 1520x720: the flat 2D style every prop matches",
+  "style_home": "the new flat background (web/assets/bg/home.webp), 1600x720",
+  "style_chars": "player_idle and the eight npc_* sprites side by side on cream: the characters' drawing style",
+  "ref_player_sit": "player_idle, player_sit, player_knit and player_fold side by side on white, at one scale: the player's look for new poses"
  },
  "style": "See the prompts: every request asks for the game's hand-painted style (ink outlines, textured gouache and coloured-pencil shading) and a transparent background.",
  "characters": {},
@@ -380,6 +384,697 @@
     }
    ],
    "merge": 2
+  },
+  {
+   "id": "v2_furniture",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Laundromat furniture sheet (see the v1.4 art notes in README): pick-up shelving, counter, folding table, backless bench, two-tier wall shelf, a clock face with tick marks and NO hands, wire laundry cart, cafe table, plastic chair, stool, two-seat waiting bench, coin changer. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "furn_tall_shelf",
+     "height": 380
+    },
+    {
+     "sprite": "furn_counter",
+     "height": 220
+    },
+    {
+     "sprite": "prop_fold_table",
+     "height": 180
+    },
+    {
+     "sprite": "prop_bench",
+     "height": 130
+    },
+    {
+     "sprite": "decor_wall_shelf",
+     "height": 150
+    },
+    {
+     "sprite": "prop_clock",
+     "height": 140
+    },
+    {
+     "sprite": "furn_laundry_cart",
+     "height": 200
+    },
+    {
+     "sprite": "street_cafe_table",
+     "height": 180
+    },
+    {
+     "sprite": "furn_plastic_chair",
+     "height": 220
+    },
+    {
+     "sprite": "furn_stool",
+     "height": 220
+    },
+    {
+     "sprite": "furn_double_bench",
+     "height": 200
+    },
+    {
+     "sprite": "upg_coin_changer",
+     "height": 130
+    }
+   ]
+  },
+  {
+   "id": "v2_home",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "style_home"
+   ],
+   "rows": 3,
+   "prompt": "The flat's furniture: side-view single bed (headboard right), the same bed with the player asleep, desk, chair, cat bed with Biscuit, yarn basket, kettle, mug, lantern, record player, camera, sketchbook, pencil cup, journal. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "furn_bed",
+     "height": 260
+    },
+    {
+     "sprite": "furn_bed_sleep",
+     "match": "furn_bed"
+    },
+    {
+     "sprite": "furn_desk",
+     "height": 220
+    },
+    {
+     "sprite": "furn_chair",
+     "height": 230
+    },
+    {
+     "sprite": "item_cat_bed",
+     "height": 130
+    },
+    {
+     "sprite": "scn_yarn_basket",
+     "height": 130
+    },
+    {
+     "sprite": "decor_kettle",
+     "height": 110
+    },
+    {
+     "sprite": "scn_mug",
+     "height": 60
+    },
+    {
+     "sprite": "item_lantern",
+     "height": 140
+    },
+    {
+     "sprite": "decor_record_player",
+     "height": 150
+    },
+    {
+     "sprite": "scn_camera",
+     "height": 70
+    },
+    {
+     "sprite": "scn_sketchbook",
+     "height": 90
+    },
+    {
+     "sprite": "scn_pencil_cup",
+     "height": 90
+    },
+    {
+     "sprite": "scn_journal",
+     "height": 90
+    }
+   ]
+  },
+  {
+   "id": "v2_decor",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Decor sheet: hanging pothos, string lights, harbour painting, cork board, community notice board, cat planter, vase of daisies, potted pothos, big leafy plant, floor lamp, coat rack, A-frame chalkboard, woven rug as a long low strip. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "decor_hanging_plant",
+     "height": 260
+    },
+    {
+     "sprite": "decor_string_lights",
+     "height": 90
+    },
+    {
+     "sprite": "decor_painting",
+     "height": 170
+    },
+    {
+     "sprite": "decor_cork_board",
+     "height": 170
+    },
+    {
+     "sprite": "furn_bulletin_board",
+     "height": 220
+    },
+    {
+     "sprite": "decor_cat_planter",
+     "height": 130
+    },
+    {
+     "sprite": "decor_flower_vase",
+     "height": 130
+    },
+    {
+     "sprite": "item_pothos",
+     "height": 120
+    },
+    {
+     "sprite": "furn_potted_plant",
+     "height": 190
+    },
+    {
+     "sprite": "furn_floor_lamp",
+     "height": 330
+    },
+    {
+     "sprite": "furn_coat_rack",
+     "height": 330
+    },
+    {
+     "sprite": "decor_chalkboard",
+     "height": 200
+    },
+    {
+     "sprite": "decor_rug",
+     "height": 60
+    }
+   ]
+  },
+  {
+   "id": "v2_street",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Street furniture: lamp post, park bench, green tree, autumn tree, brick planter, barrel planter, mailbox, trash can, news box, bicycle, construction barrier, raised garden bed. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "street_lamp_post",
+     "height": 480
+    },
+    {
+     "sprite": "furn_bench",
+     "height": 180
+    },
+    {
+     "sprite": "street_tree_green",
+     "height": 560
+    },
+    {
+     "sprite": "street_tree_autumn",
+     "height": 560
+    },
+    {
+     "sprite": "street_brick_planter",
+     "height": 120
+    },
+    {
+     "sprite": "street_flower_planter",
+     "height": 130
+    },
+    {
+     "sprite": "street_mailbox",
+     "height": 160
+    },
+    {
+     "sprite": "street_trash_can",
+     "height": 140
+    },
+    {
+     "sprite": "street_news_box",
+     "height": 170
+    },
+    {
+     "sprite": "street_bicycle",
+     "height": 160
+    },
+    {
+     "sprite": "street_barrier",
+     "height": 150
+    },
+    {
+     "sprite": "street_garden_bed",
+     "height": 170
+    }
+   ]
+  },
+  {
+   "id": "v2_street2",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Street props: bus shelter, Remy's harbour mural on a billboard, blank hanging shop sign, bistro chair, flea-market table, cargo bike, vegetable basket, striped door canopy, vending machine, tankless water heater, produce crates. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "street_bus_shelter",
+     "height": 330
+    },
+    {
+     "sprite": "street_billboard",
+     "height": 330
+    },
+    {
+     "sprite": "decor_hanging_sign",
+     "height": 170
+    },
+    {
+     "sprite": "street_cafe_chair",
+     "height": 170
+    },
+    {
+     "sprite": "street_market_table",
+     "height": 150
+    },
+    {
+     "sprite": "upg_cargo_bike",
+     "height": 170
+    },
+    {
+     "sprite": "street_veg_basket",
+     "height": 110
+    },
+    {
+     "sprite": "upg_awning",
+     "height": 110
+    },
+    {
+     "sprite": "upg_vending",
+     "height": 260
+    },
+    {
+     "sprite": "upg_water_heater",
+     "height": 170
+    },
+    {
+     "sprite": "street_crates",
+     "height": 150
+    }
+   ]
+  },
+  {
+   "id": "v2_items",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Laundry items seen in the scenes (the UI keeps its icons): four kinds of laundry bag, folded towels, folded clothes, detergent jug, softener, coin tray, teacup, sock, a lint bunny (fluffy lint clump with two ear tufts), service bell. STRICT FLAT 2D: pure orthographic front (or exact side) elevations, no perspective, no three-quarter views, no visible top surfaces.",
+   "outputs": [
+    {
+     "sprite": "scn_bag_drawstring",
+     "height": 100
+    },
+    {
+     "sprite": "scn_bag_tote",
+     "height": 100
+    },
+    {
+     "sprite": "scn_bag_hamper",
+     "height": 100
+    },
+    {
+     "sprite": "scn_bag_basket",
+     "height": 90
+    },
+    {
+     "sprite": "scn_towels",
+     "height": 80
+    },
+    {
+     "sprite": "scn_folded",
+     "height": 80
+    },
+    {
+     "sprite": "scn_detergent",
+     "height": 90
+    },
+    {
+     "sprite": "scn_softener",
+     "height": 90
+    },
+    {
+     "sprite": "scn_coin_tray",
+     "height": 40
+    },
+    {
+     "sprite": "scn_teacup",
+     "height": 50
+    },
+    {
+     "sprite": "scn_sock",
+     "height": 70
+    },
+    {
+     "sprite": "scn_lint",
+     "height": 70
+    },
+    {
+     "sprite": "scn_bell",
+     "height": 50
+    }
+   ]
+  },
+  {
+   "id": "v2_view",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "style_chars"
+   ],
+   "rows": 2,
+   "prompt": "People and traffic seen through the laundromat window: four vehicles in side view facing right, then walkers (two with umbrellas, one with a shopping bag, one with a cane, one with a dog), a cyclist and a kid in a raincoat, all facing right. One scale for all.",
+   "outputs": [
+    {
+     "sprite": "view_car_yellow"
+    },
+    {
+     "sprite": "view_wagon"
+    },
+    {
+     "sprite": "view_van"
+    },
+    {
+     "sprite": "view_taxi"
+    },
+    {
+     "sprite": "view_ped_umbrella"
+    },
+    {
+     "sprite": "view_ped_red_umbrella"
+    },
+    {
+     "sprite": "view_ped_bag"
+    },
+    {
+     "sprite": "view_ped_cane"
+    },
+    {
+     "sprite": "view_ped_dog"
+    },
+    {
+     "sprite": "view_cyclist"
+    },
+    {
+     "sprite": "view_ped_kid"
+    }
+   ],
+   "uniform": {
+    "ref": [
+     "view_ped_bag"
+    ],
+    "height": 150
+   },
+   "merge": 3
+  },
+  {
+   "id": "v2_poses",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "ref_player_sit"
+   ],
+   "rows": 1,
+   "prompt": "Three poses of the player with no furniture at all, so she can sit on the flat 2D bench, bed or chair of each scene: sitting on nothing (hands on the seat edge), sitting and knitting a rust-red scarf, standing folding a white towel.",
+   "outputs": [
+    {
+     "sprite": "player_sit_clean"
+    },
+    {
+     "sprite": "player_knit_clean"
+    },
+    {
+     "sprite": "player_fold_clean"
+    }
+   ],
+   "uniform": {
+    "ref": [
+     "player_fold_clean"
+    ],
+    "height": 490
+   }
+  },
+  {
+   "id": "v2_signs",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "street (generation 4ae5bcfe)",
+    "style_laundromat"
+   ],
+   "rows": 2,
+   "prompt": "Signs for the street, one sheet: the Crestline billboard ad (THE LINDEN, Luxury living. Coming soon., Studios from $2,950/mo, CRESTLINE PROPERTIES), the same with \"keep it Linden\" graffiti, Remy's \"for Rosa\" mural on the same frame, a SOLD · CRESTLINE PROPERTIES banner, a SAVE LINDEN ST. poster, an OUT OF ORDER sign, a striped FLEA MARKET canopy. STRICT FLAT 2D front views, no perspective.",
+   "outputs": [
+    {
+     "sprite": "street_ad_crestline",
+     "height": 330
+    },
+    {
+     "sprite": "street_ad_tagged",
+     "match": "street_ad_crestline"
+    },
+    {
+     "sprite": "street_mural_rosa",
+     "match": "street_ad_crestline"
+    },
+    {
+     "sprite": "street_sold_banner",
+     "height": 110
+    },
+    {
+     "sprite": "street_poster",
+     "height": 120
+    },
+    {
+     "sprite": "scn_out_of_order",
+     "height": 110
+    },
+    {
+     "sprite": "street_market_canopy",
+     "height": 330
+    }
+   ]
+  },
+  {
+   "id": "v2_laundry",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "prompt": "Laundry hanging from wooden pegs (sheet, blue shirt, jeans, pink dress, socks, towel, cream shirt), two puddles seen from a low side angle, and four crumpled bundles of laundry for the tumbling drums. STRICT FLAT 2D front views, no perspective.",
+   "outputs": [
+    {
+     "sprite": "line_sheet",
+     "height": 200
+    },
+    {
+     "sprite": "line_shirt_blue",
+     "height": 140
+    },
+    {
+     "sprite": "line_jeans",
+     "height": 200
+    },
+    {
+     "sprite": "line_dress",
+     "height": 200
+    },
+    {
+     "sprite": "line_socks",
+     "height": 120
+    },
+    {
+     "sprite": "line_towel",
+     "height": 180
+    },
+    {
+     "sprite": "line_shirt_cream",
+     "height": 140
+    },
+    {
+     "sprite": "scn_puddle_s",
+     "height": 40
+    },
+    {
+     "sprite": "scn_puddle_l",
+     "height": 60
+    },
+    {
+     "sprite": "drum_red",
+     "height": 100
+    },
+    {
+     "sprite": "drum_white",
+     "height": 100
+    },
+    {
+     "sprite": "drum_blue",
+     "height": 100
+    },
+    {
+     "sprite": "drum_yellow",
+     "height": 100
+    }
+   ]
+  },
+  {
+   "id": "v2_nature",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "style_laundromat"
+   ],
+   "rows": 3,
+   "uniform": {
+    "ref": [
+     "pigeon_stand"
+    ],
+    "height": 90
+   },
+   "prompt": "Four pigeons facing right (standing, pecking, flying wings up, flying wings down), three flat storybook clouds, three fallen autumn leaves. STRICT FLAT 2D front views, no perspective.",
+   "outputs": [
+    {
+     "sprite": "pigeon_stand"
+    },
+    {
+     "sprite": "pigeon_peck"
+    },
+    {
+     "sprite": "pigeon_fly_up"
+    },
+    {
+     "sprite": "pigeon_fly_down"
+    },
+    {
+     "sprite": "cloud_s"
+    },
+    {
+     "sprite": "cloud_m"
+    },
+    {
+     "sprite": "cloud_l"
+    },
+    {
+     "sprite": "leaf_maple"
+    },
+    {
+     "sprite": "leaf_linden"
+    },
+    {
+     "sprite": "leaf_oak"
+    }
+   ]
+  },
+  {
+   "id": "v2_furniture2",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "v2_furniture (generation 59671e49)",
+    "style_laundromat"
+   ],
+   "rows": 1,
+   "prompt": "The shop furniture at the proportions the room needs: a short counter, a folding table, a narrow pick-up shelf, and three seats seen from the front with their seats at the same height (plastic chair, stool, two-seat bench). STRICT FLAT 2D front views, no perspective.",
+   "outputs": [
+    {
+     "sprite": "furn_counter",
+     "height": 150
+    },
+    {
+     "sprite": "prop_fold_table",
+     "height": 140
+    },
+    {
+     "sprite": "furn_tall_shelf",
+     "height": 240
+    },
+    {
+     "sprite": "furn_plastic_chair",
+     "height": 170
+    },
+    {
+     "sprite": "furn_stool",
+     "height": 160
+    },
+    {
+     "sprite": "furn_double_bench",
+     "height": 150
+    }
+   ]
+  },
+  {
+   "id": "v2_parts",
+   "priority": 1,
+   "aspect_ratio": "3:2",
+   "resolution": "1k",
+   "refs": [
+    "washers (generation 18fa156a)",
+    "style_laundromat"
+   ],
+   "rows": 2,
+   "prompt": "Parts: the inside of a steel washer drum seen through the door (perforated, three lifters), an iron hour hand and minute hand pointing up with a ring at the pivot, OPEN and CLOSED hanging door signs, a pale full moon. STRICT FLAT 2D front views.",
+   "outputs": [
+    {
+     "sprite": "drum_interior",
+     "height": 200
+    },
+    {
+     "sprite": "clock_hand_hour",
+     "height": 120
+    },
+    {
+     "sprite": "clock_hand_minute",
+     "height": 160
+    },
+    {
+     "sprite": "sign_open",
+     "height": 150
+    },
+    {
+     "sprite": "sign_closed",
+     "match": "sign_open"
+    },
+    {
+     "sprite": "moon",
+     "height": 120
+    }
+   ]
   }
  ],
  "scenes": {

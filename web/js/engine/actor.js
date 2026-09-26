@@ -19,7 +19,7 @@ export const PLAYER_POSES = {
   pet: { s: 'player_pet', ax: 0.4 },
   tea: { s: 'player_tea', ax: 0.51 },
   read: { s: 'player_read', ax: 0.5 },
-  knit: { s: 'player_knit', ax: 0.52 },
+  knit: { s: 'player_knit_clean', ax: 0.448 },
   sketch: { s: 'player_sketch', ax: 0.4 },
   water: { s: 'player_water', ax: 0.33 },
   photo: { s: 'player_photo', ax: 0.46 },

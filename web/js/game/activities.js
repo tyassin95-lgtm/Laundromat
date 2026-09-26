@@ -136,7 +136,7 @@ export class Activities {
   }
 
   async a_window() {
-    UI.toast(WINDOW_LINES[G.weather] ? rand.pick(WINDOW_LINES[G.weather]) : 'Linden Street, going about its business.', 'icon_home', '', 3800);
+    UI.toast(WINDOW_LINES[G.weather] ? rand.pick(WINDOW_LINES[G.weather]) : 'The rooftops, going about their business.', 'icon_home', '', 3800);
   }
 
   async a_water(o = {}) {

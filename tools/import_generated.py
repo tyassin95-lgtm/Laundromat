@@ -210,7 +210,8 @@ def main(argv):
         print(f'  uniform scale {scale:.3f} (reference heights {hs})')
     made = {}
     for fig, o in zip(figs, req['outputs']):
-        sprite = cut(keyed, lab, fig, o.get('height'), scale)
+        h = o.get('height') or (made[o['match']].height if o.get('match') in made else None)
+        sprite = cut(keyed, lab, fig, h, scale)
         if o.get('match') in made:
             sprite = sprite.resize(made[o['match']].size, Image.LANCZOS)
         made[o['sprite']] = sprite

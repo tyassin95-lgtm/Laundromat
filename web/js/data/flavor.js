@@ -25,8 +25,8 @@ export const READING = [
 ];
 
 export const WINDOW_LINES = {
-  clear: ['Sun on the rooftops. Someone across the street is shaking out a rug.', 'A clear sky over Linden Street. The water tower glints.', 'Pigeons on the ledge, arguing about something important.'],
-  cloudy: ['Low grey clouds. The kind of sky that makes people do laundry.', 'The street is quiet under a flat grey sky.'],
-  rain: ['Rain streaks the glass. Umbrellas bob along the sidewalk like jellyfish.', 'The rain turns the street lamps into smeared gold coins.', 'You watch a raindrop race another raindrop. Yours loses.'],
+  clear: ['Sun on the rooftops. The old water tower glints.', 'Downtown, the crane on the new Crestline tower swings another beam into the sky.', 'Pigeons on the ledge, arguing about something important.'],
+  cloudy: ['Low grey clouds over the rooftops. The kind of sky that makes people do laundry.', 'Smoke drifts from a chimney across the way. Somebody is baking.'],
+  rain: ['Rain streaks the glass. The rooftops shine like wet slate.', 'Rain drums on the water tower. The city beyond is just a grey rumour.', 'You watch a raindrop race another raindrop. Yours loses.'],
   storm: ['The wind throws rain against the window in fistfuls. The lights flicker.', 'Thunder rolls over the rooftops. Biscuit is under the bed and not coming out.'],
 };

@@ -2,31 +2,32 @@
 // slots prefixed "h_"). comfort feeds customer happiness; some pieces also do something.
 import { G } from '../game/state.js';
 
+// Positions in world px: x is the middle, y where the piece stands (the bottom of a hanging one).
 export const SHOP_SLOTS = {
-  hang1: { x: 1000, y: 214, label: 'Ceiling hook' },
-  hang2: { x: 1700, y: 236, label: 'Window hook' },
-  lights: { x: 1680, y: 150, label: 'Over the window' },
-  wall_a: { x: 990, y: 168, label: 'Wall' },
-  wall_b: { x: 1150, y: 170, label: 'Wall' },
-  sill: { x: 1660, y: 446, label: 'Window sill' },
-  sill2: { x: 1750, y: 446, label: 'Window sill' },
-  counter_top: { x: 378, y: 446, label: 'Counter' },
-  lounge_table: { x: 1800, y: 668, label: 'Lounge table' },
-  floor_l1: { x: 1582, y: 652, label: 'By the pillar' },
-  floor_r1: { x: 1890, y: 700, label: 'By the door' },
-  rug: { x: 1700, y: 688, label: 'Floor' },
-  seat: { x: 560, y: 716, label: 'Seat' },
+  hang1: { x: 1106, y: 236, label: 'Ceiling hook' },
+  hang2: { x: 1734, y: 304, label: 'Window hook' },
+  lights: { x: 1805, y: 158, label: 'Over the window' },
+  wall_a: { x: 742, y: 214, label: 'Wall' },
+  wall_b: { x: 1290, y: 214, label: 'Wall' },
+  sill: { x: 1742, y: 540, label: 'Window sill' },
+  sill2: { x: 1872, y: 540, label: 'Window sill' },
+  counter_top: { x: 290, y: 534, label: 'Counter' },
+  lounge_table: { x: 1742, y: 684, label: 'Lounge table' },
+  floor_l1: { x: 1655, y: 640, label: 'By the dryers' },
+  floor_r1: { x: 2046, y: 708, label: 'By the door' },
+  rug: { x: 1800, y: 706, label: 'Floor' },
+  seat: { x: 1860, y: 668, label: 'Under the window (instead of the bench)' },
 };
 
 export const HOME_SLOTS = {
-  h_hang: { x: 560, y: 220, label: 'Ceiling hook' },
-  h_lights: { x: 680, y: 120, label: 'Over the window' },
-  h_wall1: { x: 1025, y: 222, label: 'Wall' },
-  h_wall2: { x: 1256, y: 262, label: 'Wall' },
-  h_shelf: { x: 612, y: 403, label: 'Window seat' },
-  h_table: { x: 1018, y: 484, label: 'Desk' },
-  h_floor: { x: 152, y: 532, label: 'By the door' },
-  h_rug: { x: 760, y: 690, label: 'Floor' },
+  h_hang: { x: 486, y: 190, label: 'Ceiling hook' },
+  h_lights: { x: 722, y: 76, label: 'Over the window' },
+  h_wall1: { x: 1085, y: 200, label: 'Wall' },
+  h_wall2: { x: 1405, y: 262, label: 'Wall' },
+  h_shelf: { x: 780, y: 460, label: 'Window seat' },
+  h_table: { x: 1085, y: 508, label: 'Desk' },
+  h_floor: { x: 196, y: 632, label: 'By the door' },
+  h_rug: { x: 760, y: 706, label: 'Floor' },
 };
 
 // cat: which slot family the piece fits. h/w: display size.
@@ -39,16 +40,16 @@ export const DECOR = {
   cat_planter: { name: 'Cat planter', sprite: 'decor_cat_planter', price: 25, comfort: 5, slots: ['sill', 'sill2', 'h_shelf'], h: 62, blurb: 'A snake plant in a very pleased ceramic cat.' },
   flower_vase: { name: 'Flower vase', sprite: 'decor_flower_vase', price: 20, comfort: 5, slots: ['sill', 'sill2', 'counter_top', 'lounge_table', 'h_table'], h: 74, blurb: 'Fresh daisies from the garden.' },
   pothos: { name: 'Potted pothos', sprite: 'item_pothos', price: 18, comfort: 4, slots: ['sill', 'sill2', 'h_shelf'], h: 64, blurb: 'Practically unkillable. Practically.' },
-  potted_plant: { name: 'Big leafy plant', sprite: 'furn_potted_plant', price: 40, comfort: 6, slots: ['floor_l1', 'floor_r1', 'h_floor'], h: 124, blurb: 'Makes any corner feel looked-after.' },
-  floor_lamp: { name: 'Reading lamp', sprite: 'furn_floor_lamp', price: 60, comfort: 7, slots: ['floor_l1', 'h_floor'], h: 205, light: true, blurb: 'A pool of warm light for night owls.' },
+  potted_plant: { name: 'Big leafy plant', sprite: 'furn_potted_plant', price: 40, comfort: 6, slots: ['floor_l1', 'floor_r1', 'h_floor'], h: 112, blurb: 'Makes any corner feel looked-after.' },
+  floor_lamp: { name: 'Reading lamp', sprite: 'furn_floor_lamp', price: 60, comfort: 7, slots: ['floor_l1', 'h_floor'], h: 190, light: true, blurb: 'A pool of warm light for night owls.' },
   coat_rack: { name: 'Coat rack', sprite: 'furn_coat_rack', price: 35, comfort: 3, slots: ['floor_r1', 'floor_l1'], h: 190, blurb: 'For dripping umbrellas and damp coats.' },
   chalkboard: { name: 'Sidewalk chalkboard', sprite: 'decor_chalkboard', price: 30, comfort: 2, slots: ['floor_r1'], h: 118, fn: 'walkins', blurb: 'Specials and doodles. Draws in more walk-ins.' },
   record_player: { name: 'Record player', sprite: 'decor_record_player', price: 90, comfort: 9, slots: ['lounge_table', 'h_table'], h: 66, fn: 'music', blurb: 'Choose what the shop listens to.' },
   kettle: { name: 'Tea kettle', sprite: 'decor_kettle', price: 35, comfort: 6, slots: ['lounge_table', 'counter_top'], h: 58, fn: 'tea', blurb: 'Free tea for anyone waiting. People linger (nicely).' },
   rug: { name: 'Woven rug', sprite: 'decor_rug', price: 50, comfort: 6, slots: ['rug', 'h_rug'], w: 230, flat: true, blurb: 'Softens the tile and the mood.' },
-  plastic_chair: { name: 'Plastic chair', sprite: 'furn_plastic_chair', price: 25, comfort: 3, slots: ['seat'], h: 150, blurb: 'Classic laundromat seating.' },
-  stool: { name: 'Stool', sprite: 'furn_stool', price: 22, comfort: 2, slots: ['seat'], h: 138, blurb: 'Good for folding marathons.' },
-  double_bench: { name: 'Double bench', sprite: 'furn_double_bench', price: 70, comfort: 7, slots: ['seat'], h: 140, blurb: 'Room for two, plus a bag of laundry.' },
+  plastic_chair: { name: 'Plastic chair', sprite: 'furn_plastic_chair', price: 25, comfort: 3, slots: ['seat'], h: 130, blurb: 'Classic laundromat seating. Takes the bench\'s place under the window.' },
+  stool: { name: 'Stool', sprite: 'furn_stool', price: 22, comfort: 2, slots: ['seat'], h: 84, blurb: 'Good for folding marathons. Takes the bench\'s place under the window.' },
+  double_bench: { name: 'Double bench', sprite: 'furn_double_bench', price: 70, comfort: 7, slots: ['seat'], h: 87, blurb: 'Room for two, plus a bag of laundry. Replaces the old bench under the window.' },
   lantern: { name: 'Old lantern', sprite: 'item_lantern', price: 28, comfort: 4, slots: ['sill', 'sill2', 'h_shelf', 'h_table'], h: 70, light: true, blurb: 'Handy when the power goes out.' },
 };
 

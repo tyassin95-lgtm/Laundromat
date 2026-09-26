@@ -13,64 +13,12 @@ import { UI } from '../ui/ui.js';
 
 const CS = 0.68;
 
-// Laundry on June's clothesline: kind, position along the line (0..1), size and colours.
+// Laundry on June's clothesline: which piece, where along the line (0..1), how tall it hangs.
 const CLOTHES = [
-  { kind: 'sheet', at: 0.08, w: 128, h: 108, col: '#efe3c6', stripe: '#8fb0c0' },
-  { kind: 'shirt', at: 0.24, w: 112, h: 86, col: '#9fb8c6' },
-  { kind: 'pants', at: 0.37, w: 64, h: 124, col: '#4f6a8a' },
-  { kind: 'dress', at: 0.51, w: 92, h: 118, col: '#c48fa0' },
-  { kind: 'socks', at: 0.62, w: 56, h: 46, col: '#e8b04e' },
-  { kind: 'towel', at: 0.74, w: 82, h: 96, col: '#e8b04e', stripe: '#c4692e' },
-  { kind: 'shirt', at: 0.9, w: 104, h: 82, col: '#efe3c6' },
+  { s: 'line_sheet', at: 0.08, h: 118 }, { s: 'line_shirt_blue', at: 0.24, h: 78 }, { s: 'line_jeans', at: 0.37, h: 124 },
+  { s: 'line_dress', at: 0.51, h: 116 }, { s: 'line_socks', at: 0.62, h: 52 }, { s: 'line_towel', at: 0.74, h: 100 },
+  { s: 'line_shirt_cream', at: 0.9, h: 76 },
 ];
-
-function garmentPath(c, g) {
-  const { w, h } = g;
-  c.beginPath();
-  if (g.kind === 'shirt') {
-    const b = w * 0.27;
-    c.moveTo(-b, 0); c.lineTo(-b - w * 0.23, h * 0.13); c.lineTo(-b - w * 0.13, h * 0.34); c.lineTo(-b, h * 0.26);
-    c.lineTo(-b - 2, h); c.lineTo(b + 2, h); c.lineTo(b, h * 0.26); c.lineTo(b + w * 0.13, h * 0.34); c.lineTo(b + w * 0.23, h * 0.13);
-    c.lineTo(b, 0); c.quadraticCurveTo(0, h * 0.14, -b, 0);
-  } else if (g.kind === 'pants') {
-    c.moveTo(-w / 2, 0); c.lineTo(w / 2, 0); c.lineTo(w / 2 + 3, h); c.lineTo(w * 0.07, h); c.lineTo(0, h * 0.28);
-    c.lineTo(-w * 0.07, h); c.lineTo(-w / 2 - 3, h);
-  } else if (g.kind === 'dress') {
-    c.moveTo(-w * 0.2, 0); c.lineTo(w * 0.2, 0); c.lineTo(w * 0.24, h * 0.32); c.quadraticCurveTo(w * 0.56, h * 0.9, w * 0.5, h);
-    c.quadraticCurveTo(0, h * 1.06, -w * 0.5, h); c.quadraticCurveTo(-w * 0.56, h * 0.9, -w * 0.24, h * 0.32);
-  } else if (g.kind === 'socks') {
-    for (const dx of [-w * 0.3, w * 0.3]) {
-      c.moveTo(dx - 9, 0); c.lineTo(dx + 9, 0); c.lineTo(dx + 9, h * 0.72); c.quadraticCurveTo(dx + 9, h, dx - 6, h);
-      c.quadraticCurveTo(dx - 22, h, dx - 20, h * 0.8); c.quadraticCurveTo(dx - 16, h * 0.66, dx - 9, h * 0.62); c.closePath();
-    }
-    return;
-  } else {
-    c.moveTo(-w / 2, 0); c.lineTo(w / 2, 0); c.lineTo(w / 2 + 1, h); c.quadraticCurveTo(0, h + 5, -w / 2 - 1, h);
-  }
-  c.closePath();
-}
-
-function drawGarment(c, g, x, y, sway) {
-  c.save();
-  c.translate(x, y);
-  c.transform(1, 0, sway * 0.01, 1, 0, 0);   // the hem swings, the pegged top stays put
-  garmentPath(c, g);
-  c.fillStyle = g.col; c.fill();
-  c.save(); c.clip();
-  const sh = c.createLinearGradient(-g.w / 2, 0, g.w / 2, 0);
-  sh.addColorStop(0, 'rgba(40,25,15,0.22)'); sh.addColorStop(0.35, 'rgba(255,250,235,0.1)'); sh.addColorStop(0.65, 'rgba(40,25,15,0.06)'); sh.addColorStop(1, 'rgba(40,25,15,0.24)');
-  c.fillStyle = sh; c.fillRect(-g.w, 0, g.w * 2, g.h + 12);
-  c.fillStyle = 'rgba(40,25,15,0.08)';
-  for (let k = -2; k <= 2; k++) c.fillRect(k * g.w * 0.16 - 2, g.h * 0.2, 4, g.h);
-  if (g.stripe) { c.fillStyle = g.stripe; c.fillRect(-g.w, g.h * 0.7, g.w * 2, g.h * 0.08); c.fillRect(-g.w, g.h * 0.83, g.w * 2, g.h * 0.04); }
-  c.restore();
-  c.strokeStyle = 'rgba(40,28,20,0.85)'; c.lineWidth = 1.6; c.lineJoin = 'round'; c.stroke();
-  // wooden pegs
-  const pegs = g.kind === 'socks' ? [-g.w * 0.3, g.w * 0.3] : g.kind === 'dress' ? [-g.w * 0.16, g.w * 0.16] : [-g.w * 0.36, g.w * 0.36];
-  c.fillStyle = '#b8864f'; c.strokeStyle = '#3a2a1e'; c.lineWidth = 1;
-  for (const px of pegs) { c.fillRect(px - 2.5, -7, 5, 14); c.strokeRect(px - 2.5, -7, 5, 14); }
-  c.restore();
-}
 
 export class StreetScene extends Scene {
   constructor(app) {
@@ -97,8 +45,9 @@ export class StreetScene extends Scene {
     this.cfg = L;
     this.worldW = L.worldW;
     this.walkBand = L.ground;
-    const bgName = L.bgAlt && this.cond(L.bgAlt.cond) ? L.bgAlt.bg : L.bg;
-    [this.bg, this.bgLights, this.sky, this.skyLights] = await Promise.all([Assets.bg(bgName), Assets.bg(L.lights), Assets.bg('skyline'), Assets.bg('skyline_lights')]);
+    const alt = L.bgAlt && this.cond(L.bgAlt.cond) ? L.bgAlt : null;
+    const lights = alt ? alt.lights : L.lights;
+    [this.bg, this.bgLights, this.sky, this.skyLights] = await Promise.all([Assets.bg(alt ? alt.bg : L.bg), lights ? Assets.bg(lights) : null, Assets.bg('skyline'), Assets.bg('skyline_lights')]);
     this.skyMask = this.buildSkyMask(this.bg);
     this.actors = [this.player];
     this.npcs.clear();
@@ -150,14 +99,29 @@ export class StreetScene extends Scene {
     o.globalCompositeOperation = 'source-over';
     o.clearRect(0, 0, W, H);
     o.setTransform(k, 0, 0, k, 0, 0);
-    o.drawImage(this.skyLights, -r.cam.x * 0.25 - 100, this.cfg.sky === 'wide' ? 0 : 60, 2400, 720);
+    const sk = this.skyRect(r);
+    o.drawImage(this.skyLights, sk.x, sk.y, sk.w, sk.h);
     if (this.bg) {
       const z = r.cam.zoom, s = k * z;
       o.globalCompositeOperation = 'destination-out';
       o.setTransform(s, 0, 0, s, -r.cam.x * s + (r.VW / 2) * (1 - z) * k, -r.cam.y * s + 360 * (1 - z) * k);
       o.drawImage(this.bg, 0, 0, this.worldW, 720);
+      // trees, lamp posts and signs stand in front of the far city too
+      for (const e of this.ents) {
+        const pr = e.pr, im = pr && Assets.img(e.s);
+        if (!im) continue;
+        const kk = pr.h ? pr.h / im.naturalHeight : pr.w / im.naturalWidth;
+        const w = im.naturalWidth * kk, h = im.naturalHeight * kk;
+        o.drawImage(im, pr.x - w / 2, pr.y - h * (pr.ay ?? 1), w, h);
+      }
     }
     return cv;
+  }
+
+  // Where the far skyline sits on screen: it slides at a quarter of the camera's speed.
+  skyRect(r) {
+    const k = this.cfg.skyScale || 1;
+    return { x: -r.cam.x * 0.25 - 100, y: this.cfg.skyY ?? -110, w: 2400 * k, h: 900 * k };
   }
 
   isSky(wx, wy) {
@@ -280,7 +244,8 @@ export class StreetScene extends Scene {
     if (G.day >= 16 && Math.random() < dt * 0.5 && this.wx() !== 'storm' && !this.isTitle) this.particles.emit('leaf', this.r.cam.x + rand() * this.r.VW, -10, 1);
     for (const pg of this.pigeons) {
       pg.hop -= dt;
-      if (pg.hop < 0) { pg.hop = rand.range(0.6, 2.4); pg.x += rand.range(-18, 18); pg.f = rand() < 0.5 ? 1 : -1; pg.jump = 0.2; }
+      if (pg.hop < 0) { pg.hop = rand.range(0.6, 2.4); if (rand() < 0.45) pg.peck = rand.range(0.4, 1.1); else { pg.x += rand.range(-18, 18); pg.f = rand() < 0.5 ? 1 : -1; pg.jump = 0.2; } }
+      if (pg.peck > 0) pg.peck -= dt;
       if (pg.jump > 0) pg.jump -= dt;
       if (Math.abs(this.player.x - pg.x) < 70 && Math.abs(this.player.y - pg.y) < 40 && this.player.moving) { pg.fly = 1; }
       if (pg.fly) { pg.fly -= dt; pg.y -= 160 * dt; pg.x += 90 * pg.f * dt; if (pg.fly <= 0) { pg.fly = 0; pg.y = 624 + rand() * 30; pg.x = 1060 + rand() * 180; } }
@@ -300,12 +265,12 @@ export class StreetScene extends Scene {
     c.fillStyle = g; c.fillRect(0, 0, r.VW, 720);
     // far skyline with parallax
     if (this.sky) {
-      const sx = -r.cam.x * 0.25 - 100;
-      const sy = this.cfg.sky === 'wide' ? 0 : 60;
-      c.drawImage(this.sky, sx, sy, 2400, 720);
+      const sk = this.skyRect(r);
+      c.drawImage(this.sky, sk.x, sk.y, sk.w, sk.h);
     }
     r.world();
     if (this.bg) c.drawImage(this.bg, 0, 0, this.worldW, 720);
+    if (this.cfg.shopSign) this.drawShopSign(r);
     if (this.cfg.clothesline) this.drawClothesline(r);
     this.drawSpecial(r);
     for (const { d } of this.sortedDrawables()) d.draw(r, this.t);
@@ -342,6 +307,8 @@ export class StreetScene extends Scene {
       r.world();
       for (const pr of this.cfg.props) if (pr.glow) this.drawBulbs(r, pr, night);
       for (const pr of this.cfg.props) if (pr.glowLamp) r.glow(pr.x, pr.y - pr.h * 0.5, 50, [255, 190, 100], 0.5 * night);
+      const bl = this.cfg.bridgeLamps;
+      if (bl) for (let i = 0; i < bl.n; i++) r.glow(bl.x0 + (bl.x1 - bl.x0) * i / (bl.n - 1), bl.y, 20, [255, 214, 150], 0.7 * night);
     }
     this.rain.draw(c, r.scale);
     r.world();
@@ -361,32 +328,28 @@ export class StreetScene extends Scene {
     if (pr.sign && box) {
       const c = r.ctx;
       c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.font = `${Math.round(box.h * 0.26)}px Pacifico`; c.fillStyle = '#5a2e14';
-      c.fillText(G.shop, box.x + box.w * 0.5, box.y + box.h * 0.66);
+      c.font = `${Math.round(box.h * 0.17)}px Pacifico`; c.fillStyle = '#5a2e14';
+      c.fillText(G.shop, box.x + box.w * 0.5, box.y + box.h * 0.73, box.w * 0.72);
       c.restore();
     }
   }
 
-  // Weekend flea market: a striped canopy on two poles and a hand-lettered sign over the table.
-  drawMarketCanopy(r, pr) {
-    const c = r.ctx;
-    const x0 = pr.x - 104, x1 = pr.x + 104, top = pr.y - 214, base = pr.y - 6;
-    c.save();
-    c.fillStyle = '#5a3a24'; c.strokeStyle = '#2a1c14'; c.lineWidth = 1.5;
-    for (const px of [x0 + 2, x1 - 8]) { c.fillRect(px, top, 6, base - top); c.strokeRect(px, top, 6, base - top); }
-    const n = 7, w = (x1 - x0) / n;
-    for (let i = 0; i < n; i++) {
-      c.fillStyle = i % 2 ? '#efe3c6' : '#c4692e';
-      c.beginPath(); c.moveTo(x0 + i * w, top); c.lineTo(x0 + (i + 1) * w, top); c.lineTo(x0 + (i + 1) * w, top + 24);
-      c.quadraticCurveTo(x0 + (i + 0.5) * w, top + 38, x0 + i * w, top + 24); c.closePath(); c.fill(); c.stroke();
-    }
-    c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(x0, top + 22, x1 - x0, 4);
-    c.fillStyle = '#f7ecd4'; c.strokeStyle = '#3a2a1e';
-    c.beginPath(); c.roundRect(pr.x - 58, top - 30, 116, 26, 4); c.fill(); c.stroke();
-    c.font = '700 14px Fraunces'; c.fillStyle = '#8f3f2c'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('FLEA MARKET', pr.x, top - 16);
+  // The shop's name, painted on the blank fascia over Rosa's window.
+  drawShopSign(r) {
+    const c = r.ctx, sg = this.cfg.shopSign;
+    c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = '46px Pacifico';
+    c.lineWidth = 5; c.strokeStyle = 'rgba(30,50,52,0.85)'; c.fillStyle = '#f3e3c3';
+    c.strokeText(G.shop, sg.x, sg.y, sg.w * 0.8); c.fillText(G.shop, sg.x, sg.y, sg.w * 0.8);
+    c.font = '700 13px Fraunces'; c.fillStyle = 'rgba(243,227,195,0.85)';
+    c.fillText('SELF-SERVICE · WASH & FOLD', sg.x, sg.y + 26);
     c.restore();
-    r.sprite('item_yarn_basket', x1 + 20, pr.y + 4, { h: 46 });
+  }
+
+  // Weekend flea market: a striped canopy over the table, and a basket of yarn beside it.
+  drawMarketCanopy(r, pr) {
+    r.sprite('street_market_canopy', pr.x, pr.y + 2, { h: 214 });
+    r.sprite('scn_yarn_basket', pr.x + 124, pr.y + 4, { h: 40 });
   }
 
   drawBulbs(r, pr, night) {
@@ -397,52 +360,18 @@ export class StreetScene extends Scene {
   }
 
   drawSpecial(r) {
-    const c = r.ctx;
+    // Crestline's billboard replaces Remy's mural (and somebody answers it)
     const ad = this.cfg.crestlineAd;
-    if (ad && this.cond(ad.cond)) {
-      // Crestline's billboard replaces Remy's mural
-      c.save();
-      c.fillStyle = '#6a6a66'; c.fillRect(ad.x - 110, ad.y - 40, 10, 40); c.fillRect(ad.x + 100, ad.y - 40, 10, 40);
-      const x = ad.x - ad.w / 2, y = ad.y - 40 - ad.h;
-      const gr = c.createLinearGradient(x, y, x + ad.w, y + ad.h);
-      gr.addColorStop(0, '#e9eef2'); gr.addColorStop(1, '#b8c6d2');
-      c.fillStyle = gr; c.fillRect(x, y, ad.w, ad.h);
-      c.strokeStyle = '#2a2f36'; c.lineWidth = 3; c.strokeRect(x, y, ad.w, ad.h);
-      c.fillStyle = '#23354a'; c.fillRect(x, y + ad.h - 44, ad.w, 44);
-      c.fillStyle = '#23354a'; c.font = '600 30px sans-serif'; c.textAlign = 'left';
-      c.fillText('THE LINDEN', x + 18, y + 48);
-      c.font = '15px sans-serif'; c.fillStyle = '#3b4a5c';
-      c.fillText('Luxury living. Coming soon.', x + 18, y + 74);
-      c.fillText('Studios from $2,950/mo', x + 18, y + 96);
-      c.fillStyle = '#e9eef2'; c.font = '600 14px sans-serif'; c.fillText('CRESTLINE PROPERTIES', x + 18, y + ad.h - 17);
-      // tower rendering
-      c.fillStyle = 'rgba(35,53,74,0.65)'; c.fillRect(x + ad.w - 90, y + 16, 56, ad.h - 66);
-      for (let i = 0; i < 7; i++) for (let j = 0; j < 3; j++) { c.fillStyle = 'rgba(233,238,242,0.7)'; c.fillRect(x + ad.w - 84 + j * 17, y + 24 + i * 16, 10, 9); }
-      if (G.flags.ad_tagged) { c.fillStyle = 'rgba(214,120,150,0.9)'; c.font = '38px Pacifico'; c.fillText('keep it Linden', x + 30, y + ad.h - 70); }
-      c.restore();
-    }
+    if (ad && this.cond(ad.cond)) r.sprite(G.flags.ad_tagged ? 'street_ad_tagged' : 'street_ad_crestline', ad.x, ad.y, { h: ad.h });
     const sb = this.cfg.soldBanner;
-    if (sb && this.cond(sb.cond)) {
-      c.save(); c.translate(sb.x, sb.y); c.rotate(-0.02);
-      c.fillStyle = '#23354a'; c.fillRect(-140, -24, 280, 48);
-      c.fillStyle = '#fff'; c.font = '600 22px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillText('SOLD · CRESTLINE PROPERTIES', 0, 1);
-      c.restore();
-    }
-    // petition posters on lamp posts
+    if (sb && this.cond(sb.cond)) r.sprite('street_sold_banner', sb.x, sb.y, { w: sb.w || 280, ay: 0.5, rot: -0.02 });
+    // petition posters on the lamp posts
     if (this.loc === 'street' && G.flags.petition_started) {
-      for (const lx of [360, 1160, 1900]) {
-        c.save(); c.translate(lx + 14, 470); c.rotate(0.04);
-        c.fillStyle = '#f3e3c3'; c.fillRect(-18, -26, 36, 52); c.strokeStyle = '#3a2a1e'; c.lineWidth = 1; c.strokeRect(-18, -26, 36, 52);
-        c.fillStyle = '#b3402f'; c.font = '700 8px Fraunces'; c.textAlign = 'center'; c.fillText('SAVE', 0, -12); c.fillText('LINDEN', 0, -2); c.fillText('ST.', 0, 8);
-        c.restore();
-      }
+      for (const lx of this.cfg.posters || []) r.sprite('street_poster', lx + 1, 500, { h: 52, ay: 0.5, rot: 0.04 });
     }
-    // Remy's new mural on the Cap & Seal fence (ending choice)
-    if (this.loc === 'street' && G.flags.new_mural) {
-      r.sprite('street_billboard', 2440, 604, { h: 230 });
-      c.save(); c.fillStyle = 'rgba(40,20,20,0.85)'; c.font = '24px Pacifico'; c.textAlign = 'center'; c.fillText('for Rosa', 2440, 560); c.restore();
-    }
+    // Remy's new mural on the old billboard (ending choice)
+    const mural = this.cfg.props.find(p => p.mural);
+    if (mural && G.flags.new_mural) r.sprite('street_mural_rosa', mural.x, mural.y, { h: mural.h });
   }
 
   drawClothesline(r) {
@@ -451,28 +380,20 @@ export class StreetScene extends Scene {
     c.save();
     c.strokeStyle = '#3a2a1e'; c.lineWidth = 2;
     c.beginPath(); c.moveTo(cl.x0, cl.y); c.quadraticCurveTo((cl.x0 + cl.x1) / 2, cl.y + 2 * sag, cl.x1, cl.y); c.stroke();
+    c.restore();
     const wind = this.wx() === 'storm' ? 3 : this.wx() === 'rain' ? 1.4 : 1;
     CLOTHES.forEach((g, i) => {
       const x = cl.x0 + (cl.x1 - cl.x0) * g.at;
-      const sway = Math.sin(this.t * (1.3 + i * 0.17) + i * 1.7) * 3 * wind + (wind > 1 ? 2 : 0);
-      drawGarment(c, g, x, lineY(x), sway);
+      const sway = (Math.sin(this.t * (1.3 + i * 0.17) + i * 1.7) * 0.03 + (wind > 1 ? 0.02 : 0)) * wind;
+      r.sprite(g.s, x, lineY(x) - 6, { h: g.h, ay: 0, rot: sway });   // pegged at the top, the hem swings
     });
-    c.restore();
   }
 
   drawPigeons(r) {
-    const c = r.ctx;
     for (const pg of this.pigeons) {
-      const y = pg.y - (pg.jump > 0 ? Math.sin(pg.jump / 0.2 * Math.PI) * 6 : 0);
-      c.save(); c.translate(pg.x, y); c.scale(pg.f * 0.9, 0.9);
-      c.fillStyle = 'rgba(0,0,0,0.2)'; c.beginPath(); c.ellipse(0, 2, 10, 3, 0, 0, Math.PI * 2); c.fill();
-      c.fillStyle = '#8a8a90'; c.strokeStyle = '#2a2a2e'; c.lineWidth = 1.2;
-      c.beginPath(); c.ellipse(0, -8, 11, 7, -0.2, 0, Math.PI * 2); c.fill(); c.stroke();
-      c.fillStyle = '#6f7a86'; c.beginPath(); c.arc(9, -15, 5, 0, Math.PI * 2); c.fill(); c.stroke();
-      c.fillStyle = '#7a9a88'; c.beginPath(); c.ellipse(6, -11, 4, 3, 0, 0, Math.PI * 2); c.fill();
-      c.fillStyle = '#d98a4a'; c.fillRect(13, -15, 4, 2);
-      c.fillStyle = '#c4692e'; c.fillRect(-2, -2, 2, 4); c.fillRect(2, -2, 2, 4);
-      c.restore();
+      const hop = pg.jump > 0 ? Math.sin(pg.jump / 0.2 * Math.PI) * 6 : 0;
+      const s = pg.fly ? (Math.sin(this.t * 22 + pg.x) > 0 ? 'pigeon_fly_up' : 'pigeon_fly_down') : pg.peck > 0 ? 'pigeon_peck' : 'pigeon_stand';
+      r.sprite(s, pg.x, pg.y - hop, { h: s === 'pigeon_stand' ? 26 : s === 'pigeon_peck' ? 19 : 30, flip: pg.f < 0 });
     }
   }
 

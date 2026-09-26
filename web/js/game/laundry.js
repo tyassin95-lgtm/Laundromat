@@ -7,19 +7,65 @@ import { REGULARS, SERVICES } from '../data/regulars.js';
 export const OPEN_AT = 8 * 60;
 export const CLOSE_AT = 18 * 60;
 
+// Machines and their upgrade tree. Every washer, and every dryer tower (two drums), can be
+// upgraded in place to a model that grows out of its own (from: [...]); an empty bay takes any
+// model you have unlocked: tier 1, or one whose parent you have owned (G.unlocked).
+//   cycle minutes · soap per load (washers) · wear per cycle · lint per cycle (dryers)
+//   gentle   delicates come out right (a little happier customers)
+//   care     every order through it comes back a little nicer
+//   selfPay  walk-ins pay this much more to use it
 export const MODELS = {
-  classic: { kind: 'washer', name: 'Classic front-loader', cycle: 32, soap: 1, wear: 5.5, price: 140, sprite: 'machine_washer_idle',
+  classic: { kind: 'washer', tier: 1, name: 'Classic front-loader', sprite: 'washer_classic', cycle: 32, soap: 1, wear: 5.5, price: 140,
     blurb: 'Rosa\'s old workhorse. Honest, loud, a little temperamental.' },
-  speed: { kind: 'washer', name: 'SpinQueen 900', cycle: 20, soap: 1, wear: 4.5, price: 320, sprite: 'machine_washer_orange',
-    blurb: 'Fast cycles. Orders wash in almost half the time.' },
-  eco: { kind: 'washer', name: 'Blue Heron Eco', cycle: 26, soap: 0.5, wear: 2.5, price: 260, sprite: 'machine_washer_blue',
-    blurb: 'Gentle, reliable, sips detergent. Customers love it for delicates.' },
-  stack: { kind: 'dryer', name: 'Twin-Tumble dryer stack', cycle: 36, wear: 3.5, price: 380, sprite: 'machine_stack_unit',
-    blurb: 'Two dryer drums in one tower.' },
+  speed: { kind: 'washer', tier: 2, from: ['classic'], name: 'SpinQueen 900', sprite: 'washer_speed', cycle: 20, soap: 1, wear: 4.5, price: 320,
+    blurb: 'Fast cycles: orders wash in almost half the time.' },
+  eco: { kind: 'washer', tier: 2, from: ['classic'], name: 'Blue Heron Eco', sprite: 'washer_eco', cycle: 26, soap: 0.5, wear: 2.5, price: 260, gentle: true,
+    blurb: 'Gentle, reliable, sips detergent. Delicates come out just right.' },
+  turbo: { kind: 'washer', tier: 3, from: ['speed'], name: 'SpinQueen Turbo', sprite: 'washer_turbo', cycle: 14, soap: 1, wear: 4, price: 520,
+    blurb: 'Fourteen minutes a load. Hums like a race car at the lights.' },
+  pro: { kind: 'washer', tier: 3, from: ['eco'], name: 'Heron Pro', sprite: 'washer_pro', cycle: 22, soap: 0.4, wear: 1.5, price: 480, gentle: true, care: 0.05,
+    blurb: 'Digital, whisper-quiet and hardly wears. Clothes come out a little nicer.' },
+  titan: { kind: 'washer', tier: 4, from: ['turbo', 'pro'], name: 'Titan XL', sprite: 'washer_titan', cycle: 17, soap: 0.8, wear: 1.2, price: 880, gentle: true, care: 0.05, selfPay: 1.6,
+    blurb: 'Industrial steel and a drum you could nap in. Walk-ins pay extra to use it.' },
+  stack: { kind: 'dryer', tier: 1, name: 'Twin-Tumble tower', sprite: 'dryer_stack', cycle: 36, wear: 3.5, lint: 1, price: 380,
+    blurb: 'Two dryer drums in one tower. Warm, slow, dependable.' },
+  gas: { kind: 'dryer', tier: 2, from: ['stack'], name: 'Firebird gas tower', sprite: 'dryer_gas', cycle: 26, wear: 3, lint: 1.4, price: 520,
+    blurb: 'Gas-fired and quick. More heat means more lint.' },
+  heat: { kind: 'dryer', tier: 2, from: ['stack'], name: 'Breeze heat-pump tower', sprite: 'dryer_heat', cycle: 32, wear: 1.5, lint: 0.5, price: 480, gentle: true,
+    blurb: 'Low and slow and kind to fabric. Barely makes any lint.' },
+  inferno: { kind: 'dryer', tier: 3, from: ['gas'], name: 'Inferno tower', sprite: 'dryer_inferno', cycle: 18, wear: 2.6, lint: 1.4, price: 760,
+    blurb: 'The fastest dryers on Linden Street. Stand back.' },
+  cloud: { kind: 'dryer', tier: 3, from: ['heat'], name: 'Cloud Nine tower', sprite: 'dryer_cloud', cycle: 25, wear: 1, lint: 0.3, price: 720, gentle: true, care: 0.05,
+    blurb: 'Soft, fluffy, nearly silent. Customers can tell.' },
 };
 
 export const WASHER_SLOTS = 5;
 export const DRYER_UNITS = 2;
+
+export const unlocked = key => MODELS[key].tier === 1 || (G.unlocked || []).includes(key) || (MODELS[key].from || []).some(p => (G.unlocked || []).includes(p));
+export function noteOwned() {
+  G.unlocked = G.unlocked || [];
+  for (const m of G.machines) if (!G.unlocked.includes(m.model)) G.unlocked.push(m.model);
+}
+// Upgrading trades the old machine in for 40% of its price.
+export const tradeIn = key => Math.round(MODELS[key].price * 0.4);
+export const upgradeCost = (fromKey, toKey) => MODELS[toKey].price - tradeIn(fromKey);
+export const childrenOf = key => Object.keys(MODELS).filter(k => (MODELS[k].from || []).includes(key));
+// The machines that make up one washer bay or dryer tower.
+export const unitOf = m => m.kind === 'washer' ? [m] : G.machines.filter(d => d.kind === 'dryer' && Math.floor(d.slot / 2) === Math.floor(m.slot / 2));
+export const unitBusy = m => unitOf(m).some(d => d.state || d.load);
+
+export function installModel(kind, bay, key) {
+  if (kind === 'washer') G.machines.push({ id: 'W' + (bay + 1) + '_' + (G.orderSeq++), kind, slot: bay, model: key, cond: 100, broken: false });
+  else for (const k of [0, 1]) G.machines.push({ id: 'D' + (bay * 2 + k + 1) + '_' + (G.orderSeq++), kind, slot: bay * 2 + k, model: key, cond: 100, broken: false });
+  ensureMachineFields();
+  noteOwned();
+}
+
+export function upgradeUnit(m, key) {
+  for (const d of unitOf(m)) { d.model = key; d.cond = 100; d.broken = false; d.lint = 0; d.breakAt = null; }
+  noteOwned();
+}
 
 const SELF_WASH = 3.5, SELF_DRY = 2.5;
 
@@ -54,6 +100,7 @@ export function cycleMinutes(m) {
 export function isFree(m) { return !m.broken && !m.state && !m.load; }
 
 export function ensureMachineFields() {
+  noteOwned();
   for (const m of G.machines) {
     if (m.state === undefined) m.state = null;       // null | 'running' | 'done'
     if (m.load === undefined) m.load = null;         // order id or 'self'
@@ -78,7 +125,7 @@ export function startCycle(m, load) {
   const breakChance = m.cond < 12 ? 0.55 : m.cond < 25 ? 0.2 : m.cond < 40 ? 0.05 : 0.0;
   m.load = load; m.state = 'running'; m.t = 0; m.dur = cycleMinutes(m);
   m.uses++;
-  if (m.kind === 'dryer') m.lint = (m.lint || 0) + (up('lint_screens') ? 0.5 : 1);
+  if (m.kind === 'dryer') m.lint = (m.lint || 0) + (model.lint ?? 1) * (up('lint_screens') ? 0.5 : 1);
   G.stats.cycles++;
   G.vars.cyclesToday = (G.vars.cyclesToday || 0) + 1;
   G.vars.weekCycles = (G.vars.weekCycles || 0) + 1;
@@ -168,6 +215,8 @@ export function pickup(o) {
   const foldQ = o.fold === null ? 0.8 : o.fold;
   let q = (onTime ? 0.55 : 0.2) + foldQ * 0.25 + (G.cleanliness / 100) * 0.1 + comfortScore() * 0.1 + (up('wifi') ? 0.05 : 0);
   if (o.softenerWanted !== undefined) q += o.softenerOk ? 0.05 : -0.08;
+  if (o.gentle && o.gentleOk) q += 0.05;
+  q += o.care || 0;
   q = clamp(q, 0, 1);
   const pwyc = pwycToday();
   const priceMul = pwyc ? 0.5 : G.policies.prices === 'low' ? 0.85 : G.policies.prices === 'high' ? 1.2 : 1;
@@ -312,7 +361,7 @@ export function tick(dm) {
     if (free.length >= 2 || (free.length === 1 && washers().filter(isFree).length > 1)) {
       const m = free[Math.floor(Math.random() * free.length)];
       startCycle(m, 'self');
-      const wash = SELF_WASH * (pwycToday() ? 0.5 : 1);
+      const wash = SELF_WASH * (modelOf(m).selfPay || 1) * (pwycToday() ? 0.5 : 1);
       addMoney(wash, null, 'self');
       G.today.selfServe += wash;
       if (up('vending') && Math.random() < 0.45) {
@@ -340,14 +389,14 @@ export function tick(dm) {
   const puddleChance = (G.weather === 'rain' ? 0.011 : G.weather === 'storm' ? 0.02 : 0.003) * dm * (up('awning') ? 0.6 : 1);
   if (Math.random() < puddleChance && Sim.puddles.length < 4) {
     const nearDoor = Math.random() < 0.7;
-    const p = { id: Sim.seq++, x: nearDoor ? 1640 + Math.random() * 200 : 560 + Math.random() * 700, y: 600 + Math.random() * 70, size: 0.7 + Math.random() * 0.5 };
+    const p = { id: Sim.seq++, x: nearDoor ? 1700 + Math.random() * 260 : 640 + Math.random() * 700, y: 650 + Math.random() * 40, size: 0.7 + Math.random() * 0.5 };
     Sim.puddles.push(p);
     addStat('cleanliness', -3);
     emit('puddle', { p });
   }
   if (Math.random() < 0.0035 * dm && Sim.litter.length < 3) {
     const kind = Math.random() < 0.55 ? 'sock' : 'lint';
-    const l = { id: Sim.seq++, kind, x: 520 + Math.random() * 1000, y: 585 + Math.random() * 90 };
+    const l = { id: Sim.seq++, kind, x: 640 + Math.random() * 1000, y: 640 + Math.random() * 56 };
     Sim.litter.push(l);
     emit('litter', { l });
   }

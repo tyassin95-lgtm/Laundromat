@@ -26,8 +26,8 @@ export class Particles {
         case 'splash':
           p.vx = rand.range(-70, 70); p.vy = rand.range(-140, -60); p.life = 0.45; p.size = rand.range(1.5, 3); p.g = 700; break;
         case 'leaf':
-          p.vx = rand.range(20, 60); p.vy = rand.range(25, 50); p.life = rand.range(5, 9); p.size = rand.range(5, 9); p.vr = rand.range(-2, 2); p.phase = rand() * 6;
-          p.color = o.color || rand.pick(['#d8792e', '#e8a33c', '#b85a2a', '#c9a13a']); break;
+          p.vx = rand.range(20, 60); p.vy = rand.range(25, 50); p.life = rand.range(5, 9); p.size = rand.range(11, 17); p.vr = rand.range(-2, 2); p.phase = rand() * 6;
+          p.sprite = rand.pick(['leaf_maple', 'leaf_linden', 'leaf_oak']); break;
         case 'note':
           p.vx = rand.range(-20, 20); p.vy = rand.range(-50, -35); p.life = 2; p.size = rand.range(14, 20); p.phase = rand() * 6; p.glyph = rand.pick(['♪', '♫']); break;
         case 'zzz':
@@ -107,17 +107,30 @@ export class Particles {
           ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
           break;
         }
-        case 'splash': case 'lint': {
+        case 'splash': {
           ctx.globalAlpha = t;
-          ctx.fillStyle = p.type === 'splash' ? 'rgba(200,225,240,0.9)' : '#d9d2c3';
+          ctx.fillStyle = 'rgba(200,225,240,0.9)';
           ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
           break;
         }
+        case 'lint': {
+          // tufts of fluff off the lint screen (sprites/scn_lint)
+          const im = Assets.img('scn_lint');
+          if (!im) break;
+          ctx.globalAlpha = t;
+          ctx.translate(p.x, p.y); ctx.rotate(p.age * 2 + p.size);
+          const h = p.size * 3.2, w = h * im.naturalWidth / im.naturalHeight;
+          ctx.drawImage(im, -w / 2, -h / 2, w, h);
+          break;
+        }
         case 'leaf': {
+          // a painted leaf (sprites/leaf_*), tumbling: it turns and flips as it falls
+          const im = Assets.img(p.sprite);
+          if (!im) break;
           ctx.globalAlpha = Math.min(1, t * 2);
           ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(1, Math.abs(Math.sin(p.age * 2 + p.phase)) * 0.7 + 0.3);
-          ctx.fillStyle = p.color; ctx.strokeStyle = 'rgba(60,30,15,0.7)'; ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          const h = p.size, w = h * im.naturalWidth / im.naturalHeight;
+          ctx.drawImage(im, -w / 2, -h / 2, w, h);
           break;
         }
         case 'note': {
@@ -173,45 +186,100 @@ export class Rain {
   }
 }
 
-// Droplets running down window glass (drawn inside given rects, world space).
+// Rain seen through a window: streaks falling outside (drawOutside, before the room is drawn, so
+// the frames cover them) and drops on the glass itself (draw, after the room): small beads that
+// sit and gather, and every so often one grows heavy and runs down, leaving a thin wet trail.
 export class GlassRain {
   constructor(rects) {
-    this.rects = rects; this.drops = []; this.intensity = 0;
-    for (const r of rects) for (let i = 0; i < 40; i++) this.drops.push(this.mk(r, true));
+    this.rects = rects; this.intensity = 0; this.beads = []; this.runs = []; this.streaks = []; this.t = 0;
   }
-  mk(r, anywhere) {
-    return { r, x: r.x + rand() * r.w, y: anywhere ? r.y + rand() * r.h : r.y - rand() * 20, v: rand.range(8, 30), s: rand.range(1.2, 3.4), run: rand() < 0.35, trail: [] };
-  }
+  area() { return this.rects.reduce((a, r) => a + r.w * r.h, 0); }
+  bead(r) { return { r, x: r.x + rand() * r.w, y: r.y + rand() * r.h, s: rand.range(0.7, 1.9), age: rand() * 20 }; }
   update(dt) {
-    if (this.intensity <= 0) return;
-    for (const d of this.drops) {
-      if (d.run) {
-        d.v += (rand() - 0.3) * 60 * dt; d.v = Math.max(10, Math.min(120, d.v));
-        d.y += d.v * dt; d.x += (rand() - 0.5) * 8 * dt;
-        d.trail.push([d.x, d.y]); if (d.trail.length > 14) d.trail.shift();
-      } else if (rand() < 0.002) d.run = true;
-      if (d.y > d.r.y + d.r.h) Object.assign(d, this.mk(d.r, false), { trail: [] });
+    this.t += dt;
+    const k = this.intensity;
+    if (k <= 0) { this.beads.length = 0; this.runs.length = 0; this.streaks.length = 0; return; }
+    const want = Math.round(this.area() / 900 * k);
+    while (this.beads.length < want) this.beads.push(this.bead(rand.pick(this.rects)));
+    if (this.beads.length > want) this.beads.length = want;
+    // a bead now and then gets heavy and runs
+    if (rand() < dt * 1.6 * k && this.runs.length < 14) {
+      const r = rand.pick(this.rects);
+      this.runs.push({ r, x: r.x + rand() * r.w, y: r.y + rand() * r.h * 0.4, v: 0, s: rand.range(1.8, 3.2), trail: [], hold: rand.range(0, 0.6) });
+    }
+    for (let i = this.runs.length - 1; i >= 0; i--) {
+      const d = this.runs[i];
+      d.hold -= dt;
+      if (d.hold > 0) continue;
+      // runs in little surges: it sticks, lets go, sticks again
+      if (rand() < dt * 1.5) d.hold = rand.range(0.05, 0.35);
+      d.v = Math.min(160, d.v + 260 * dt);
+      d.y += d.v * dt; d.x += (rand() - 0.5) * 10 * dt;
+      d.trail.push({ x: d.x, y: d.y, t: this.t });
+      while (d.trail.length && this.t - d.trail[0].t > 1.6) d.trail.shift();
+      if (d.y > d.r.y + d.r.h + 4) this.runs.splice(i, 1);
+      else for (const b of this.beads) if (b.r === d.r && Math.abs(b.x - d.x) < d.s + 1 && Math.abs(b.y - d.y) < 3) Object.assign(b, this.bead(b.r), { y: b.r.y + rand() * b.r.h * 0.3 });
+    }
+    const wantStreaks = Math.round(this.area() / 2600 * k);
+    while (this.streaks.length < wantStreaks) {
+      const r = rand.pick(this.rects);
+      this.streaks.push({ r, x: r.x + rand() * (r.w + 40), y: r.y - rand() * r.h, v: rand.range(520, 820), len: rand.range(14, 30), a: rand.range(0.18, 0.4) });
+    }
+    if (this.streaks.length > wantStreaks) this.streaks.length = wantStreaks;
+    for (const s of this.streaks) {
+      s.y += s.v * dt; s.x -= s.v * 0.12 * dt;
+      if (s.y - s.len > s.r.y + s.r.h) { s.y = s.r.y - rand() * 40; s.x = s.r.x + rand() * (s.r.w + 40); }
     }
   }
+  clip(ctx, r) { ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip(); }
+  // falling rain outside, behind the glass
+  drawOutside(ctx) {
+    if (this.intensity <= 0) return;
+    ctx.save();
+    ctx.lineCap = 'round';
+    for (const r of this.rects) {
+      ctx.save(); this.clip(ctx, r);
+      for (const s of this.streaks) {
+        if (s.r !== r) continue;
+        ctx.strokeStyle = `rgba(214,226,238,${s.a * this.intensity})`; ctx.lineWidth = 1.1;
+        ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + s.len * 0.12, s.y - s.len); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+  // drops on the pane
   draw(ctx) {
     if (this.intensity <= 0) return;
     ctx.save();
     for (const r of this.rects) {
-      ctx.save();
-      ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
-      ctx.globalAlpha = this.intensity;
-      for (const d of this.drops) {
+      ctx.save(); this.clip(ctx, r);
+      // a faint film of water and mist low on the glass
+      const g = ctx.createLinearGradient(0, r.y + r.h * 0.55, 0, r.y + r.h);
+      g.addColorStop(0, 'rgba(220,230,238,0)'); g.addColorStop(1, `rgba(220,230,238,${0.16 * this.intensity})`);
+      ctx.fillStyle = g; ctx.fillRect(r.x, r.y, r.w, r.h);
+      for (const b of this.beads) {
+        if (b.r !== r) continue;
+        ctx.fillStyle = 'rgba(28,40,52,0.28)';
+        ctx.beginPath(); ctx.ellipse(b.x, b.y + b.s * 0.15, b.s, b.s * 1.1, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.55)';
+        ctx.beginPath(); ctx.arc(b.x - b.s * 0.35, b.y - b.s * 0.4, Math.max(0.45, b.s * 0.32), 0, Math.PI * 2); ctx.fill();
+      }
+      for (const d of this.runs) {
         if (d.r !== r) continue;
         if (d.trail.length > 1) {
-          ctx.strokeStyle = 'rgba(220,235,250,0.18)'; ctx.lineWidth = d.s * 0.7;
-          ctx.beginPath(); ctx.moveTo(d.trail[0][0], d.trail[0][1]);
-          for (const [x, y] of d.trail) ctx.lineTo(x, y);
-          ctx.stroke();
+          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+          for (let i = 1; i < d.trail.length; i++) {
+            const p0 = d.trail[i - 1], p1 = d.trail[i];
+            const a = 1 - (this.t - p1.t) / 1.6;
+            ctx.strokeStyle = `rgba(200,218,232,${0.22 * a})`; ctx.lineWidth = d.s * 0.55;
+            ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+          }
         }
-        ctx.fillStyle = 'rgba(225,238,250,0.45)';
-        ctx.beginPath(); ctx.ellipse(d.x, d.y, d.s * 0.8, d.s, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        ctx.beginPath(); ctx.arc(d.x - d.s * 0.3, d.y - d.s * 0.3, d.s * 0.3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(24,36,48,0.34)';
+        ctx.beginPath(); ctx.ellipse(d.x, d.y, d.s * 0.85, d.s * 1.25, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.7)';
+        ctx.beginPath(); ctx.arc(d.x - d.s * 0.3, d.y - d.s * 0.5, d.s * 0.3, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
     }
