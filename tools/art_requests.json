@@ -1,0 +1,72 @@
+{
+  "about": "Character art still to be generated (Higgsfield text-to-image). Each request is one image; tools/import_generated.py cuts it into the named sprites. Figures are matched to outputs left to right. Generate in priority order.",
+  "style": "Hand-painted 2D game art in a cosy storybook style: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain and speckles, warm muted autumn palette (rust, ochre, olive, denim blue, cream), soft warm light, semi-realistic proportions, gentle expressive faces. Plain flat pure white background, no ground shadow, no scenery, no text, no labels, no border.",
+  "characters": {
+    "luis": "Luis Delgado, a warm Latino corner-store owner in his mid 60s, stocky, grey swept-back hair, thick grey moustache, deep smile lines, blue plaid flannel shirt with the sleeves rolled up under a faded olive-green canvas shop apron, brown work trousers, worn black work shoes, a pencil tucked behind one ear",
+    "priya": "Priya Raman, a South Asian woman in her early 30s who works night shifts as an ER nurse, long black hair in a loose low braid, small gold nose stud, tired but kind eyes, teal hospital scrubs under an enormous mustard-yellow knit cardigan, ID badge on a lanyard, white sneakers",
+    "haddad": "Fatima Haddad, a small round-faced Lebanese grandmother in her 70s, plum-purple patterned headscarf, reading glasses on a beaded chain, long dark-green cardigan over a long navy skirt, sensible black shoes",
+    "kai": "Kai, a cheerful androgynous bike courier in their early 20s, East Asian, short messy black hair with one bleached streak, a bright orange rain jacket worn open over a grey hoodie, black cargo trousers rolled at the ankle, high-top sneakers, a big grey messenger bag worn across the body with a bike helmet clipped to it",
+    "june": "June Ito, a small Japanese-American retired schoolteacher in her 70s, short curly grey hair, round tortoiseshell glasses, gentle smile, rust-orange knit cardigan over a cream blouse with a small floral print, khaki trousers, brown lace-up boots",
+    "remy": "Remy Castillo, a young Latina barista and mural painter in her mid 20s, pink hair tied up in a messy bun with loose strands, small hoop earrings, a black denim jacket with the sleeves pushed up over a dark red button-up shirt, dark jeans flecked with paint, black boots"
+  },
+  "requests": [
+    {
+      "id": "neighbours_bodies", "priority": 1,
+      "prompt": "{style} A character lineup of four separate people standing side by side in one row, evenly spaced with wide white gaps between them, all at the same scale, each shown full body from the top of the head down to the shoes, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at their sides, not overlapping. From left to right: (1) {luis}. (2) {priya}. (3) {haddad}. (4) {kai}.",
+      "outputs": [
+        { "sprite": "npc_luis", "height": 576 },
+        { "sprite": "npc_priya", "height": 576 },
+        { "sprite": "npc_haddad", "height": 576 },
+        { "sprite": "npc_kai", "height": 576 }
+      ]
+    },
+    {
+      "id": "luis_faces", "priority": 2,
+      "prompt": "{style} A character expression sheet: four head-and-shoulders bust portraits of the same man side by side in one row, evenly spaced with clear white gaps between them, all the same size, each turned slightly towards the viewer's left and cut off just below the shoulders. From left to right: calm and kind; a warm smile; tired and sad; laughing with his eyes crinkled shut. The man: {luis}.",
+      "outputs": [
+        { "sprite": "face_luis_neutral", "height": 640 },
+        { "sprite": "face_luis_smile", "height": 640 },
+        { "sprite": "face_luis_sad", "height": 640 },
+        { "sprite": "face_luis_laugh", "height": 640 }
+      ]
+    },
+    {
+      "id": "priya_faces", "priority": 2,
+      "prompt": "{style} A character expression sheet: four head-and-shoulders bust portraits of the same woman side by side in one row, evenly spaced with clear white gaps between them, all the same size, each turned slightly towards the viewer's left and cut off just below the shoulders. From left to right: dry and deadpan; a small warm smile; exhausted with heavy eyelids; laughing. The woman: {priya}.",
+      "outputs": [
+        { "sprite": "face_priya_neutral", "height": 640 },
+        { "sprite": "face_priya_smile", "height": 640 },
+        { "sprite": "face_priya_tired", "height": 640 },
+        { "sprite": "face_priya_laugh", "height": 640 }
+      ]
+    },
+    {
+      "id": "haddad_faces", "priority": 2,
+      "prompt": "{style} A character expression sheet: four head-and-shoulders bust portraits of the same elderly woman side by side in one row, evenly spaced with clear white gaps between them, all the same size, each turned slightly towards the viewer's left and cut off just below the shoulders. From left to right: appraising you over her glasses; a fond smile; worried; laughing. The woman: {haddad}.",
+      "outputs": [
+        { "sprite": "face_haddad_neutral", "height": 640 },
+        { "sprite": "face_haddad_smile", "height": 640 },
+        { "sprite": "face_haddad_worried", "height": 640 },
+        { "sprite": "face_haddad_laugh", "height": 640 }
+      ]
+    },
+    {
+      "id": "kai_faces", "priority": 2,
+      "prompt": "{style} A character expression sheet: four head-and-shoulders bust portraits of the same young person side by side in one row, evenly spaced with clear white gaps between them, all the same size, each turned slightly towards the viewer's left and cut off just below the shoulders. From left to right: curious; a big grin; worried with raised eyebrows; wide-eyed and excited with an open mouth. The person: {kai}.",
+      "outputs": [
+        { "sprite": "face_kai_neutral", "height": 640 },
+        { "sprite": "face_kai_grin", "height": 640 },
+        { "sprite": "face_kai_worried", "height": 640 },
+        { "sprite": "face_kai_excited", "height": 640 }
+      ]
+    },
+    {
+      "id": "friends_bodies", "priority": 3,
+      "prompt": "{style} Two separate people standing side by side, with a wide white gap between them, at the same scale, each shown full body from the top of the head down to the shoes, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at their sides, not overlapping. Left: {june}. Right: {remy}.",
+      "outputs": [
+        { "sprite": "npc_june", "height": 575 },
+        { "sprite": "npc_remy", "height": 575 }
+      ]
+    }
+  ]
+}

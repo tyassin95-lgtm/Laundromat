@@ -14,6 +14,18 @@ const has = (dir, name, ext) => fs.existsSync(path.join(WEB, 'assets', dir, name
 const manifest = JSON.parse(fs.readFileSync(path.join(WEB, 'assets', 'sprites', 'manifest.json'), 'utf8'));
 const problems = [];
 const seen = new Set();
+// Characters marked neighbour: true may not have art yet (they talk without a portrait and
+// stay off-screen until it's added), so their faces and sprites are reported, not failed.
+const optional = new Set(), optionalMissing = [];
+const charSrc = fs.readFileSync(path.join(WEB, 'js', 'data', 'characters.js'), 'utf8');
+for (const block of charSrc.split(/\n  (?=\w+: \{)/)) {
+  if (!/neighbour:\s*true/.test(block)) continue;
+  const portrait = (block.match(/portrait:\s*'([a-z]+)'/) || [])[1];
+  const exprs = [...((block.match(/exprs:\s*\[([^\]]+)\]/) || [])[1] || '').matchAll(/'([a-z]+)'/g)].map(m => m[1]);
+  for (const e of exprs) optional.add(`face_${portrait}_${e}`);
+  const sprite = (block.match(/sprite:\s*'([a-z_]+)'/) || [])[1];
+  if (sprite) optional.add(sprite);
+}
 const check = (kind, name, where) => {
   const key = kind + ':' + name; if (seen.has(key)) return; seen.add(key);
   let ok = true;
@@ -22,6 +34,7 @@ const check = (kind, name, where) => {
   if (kind === 'sfx') ok = has('audio/sfx', name, '.ogg');
   if (kind === 'amb') ok = has('audio/amb', name, '.ogg');
   if (kind === 'music') ok = has('audio/music', name, '.ogg');
+  if (!ok && kind === 'sprite' && optional.has(name)) { optionalMissing.push(name); return; }
   if (!ok) problems.push(`${kind} "${name}" (${path.relative(ROOT, where)})`);
 };
 for (const [f, s] of src) {
@@ -54,6 +67,7 @@ const pre = [...list.matchAll(/'([a-z0-9_]+)'/g)].map(m => m[1]);
 for (const n of pre) check('sfx', n, path.join(WEB, 'js', 'engine', 'audio.js'));
 const notPreloaded = [...seen].filter(k => k.startsWith('sfx:')).map(k => k.slice(4)).filter(n => !pre.includes(n));
 console.log(`${seen.size} asset references checked, ${problems.length} missing`);
+if (optionalMissing.length) console.log(`  optional character art not added yet (${optionalMissing.length}): ${optionalMissing.join(', ')}`);
 for (const p of problems) console.log('  missing', p);
 if (notPreloaded.length) console.log('  sfx used but not preloaded:', notPreloaded.join(', '));
 process.exit(problems.length || notPreloaded.length ? 1 : 0);

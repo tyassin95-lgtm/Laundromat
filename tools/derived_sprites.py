@@ -155,6 +155,9 @@ def build(out_dir, manifest):
         ('npc_june', 'portrait_june.png', (7, 102, 676, 995), 0.50, (18, -4), 'june', 48),
     ]
     for name, sheet, cell, scale, offset, pal, fade in specs:
+        if str(manifest.get(name, {}).get('sheet', '')).startswith('generated'):
+            print('keeping generated', name)   # real art from tools/import_generated.py wins
+            continue
         img = composite_npc(sheet, cell, scale, offset, PALETTES[pal], name, fade)
         target_h = 575
         s = target_h / img.height

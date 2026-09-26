@@ -52,7 +52,7 @@ for m in re.finditer(r"goto:\s*'([^']+)'", calls):
     refs.append((m.group(1), 'calls.js'))
 for m in re.finditer(r"goto:\s*\w+\s*\?\s*'([^']+)'\s*:\s*'([^']+)'", calls):
     refs.append((m.group(1), 'calls.js')); refs.append((m.group(2), 'calls.js'))
-for who in ['walt', 'maya', 'june', 'remy']:
+for who in ['walt', 'maya', 'june', 'remy', 'delgado', 'priya', 'haddad', 'kai']:
     for react in ['love', 'like', 'neutral', 'dislike']:
         refs.append((f'gift_{who}_{react}', 'story.giftTo'))
 refs.append(('chat_generic', 'story.pickChatter'))
@@ -94,7 +94,7 @@ tables = {
     'upgrade': keys_of('decor.js', 'UPGRADES'), 'record': keys_of('items.js', 'RECORDS'),
     'call': keys_of('calls.js', 'CALLS'),
 }
-people = {'walt', 'maya', 'june', 'remy'}
+people = {'walt', 'maya', 'june', 'remy', 'delgado', 'priya', 'haddad', 'kai'}
 for n, lines in lines_by_node.items():
     for f, i, line in lines:
         for cmd, arg in re.findall(r'<<\s*([a-z_]+)\s+([\w.-]+)', line):
@@ -118,7 +118,7 @@ for n, lines in lines_by_node.items():
             if ph not in known_ph:
                 problems.append(f'unknown placeholder {{{ph}}} at {os.path.basename(f)}:{i}')
 
-unused = [n for n in nodes if n not in {r[0] for r in refs} and not n.startswith(('gift_', 'chat_')) and not re.match(r'^(walt|maya|june|remy)_c\d+$', n)]
+unused = [n for n in nodes if n not in {r[0] for r in refs} and not n.startswith(('gift_', 'chat_')) and not re.match(r'^(walt|maya|june|remy|delgado|priya|haddad|kai)_c\d+$', n)]
 print(f'{len(nodes)} nodes, {len(refs)} references, {len(problems)} problems')
 for p in problems:
     print('  -', p)
