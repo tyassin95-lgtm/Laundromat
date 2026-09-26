@@ -20,4 +20,9 @@ export const CHATTER = {
     ...pool('remy', 13, { 4: { min: 3 }, 5: { from: 13 }, 6: { min: 3 }, 7: { from: 13 }, 8: { min: 2 }, 12: { min: 4 }, 13: { min: 5 } }),
     { node: 'remy_street', place: 'street', cond: 'loc == "street"' },
   ],
+  // neighbours (chats at the counter when they bring laundry in)
+  delgado: pool('delgado', 6, { 1: { until: 12 }, 2: { until: 13 }, 4: { from: 14 }, 5: { from: 13 } }),
+  priya: pool('priya', 6, { 3: { min: 1 }, 6: { from: 18 } }),
+  haddad: pool('haddad', 5, { 2: { min: 1 }, 5: { from: 12 } }),
+  kai: pool('kai', 5, { 5: { from: 17, cond: 'flag.kai_sales_office' } }),
 };

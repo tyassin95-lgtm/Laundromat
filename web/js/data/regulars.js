@@ -11,6 +11,7 @@ export const SERVICES = {
 export const REGULARS = [
   {
     id: 'priya', name: 'Priya', icon: 'item_coffee_mug', services: ['wash_fold', 'rush'], bags: ['item_tote_bag'],
+    thanks: ['Like little presents. You\'re a lifesaver.', 'Late, but clean. I\'ll live. Probably.'],
     notes: [
       'Night shift again. Scrubs by 4 if you can — you are a lifesaver. ♥ P',
       'Sorry about the coffee stain. It was a long, long night.',
@@ -20,11 +21,14 @@ export const REGULARS = [
     ],
   },
   {
-    id: 'delgado', name: 'Luis Delgado', icon: 'item_apron', services: ['wash_fold'], bags: ['item_hamper'], until: 13,
+    id: 'delgado', name: 'Luis Delgado', icon: 'item_apron', services: ['wash_fold'], bags: ['item_hamper'],
+    thanks: ['Folded just like Rosa. Almost.', 'Better late than wrinkled, mija.'],
     notes: [
-      'Store aprons and the good tablecloths. Same as always, mija. — Luis',
-      { text: 'Rent on the store went up again. Don\'t know how long we can hold on. — L', from: 6 },
-      { text: 'Last load of the store\'s aprons. Thirty-one years. Thank you, Rosa\'s. — Luis', from: 11 },
+      { text: 'Store aprons and the good tablecloths. Same as always, mija. — Luis', until: 12 },
+      { text: 'Rent on the store went up again. Don\'t know how long we can hold on. — L', from: 6, until: 12 },
+      { text: 'Last load of the store\'s aprons. Thirty-one years. Thank you, Rosa\'s. — Luis', from: 11, until: 13 },
+      { text: 'Just my own shirts now. Strange, washing for one man. — L', from: 14 },
+      { text: 'Marisol says to starch the collars. I say life is too short. You decide. — L', from: 14 },
     ],
   },
   {
@@ -62,6 +66,7 @@ export const REGULARS = [
   },
   {
     id: 'kai', name: 'Kai', icon: 'item_drawstring_bag', services: ['wash_dry', 'rush'], bags: ['item_drawstring_bag'],
+    thanks: ['Sock count: correct. Suspicious, but correct.', 'Late AND a sock short? Kidding. Mostly.'],
     notes: [
       'One sock missing. Again. It\'s a conspiracy and I will get to the bottom of it.',
       'Rode in the rain all week. Everything I own smells like a puddle.',
@@ -70,6 +75,7 @@ export const REGULARS = [
   },
   {
     id: 'haddad', name: 'Mrs. Haddad', icon: 'item_hamper', services: ['wash_fold'], bags: ['item_hamper'], softener: 0.85,
+    thanks: ['It smells of lavender. Good girl.', 'Late. Rosa was never late. Eat something.'],
     notes: [
       'Sheets for the grandchildren\'s visit. Lavender softener if you have it!',
       'The grandchildren are gone. The sheets remember them. Wash gently.',

@@ -25,6 +25,10 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
 - **Four friends with their own stories.** Walt, a retired machinist; Maya, a music student
   who works nights; June, a retired teacher who runs the garden; and Remy, a barista who
   paints murals. Each has their own routine and ten friendship levels with scenes along the way.
+- **And the neighbours.** Regulars who stop to talk when they bring their laundry in: Luis from
+  the corner market, Priya the ER night nurse, Mrs. Haddad from the Alder Arms and Kai the bike
+  courier. Each has a small story of their own, five friendship levels, and a voice at the
+  council hearing if they like you enough.
 - **Your choices matter.** Your prices, house rules and story decisions change the shop's
   reputation and community spirit. Friendships decide who stands up for the shop when it
   matters. There are three endings.
@@ -49,8 +53,8 @@ it survives the WebView cache being cleared.
 
 | Action | Touch |
 | --- | --- |
-| Walk | Tap the floor |
-| Use anything (machines, counter, shelf, people, doors) | Tap it. You walk over and do it |
+| Move (you hop straight there) | Tap the floor |
+| Use anything (machines, counter, shelf, people, doors) | Tap it. You pop over and do it |
 | Look around a wide room | Drag sideways |
 | Fold laundry | Swipe along the arrow |
 | Repair a machine | Tap the glowing bolt, then tap again when the needle is in the green |
@@ -146,6 +150,14 @@ Headless test tools (they need Node and Playwright with Chromium):
 Every visual and sound is a plain file with a stable name. **To reskin anything, replace
 the file and keep its name.**
 
+- **Character art is optional.** A character whose portrait (`face_<portrait>_<expression>`)
+  isn't in the manifest speaks with just a name plate; a neighbour without an in-world sprite
+  (`npc_<name>`) is heard at the counter instead of seen. Add the files and they appear, with
+  no code changes. `tools/art_requests.json` lists the art still to make, with the exact
+  text-to-image prompts. `python3 tools/import_generated.py <request> <image or URL>` keys out
+  the flat background, cuts the figures apart, scales them and registers them in the manifest
+  (`--list` shows what's still missing). `node tools/check_assets.mjs` reports which optional
+  art hasn't been added yet.
 - **Sprites** live in `web/assets/sprites/<name>.webp`, listed in `manifest.json`.
   Characters, machines, props, portraits (`face_<who>_<expression>`), icons and UI frames
   all live here. You can re-cut them from new source sheets in `art/source/` with
@@ -191,6 +203,8 @@ All content is data in `web/js/data/`:
   a friend arriving, a location, talking, a time of day and so on) with day, weekday and
   condition filters.
 - `characters.js` covers portraits, voices, gift tastes and routines (who is where, when).
+  Characters marked `neighbour: true` come in with their laundry (their drop-offs are in
+  `regulars.js`) and talk at the counter; their scenes are in `story/neighbours.js`.
   `chatter.js` holds everyday conversation pools.
 - `regulars.js` has drop-off customers and the notes they leave. `decor.js`, `items.js` and
   `locations.js` define the catalogue, the inventory and the explorable places.

@@ -6,6 +6,7 @@ export const STORY_DAYS = 28;
 export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const WEEKDAYS_LONG = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 export const FRIENDS = ['walt', 'maya', 'june', 'remy'];
+export const NEIGHBOURS = ['delgado', 'priya', 'haddad', 'kai'];   // 5-heart friendships
 
 export function newState(name) {
   return {

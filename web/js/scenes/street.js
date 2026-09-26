@@ -6,7 +6,7 @@ import { Sound } from '../engine/audio.js';
 import { clamp, rand, makeRng } from '../engine/util.js';
 import { G, weekday } from '../game/state.js';
 import { LOCATIONS } from '../data/locations.js';
-import { CHARACTERS, ROUTINES } from '../data/characters.js';
+import { CHARACTERS, ROUTINES, NEIGHBOUR_IDS, hasSprite } from '../data/characters.js';
 import { compileExpr } from '../game/script.js';
 import { UI } from '../ui/ui.js';
 
@@ -200,7 +200,9 @@ export class StreetScene extends Scene {
   placeNpcs() {
     const wd = weekday(G.day);
     const here = [];
-    for (const id of ['walt', 'maya', 'june', 'remy']) {
+    for (const id of ['walt', 'maya', 'june', 'remy', ...NEIGHBOUR_IDS]) {
+      // neighbours are out and about once you've met them (and once they have in-world art)
+      if (NEIGHBOUR_IDS.includes(id) && (!hasSprite(id) || !G.flags['met_' + id] || G.day < (ROUTINES[id].from || 0))) continue;
       if (!this.app.story.canVisit(id)) continue;
       // strangers only show up where their introduction happens
       if (!G.flags['met_' + id] && !(id === 'remy' && this.loc === 'street')) continue;
@@ -242,8 +244,8 @@ export class StreetScene extends Scene {
     }
   }
 
-  walkThen(x, y, fn) {
-    this.player.walkTo(clamp(x, 30, this.worldW - 30), clamp(y, this.walkBand[0], this.walkBand[1])).then(ok => { if (ok) fn(); });
+  walkThen(x, y, fn, face) {
+    this.player.walkTo(clamp(x, 30, this.worldW - 30), clamp(y, this.walkBand[0], this.walkBand[1]), face).then(ok => { if (ok) fn(); });
   }
 
   async tapNpc(id, a) {
@@ -255,7 +257,7 @@ export class StreetScene extends Scene {
         { label: 'Talk', icon: 'icon_speech', run: async () => { a.emote = null; await this.app.story.talk(id, { place: this.loc }); this.app.day.spend(10); } },
         { label: 'Give gift', icon: 'icon_heart', run: () => this.app.story.giftTo(id) },
       ]);
-    });
+    }, a.x > tx ? 1 : -1);
   }
 
   goDo(h) {
@@ -266,15 +268,12 @@ export class StreetScene extends Scene {
   // ------------------------------------------------------------------ update / draw
   update(dt) {
     super.update(dt);
-    if (!this.app.paused()) for (const a of this.actors) a.update(dt);
+    const paused = this.app.paused();
+    for (const a of this.actors) a.update(dt, paused);
     this.particles.update(dt);
     this.rain.update(dt, this.r.VW, 700);
     this.applyFatigue(330, null);
     this.follow(this.player, dt);
-    if (this.player.moving) {
-      this.stepT = (this.stepT || 0) + dt;
-      if (this.stepT > 0.34) { this.stepT = 0; Sound.play(rand.pick(['step_tile1', 'step_tile2', 'step_tile3']), { vol: 0.35, jitter: 0.1 }); }
-    }
     if (G.day >= 16 && Math.random() < dt * 0.5 && this.wx() !== 'storm' && !this.isTitle) this.particles.emit('leaf', this.r.cam.x + rand() * this.r.VW, -10, 1);
     for (const pg of this.pigeons) {
       pg.hop -= dt;

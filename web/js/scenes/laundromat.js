@@ -6,11 +6,11 @@ import { Sound } from '../engine/audio.js';
 import { GlassRain } from '../engine/particles.js';
 import { tweens } from '../engine/tween.js';
 import { clamp, rand, clockStr, money } from '../engine/util.js';
-import { G, addStat, addMoney, heartsOf, giveItem, takeItem, weekday } from '../game/state.js';
+import { G, addStat, addMoney, heartsOf, giveItem, takeItem, weekday, NEIGHBOURS } from '../game/state.js';
 import * as L from '../game/laundry.js';
 import { SHOP_SLOTS, DECOR, SUPPLIES } from '../data/decor.js';
-import { SERVICES, FRIEND_ORDERS } from '../data/regulars.js';
-import { CHARACTERS, ROUTINES } from '../data/characters.js';
+import { SERVICES, FRIEND_ORDERS, REGULARS } from '../data/regulars.js';
+import { CHARACTERS, ROUTINES, hasSprite, faceOrIcon } from '../data/characters.js';
 import { UI } from '../ui/ui.js';
 import { foldGame, repairGame } from '../ui/minigames.js';
 import { vibrate, Settings } from '../game/settings.js';
@@ -216,8 +216,7 @@ export class LaundromatScene extends Scene {
   walkFloor(x, y) {
     this.jobs = [];
     const tx = clamp(x, 40, this.worldW - 40), ty = clamp(y, this.walkBand[0], this.walkBand[1]);
-    this.player.walkTo(tx, ty).then(() => { });
-    this.stepSounds = true;
+    this.player.walkTo(tx, ty);
   }
 
   queue(job) {
@@ -231,7 +230,7 @@ export class LaundromatScene extends Scene {
     while (this.jobs.length) {
       const j = this.jobs.shift();
       if (j.x !== undefined) {
-        const ok = await this.player.walkTo(j.x, j.y);
+        const ok = await this.player.walkTo(j.x, j.y, j.face);
         if (ok === false) continue;
       }
       if (j.face) this.player.facing = j.face;
@@ -479,7 +478,7 @@ export class LaundromatScene extends Scene {
       this.player.visible = true;
       o.stage = 'carried';
       // straight to the pickup shelf
-      await this.player.walkTo(SHELF.x + 26, 548);
+      await this.player.walkTo(SHELF.x + 26, 548, -1);
       await this.placeOnShelf(o);
     } });
   }
@@ -597,7 +596,9 @@ export class LaundromatScene extends Scene {
   spawnVisitor(id, opts = {}) {
     if (this.visitors.has(id)) return this.visitors.get(id);
     const c = CHARACTERS[id];
-    const a = new Actor({ id, sprite: c.sprite, h: c.h, x: 1858, y: 560, speed: 190 });
+    // pop in just inside the door (side by side if two people come in together), then hop over
+    const entering = [...this.visitors.values()].filter(o => o.state === 'enter').length;
+    const a = new Actor({ id, sprite: c.sprite, h: c.h, x: 1846 - entering * 80, y: 590 + entering * 14, speed: 190 });
     a.facing = -1;
     this.actors.push(a);
     const v = { id, actor: a, state: 'enter', leaveAt: G.time + (opts.stay || 60), order: null };
@@ -605,16 +606,23 @@ export class LaundromatScene extends Scene {
     Sound.play('shop_bell', { vol: 0.7 });
     this.doorOpen = 0.8;
     const dest = opts.to || (opts.order ? { x: COUNTER.x + 128, y: 620 } : this.freeLoungeSpot());
-    a.walkTo(dest.x, dest.y).then(async () => {
+    (async () => {
+      await a.appear();
+      await tweens.wait(0.3);
+      if (v.state !== 'enter') return;
+      const face = dest.x < 900 ? -1 : (dest.face || -1);
+      await a.walkTo(dest.x, dest.y, face);
+      if (v.state !== 'enter') return;
       v.state = 'here';
-      a.facing = dest.x < 900 ? -1 : (dest.face || -1);
+      a.facing = face;
       if (opts.order) this.dropOffFriendOrder(v);
-      await this.app.story.trigger('arrive', { who: id, v });
+      if (opts.neighbour) await this.app.story.neighbourChat(id);
+      else await this.app.story.trigger('arrive', { who: id, v });
       if (v.order && v.state === 'here') {
         const spot = this.freeLoungeSpot();
-        await a.walkTo(spot.x, spot.y); a.facing = spot.face || -1;
+        await a.walkTo(spot.x, spot.y, spot.face || -1);
       }
-    });
+    })();
     return v;
   }
 
@@ -658,8 +666,9 @@ export class LaundromatScene extends Scene {
     if (v.state !== 'here') return;
     // hand over finished laundry in person
     const o = v.order && L.order(v.order);
-    const talkX = a.x + (a.x > 1000 ? -110 : 110);
-    await this.player.walkTo(clamp(talkX, 60, 1860), clamp(a.y + 6, 540, 692));
+    const talkX = clamp(a.x + (a.x > 1000 ? -110 : 110), 60, 1860);
+    if (!await this.player.walkTo(talkX, clamp(a.y + 6, 540, 692), a.x > talkX ? 1 : -1)) return;
+    if (v.state !== 'here') return;
     this.player.facing = a.x > this.player.x ? 1 : -1;
     a.facing = -this.player.facing;
     if (o && o.stage === 'ready') {
@@ -691,14 +700,37 @@ export class LaundromatScene extends Scene {
     // laundry they dropped off stays: it goes on the pickup shelf like anyone else's
     const o = v.order && L.order(v.order);
     if (o && o.stage !== 'done') { o.personal = false; v.order = null; this.app.hud.refreshTickets(); }
-    v.actor.walkTo(1858, 570).then(() => {
+    (async () => {
+      await v.actor.walkTo(1846, 590);
       Sound.play('shop_bell', { vol: 0.5 });
       this.doorOpen = 0.8;
-      tweens.to(v.actor, { alpha: 0 }, 0.3).then(() => {
-        this.actors = this.actors.filter(x => x !== v.actor);
-        this.visitors.delete(v.id);
-      });
-    });
+      await v.actor.vanish();
+      this.actors = this.actors.filter(x => x !== v.actor);
+      if (this.visitors.get(v.id) === v) this.visitors.delete(v.id);
+    })();
+  }
+
+  // A neighbour bringing laundry in sometimes stays for a word: always when their story has a
+  // moment waiting, otherwise every other day or so (two chats a day at most). With in-world
+  // art they pop in at the counter; without it, you hear them from behind the counter.
+  neighbourDropIn(who) {
+    const st = this.app.story;
+    if (G.day < 2 || st.busy || this.visitors.has(who) || this.mode === 'fold') return;
+    const due = st.pending('arrive', { who });
+    const chats = G.today.nbChats || 0;
+    if (!due && (G.day - (G.vars['nb_last_' + who] ?? -9) < 2 || chats >= 2 || G.talked[who] === G.day)) return;
+    G.vars['nb_last_' + who] = G.day;
+    G.today.nbChats = chats + 1;
+    if (hasSprite(who)) this.spawnVisitor(who, { to: { x: COUNTER.x + 150, y: 626, face: -1 }, stay: 25, neighbour: true });
+    else st.neighbourChat(who);
+  }
+
+  // Picking up on time is how you mostly get to know the neighbours.
+  neighbourThanks(who, onTime) {
+    this.app.story.addHearts(who, onTime ? 15 : 3, true);
+    const r = REGULARS.find(x => x.id === who);
+    const line = r && r.thanks && r.thanks[onTime ? 0 : 1];
+    if (line) UI.toast(`${CHARACTERS[who].name}: “${line}”`, faceOrIcon(who), onTime ? '' : 'bad', 3200);
   }
 
   scheduleVisitors() {
@@ -733,8 +765,8 @@ export class LaundromatScene extends Scene {
   update(dt) {
     super.update(dt);
     const paused = this.app.paused();
+    for (const a of this.actors) a.update(dt, paused);
     if (!paused) {
-      for (const a of this.actors) a.update(dt);
       if (this.shiftRunning) {
         const pace = { relaxed: 1.4, normal: 2, brisk: 3 }[Settings.get('pace') || 'normal'] || 2;
         const dm = dt * pace;
@@ -766,11 +798,6 @@ export class LaundromatScene extends Scene {
     this.ripples = this.ripples.filter(r => (r.t += dt) < 0.45);
     if (this.doorOpen > 0) this.doorOpen -= dt;
     for (const k in this.machineAnim) { this.machineAnim[k].open -= dt; if (this.machineAnim[k].open <= 0) delete this.machineAnim[k]; }
-    // footsteps
-    if (this.player.moving) {
-      this.stepT = (this.stepT || 0) + dt;
-      if (this.stepT > 0.3) { this.stepT = 0; Sound.play(rand.pick(['step_tile1', 'step_tile2', 'step_tile3']), { vol: 0.5, jitter: 0.08 }); }
-    }
     // ambient particles
     if (Math.random() < dt * 1.5 && nightness(G.time) < 0.6) this.particles.emit('dust', 1560 + Math.random() * 240, 250 + Math.random() * 300, 1);
     for (const m of G.machines) {
@@ -788,6 +815,7 @@ export class LaundromatScene extends Scene {
           if (!e.o.personal) { Sound.play('bell_small', { vol: 0.8 }); this.doorOpen = 0.6; UI.toast(`${e.o.name} dropped off laundry.`, 'icon_basket'); }
           e.o.color = rand.pick(LAUNDRY_COLORS);
           this.app.hud.refreshTickets();
+          if (NEIGHBOURS.includes(e.o.who)) this.neighbourDropIn(e.o.who);
           break;
         case 'cycleDone': {
           if (e.m.load !== 'self') { Sound.play('machine_done', { vol: 0.6 }); vibrate(20); }
@@ -817,7 +845,8 @@ export class LaundromatScene extends Scene {
           const pos = this.r.toScreen(SHELF.x, SHELF.base - 200);
           UI.moneyPop(e.pay + e.tip, pos.x, pos.y);
           this.particles.emit('coin', SHELF.x + 60, SHELF.base - 120, 2);
-          if (!e.onTime) UI.toast(`${e.o.name} got their laundry late.`, 'icon_clock', 'bad');
+          if (NEIGHBOURS.includes(e.o.who) && G.flags['met_' + e.o.who]) this.neighbourThanks(e.o.who, e.onTime);
+          else if (!e.onTime) UI.toast(`${e.o.name} got their laundry late.`, 'icon_clock', 'bad');
           else if (e.tip > 0) UI.toast(`${e.o.name} picked up — tip ${money(e.tip)}!`, 'icon_coin');
           this.app.hud.refresh(); this.app.hud.refreshTickets();
           break;

@@ -8,5 +8,6 @@ import maya from './maya.js';
 import june from './june.js';
 import remy from './remy.js';
 import misc from './misc.js';
+import neighbours from './neighbours.js';
 
-export const SCRIPTS = { week1, week2, week3, week4, walt, maya, june, remy, misc };
+export const SCRIPTS = { week1, week2, week3, week4, walt, maya, june, remy, misc, neighbours };

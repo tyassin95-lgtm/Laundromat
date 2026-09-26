@@ -117,7 +117,7 @@ export class HomeScene extends Scene {
   }
 
   walkThen(x, y, face, fn) {
-    this.player.walkTo(clamp(x, 40, this.worldW - 40), clamp(y, this.walkBand[0], this.walkBand[1])).then(ok => { if (!ok) return; if (face) this.player.facing = face; fn(); });
+    this.player.walkTo(clamp(x, 40, this.worldW - 40), clamp(y, this.walkBand[0], this.walkBand[1]), face).then(ok => { if (!ok) return; if (face) this.player.facing = face; fn(); });
   }
 
   onTap(px, py) {
@@ -129,17 +129,14 @@ export class HomeScene extends Scene {
 
   update(dt) {
     super.update(dt);
-    if (!this.app.paused()) for (const a of this.actors) a.update(dt);
+    const paused = this.app.paused();
+    for (const a of this.actors) a.update(dt, paused);
     this.particles.update(dt);
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
     this.fitView();
     this.applyFatigue(300, null);
     this.follow(this.player, dt);
-    if (this.player.moving) {
-      this.stepT = (this.stepT || 0) + dt;
-      if (this.stepT > 0.32) { this.stepT = 0; Sound.play(rand.pick(['step_wood1', 'step_wood2', 'step_wood3']), { vol: 0.45, jitter: 0.08 }); }
-    }
     if (G.record && G.placed.h_table === 'record_player' && Math.random() < dt * 0.5) this.particles.emit('note', 1060, 440, 1);
     if (nightness(G.time) < 0.4 && Math.random() < dt * 1.2) this.particles.emit('dust', WIN.x + rand() * WIN.w, WIN.y + 100 + rand() * 300, 1);
   }

@@ -122,7 +122,7 @@ export class Scene {
 
   update(dt) { this.t += dt; }
 
-  // Tired players walk slower; the first time each day it happens, say how to recover.
+  // Tired players hop more slowly; the first time each day it happens, say how to recover.
   applyFatigue(baseSpeed, hint) {
     const tired = G.energy < 20;
     if (this.player) this.player.speed = tired ? baseSpeed * 0.75 : baseSpeed;

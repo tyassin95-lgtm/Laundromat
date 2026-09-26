@@ -6,7 +6,7 @@ import { Save } from '../game/save.js';
 import { Settings } from '../game/settings.js';
 import * as L from '../game/laundry.js';
 import { UI } from './ui.js';
-import { CHARACTERS } from '../data/characters.js';
+import { CHARACTERS, NEIGHBOUR_IDS, portraitFor } from '../data/characters.js';
 import { DECOR, UPGRADES, SUPPLIES, SHOP_SLOTS, HOME_SLOTS, comfortOf } from '../data/decor.js';
 import { ITEMS, RECORDS, SOCKS } from '../data/items.js';
 import { SERVICES } from '../data/regulars.js';
@@ -78,6 +78,7 @@ export class Menus {
     const pages = {
       diary: ['Diary', () => this.pageDiary(left, right)],
       friends: ['Friends', () => this.pageFriends(left, right)],
+      neighbours: ['Neighbours', () => this.pageNeighbours(left, right)],
       shop: ['The shop', () => this.pageShop(left, right)],
       collect: ['Collections', () => this.pageCollections(left, right)],
       ledger: ['Ledger', () => this.pageLedger(left, right)],
@@ -132,6 +133,22 @@ export class Menus {
     };
     l.innerHTML = `<h2>Friends</h2>${card('walt')}${card('maya')}`;
     r.innerHTML = `<h2>&nbsp;</h2>${card('june')}${card('remy')}<p class="ds" style="margin-top:.6rem">Talk every day, bring gifts, and finish their laundry on time. New ♥ unlock new moments.</p>`;
+  }
+
+  pageNeighbours(l, r) {
+    const card = w => {
+      const c = CHARACTERS[w];
+      const met = G.flags['met_' + w];
+      const h = heartsOf(w);
+      const face = met && portraitFor(w, h >= 3 ? 'smile' : null);
+      const img = face ? `<img class="face" src="${S(face)}">` : `<img class="face icon" src="${S(c.icon)}" style="${met ? '' : 'opacity:.45'}">`;
+      return `<div class="friend">${img}<div><div class="nm">${c.full}</div>` +
+        `<div class="ds">${met ? c.blurb : 'You know the name from the laundry tickets. You haven\'t really talked yet.'}</div>` +
+        `<div class="hearts">${Array.from({ length: 5 }, (_, i) => `<i class="${i < h ? 'on' : ''}"></i>`).join('')}</div></div></div>`;
+    };
+    const [a, b, c, d] = NEIGHBOUR_IDS;
+    l.innerHTML = `<h2>Neighbours</h2>${card(a)}${card(b)}`;
+    r.innerHTML = `<h2>&nbsp;</h2>${card(c)}${card(d)}<p class="ds" style="margin-top:.6rem">Regulars stop to talk when they bring laundry in. Finish it on time. The ones who like you will stand up for the shop.</p>`;
   }
 
   lovesHint(w) {
@@ -568,7 +585,7 @@ export class Menus {
 
   help() {
     UI.notice(`<h2>How to run a laundromat</h2>
-      <p><b>Tap</b> anywhere on the floor to walk. <b>Tap things</b> to use them — you walk over and do it.</p>
+      <p><b>Tap</b> anywhere on the floor to hop there. <b>Tap things</b> to use them — you pop over and do it.</p>
       <p><b>Drop-offs:</b> bags appear on the counter. Carry one to a <b>washer</b>, then a <b>dryer</b>, then <b>fold</b> it at the folding table. It goes on the pickup shelf and the customer collects it at their pickup time. Gold arrows show where the laundry you're holding can go.</p>
       <p><b>Hands full?</b> Tap a finished machine to swap loads, or tap the counter to set a bag down for later. Tap an order ticket to read its note.</p>
       <p><b>Walk-ins</b> use free washers on their own and pay coins. Keep a machine free for them.</p>

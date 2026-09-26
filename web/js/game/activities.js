@@ -214,6 +214,12 @@ export class Activities {
   }
 
   async a_market() {
+    // Luis took June's advice and runs a stall now
+    if (G.flags.delgado_stall && G.vars.lime_day !== G.day) {
+      G.vars.lime_day = G.day;
+      UI.toast('Luis waves from a fruit stall under a hand-painted sign: DELGADO\'S — NOW OUTDOORS.', 'item_apron', '', 3600);
+      this.app.story.addHearts('delgado', 10, true);
+    }
     this.app.menus.openCatalog('market');
     this.spend(20);
   }

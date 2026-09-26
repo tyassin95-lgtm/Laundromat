@@ -1,6 +1,6 @@
 // Story director: event triggers, script commands, talking, gifts and friendship.
-import { Runner, loadScript, hasNode } from './script.js';
-import { G, heartsOf, addMoney, addStat, giveItem, takeItem, hasItem, stars, weekday, FRIENDS } from './state.js';
+import { Runner, loadScript, hasNode, registerSpeakers } from './script.js';
+import { G, heartsOf, addMoney, addStat, giveItem, takeItem, hasItem, stars, weekday, FRIENDS, NEIGHBOURS } from './state.js';
 import { Dialogue } from '../ui/dialogue.js';
 import { UI } from '../ui/ui.js';
 import { Sound } from '../engine/audio.js';
@@ -17,6 +17,7 @@ import { makeRng } from '../engine/util.js';
 export class Story {
   constructor(app) {
     this.app = app;
+    registerSpeakers(Object.keys(CHARACTERS));
     for (const [tag, src] of Object.entries(SCRIPTS)) loadScript(src, tag);
     this.busy = false;
     this.queue = [];
@@ -32,13 +33,14 @@ export class Story {
 
   context() {
     const hearts = {};
-    for (const f of FRIENDS) hearts[f] = heartsOf(f);
+    for (const f of FRIENDS.concat(NEIGHBOURS)) hearts[f] = heartsOf(f);
     return {
       flag: G.flags, var: G.vars, vars: G.vars, hearts, pts: G.hearts, day: G.day, money: G.money, community: G.community, petition: G.petition,
       rep: G.reputation, stars: stars(), energy: G.energy, weekday: weekday(G.day), time: G.time, phase: G.phase, item: G.inv,
       seen: G.seen, name: G.name, weather: G.weather, loc: G.location, talkedToday: (w) => G.talked[w] === G.day,
       owns: (d) => G.decor.includes(d), placed: (d) => Object.values(G.placed).includes(d), upgrade: (u) => G.upgrades.includes(u),
       skill: G.skills, socks: G.collections.socks.length, records: G.collections.records.length, ending: G.ending,
+      found: id => G.collections.socks.includes(id),
       ev: this.lastEventData || {}, Math,
     };
   }
@@ -65,7 +67,8 @@ export class Story {
 
   // Find and play story events for a trigger. Returns true if something played.
   async trigger(on, data = {}) {
-    const ctx = this.context();
+    const keep = this.lastEventData;
+    this.lastEventData = data;          // conditions can look at it as ev.*
     for (const ev of EVENTS) {
       if (ev.on !== on) continue;
       if (ev.once !== false && G.flags['ev_' + ev.id]) continue;
@@ -83,8 +86,33 @@ export class Story {
       if (ev.run) await ev.run(this.app, data);
       return true;
     }
-    void ctx;
+    this.lastEventData = keep;
     return false;
+  }
+
+  // Would trigger(on, data) play something right now? (No side effects.)
+  pending(on, data = {}) {
+    const keep = this.lastEventData;
+    this.lastEventData = data;
+    try {
+      return EVENTS.some(ev => ev.on === on && !(ev.once !== false && G.flags['ev_' + ev.id]) &&
+        (!ev.day || ev.day === G.day) && (!ev.minDay || G.day >= ev.minDay) && (!ev.maxDay || G.day <= ev.maxDay) &&
+        (!ev.who || ev.who === data.who) && (!ev.loc || ev.loc === (data.loc || G.location)) &&
+        (!ev.at || (G.time >= ev.at && G.time <= ev.at + 90)) && (ev.weekday === undefined || ev.weekday === weekday(G.day)) &&
+        (!ev.cond || this.runner.eval(ev.cond)));
+    } finally { this.lastEventData = keep; }
+  }
+
+  // A neighbour at the counter: their story moment if one is due, otherwise a quick chat.
+  async neighbourChat(who) {
+    const played = await this.trigger('arrive', { who });
+    if (!played) await this.play(this.pickChatter(who));
+    G.flags['met_' + who] = true;
+    if (G.talked[who] !== G.day) {
+      G.talked[who] = G.day;
+      G.today.talked.push(who);
+      this.addHearts(who, 25, true);
+    }
   }
 
   hasLocationEvent(loc) {
@@ -107,9 +135,10 @@ export class Story {
 
   // ------------------------------------------------------------------ friendship
   addHearts(who, pts, quiet) {
-    if (!FRIENDS.includes(who)) return;
+    const neighbour = NEIGHBOURS.includes(who);
+    if (!FRIENDS.includes(who) && !neighbour) return;
     const before = heartsOf(who);
-    G.hearts[who] = Math.max(0, Math.min(1000, (G.hearts[who] || 0) + pts));
+    G.hearts[who] = Math.max(0, Math.min(neighbour ? 500 : 1000, (G.hearts[who] || 0) + pts));
     const after = heartsOf(who);
     G.today.hearts[who] = (G.today.hearts[who] || 0) + pts;
     if (after > before) {
@@ -226,7 +255,7 @@ export class Story {
       case 'resume_music': this.musicOverride = null; app.day.sceneMusic(); break;
       case 'wait': await tweens.wait(+a[0] || 0.5); break;
       case 'visit': if (scene && scene.spawnVisitor) { scene.spawnVisitor(a[0], { order: a.includes('order') ? true : null, stay: +(a[a.indexOf('stay') + 1]) || 90, to: a.includes('counter') ? { x: 348, y: 620 } : undefined }); await tweens.wait(0.2); } break;
-      case 'await_arrival': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) await v.actor.walkTo(v.actor.target ? v.actor.target.x : v.actor.x, v.actor.target ? v.actor.target.y : v.actor.y); } break;
+      case 'await_arrival': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); for (let i = 0; v && v.state === 'enter' && i < 40; i++) await tweens.wait(0.1); } break;
       case 'leave': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) scene.visitorLeave(v); } break;
       case 'pin': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) v.pinned = a[1] !== 'off'; } break;
       case 'stay': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) v.leaveAt = G.time + (+a[1] || 60); } break;

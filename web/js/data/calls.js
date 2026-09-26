@@ -1,5 +1,5 @@
 // Custom logic that story scripts invoke with <<call name args>>.
-import { G, heartsOf, FRIENDS, addStat } from '../game/state.js';
+import { G, heartsOf, FRIENDS, NEIGHBOURS, addStat } from '../game/state.js';
 import { Save } from '../game/save.js';
 import { UI } from '../ui/ui.js';
 import { tweens } from '../engine/tween.js';
@@ -41,9 +41,12 @@ export const CALLS = {
     if (heartsOf('walt') >= 5 || G.flags.walt_testifies) speakers.push('walt');
     if (heartsOf('remy') >= 5 && G.flags.commission_refused) speakers.push('remy');
     if (heartsOf('maya') >= 5 && G.flags.maya_track) speakers.push('maya');
-    G.vars.speakers = speakers.length;
-    for (const s of speakers) G.flags['speaks_' + s] = true;
-    let score = speakers.length * 18 + Math.min(G.petition, 200) * 0.22 + G.community * 0.35;
+    // neighbours who like you enough stand up too
+    const neighbours = NEIGHBOURS.filter(w => G.flags['met_' + w] && heartsOf(w) >= 3);
+    G.vars.speakers = speakers.length + neighbours.length;
+    for (const s of speakers.concat(neighbours)) G.flags['speaks_' + s] = true;
+    let score = speakers.length * 18 + neighbours.length * 5 + Math.min(G.petition, 200) * 0.22 + G.community * 0.35;
+    if (G.flags.kai_intel) score += 6;
     if (G.flags.poster_deal) score -= 12;
     if (G.flags.tenants_meetings) score += 8;
     if (G.flags.storm_open_all_night) score += 6;

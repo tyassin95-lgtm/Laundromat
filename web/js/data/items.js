@@ -14,6 +14,7 @@ export const ITEMS = {
   cutting: { name: 'Pothos cutting', sprite: 'item_pothos', gift: true, tags: ['cutting'], blurb: 'A rooted cutting in a little pot.' },
   coffee: { name: 'Corner Cup coffee', sprite: 'item_coffee_mug', gift: true, tags: ['coffee'], blurb: 'Still warm. Remy drew a heart in the foam.' },
   lemon_bars: { name: 'Lemon bars', sprite: 'item_picnic_basket', gift: true, tags: ['lemon_bars'], blurb: 'June\'s famous recipe. Powdered sugar everywhere.' },
+  maamoul: { name: 'Ma\'amoul', sprite: 'item_picnic_basket', gift: true, tags: ['lemon_bars', 'maamoul'], blurb: 'Mrs. Haddad\'s date-and-walnut cookies. Her mother\'s recipe.' },
   record: { name: 'Vinyl record', sprite: 'item_vinyl', gift: true, tags: ['record'], blurb: 'Second-hand, slightly warped, lovely.' },
   spray_paint: { name: 'Spray paint', sprite: 'item_spray_bottle', gift: true, tags: ['spray_paint'], blurb: 'Six cans in "Rosa teal."' },
   photo_rosa: { name: 'Photo of Rosa', sprite: 'item_journal', gift: false, tags: ['photo_rosa'], blurb: 'Rosa, Peg and a young Walt in front of the shop, 1974.' },

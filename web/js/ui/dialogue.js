@@ -33,18 +33,22 @@ function ensure() {
   if (root) return;
   root = el('div', 'dlg');
   root.appendChild(el('div', 'shade'));
+  // The stage is the text box's footprint: portraits rise from behind its top corners and the
+  // choices sit centred above it, so everything lines up with the box on any screen shape.
+  const stage = el('div', 'stage');
   portraits.left = el('img', 'portrait left hidden');
   portraits.right = el('img', 'portrait right hidden');
-  root.appendChild(portraits.left);
-  root.appendChild(portraits.right);
-  box = el('div', 'box frame-speech');
+  stage.appendChild(portraits.left);
+  stage.appendChild(portraits.right);
+  box = el('div', 'box frame-speech no-tail');
   nameEl = el('div', 'name');
   textEl = el('div', 'text');
   nextEl = el('div', 'next');
   box.appendChild(nameEl); box.appendChild(textEl); box.appendChild(nextEl);
-  root.appendChild(box);
+  stage.appendChild(box);
   choicesEl = el('div', 'choices');
-  root.appendChild(choicesEl);
+  stage.appendChild(choicesEl);
+  root.appendChild(stage);
   root.addEventListener('click', onTap);
   document.getElementById('ui').appendChild(root);
 }
@@ -151,13 +155,9 @@ export const Dialogue = {
       nameEl.innerHTML = `<span>${escapeHtml(speakerName(who))}</span>`;
       nameEl.classList.toggle('right', side === 'right');
       textEl.classList.remove('narration');
-      box.classList.toggle('tail-r', side === 'right');
-      box.classList.remove('no-tail');
     } else {
       nameEl.innerHTML = '';
       textEl.classList.add('narration');
-      box.classList.remove('tail-r');
-      box.classList.add('no-tail');
       portraits.left.classList.add('dim'); portraits.right.classList.add('dim');
     }
     nextEl.classList.remove('show');

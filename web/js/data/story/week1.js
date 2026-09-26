@@ -19,7 +19,7 @@ me.neutral: Number three sticks. Kick it low, left side. Got it.
 me.tired: Morning, Biscuit.
 biscuit: ...
 me.smug: Great talk.
-: *Tap* the floor to walk. *Tap* things to use them — {name} walks over and does the rest.
+: *Tap* the floor to hop there. *Tap* things to use them — {name} pops over and does the rest.
 me.thinking: The shop opens at eight. Rosa never opened late in fifty-three years. No pressure.
 <<goal "Pet Biscuit if you like, then head downstairs (the door on the left).">>
 
@@ -63,7 +63,7 @@ walt.neutral: I'll wait. Got nowhere to be.
 === tut_carry
 <<flag tut_carry_done>>
 : You're holding the bag. *Gold arrows* show where it can go next.
-: Tap a free *washer*. {name} walks over and loads it.
+: Tap a free *washer*. {name} pops over and loads it.
 <<goal "Put the laundry in a free washer.">>
 
 === tut_loaded

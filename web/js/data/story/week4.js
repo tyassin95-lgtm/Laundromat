@@ -131,6 +131,25 @@ remy.excited: I said no. You can too.
 maya.worried: Maya Okafor. Um. Two hundred thousand people have listened to a song I recorded in a laundromat on Linden Street.
 maya.content: They didn't listen because it was new. They listened because it was *real*.
 <<endif>>
+<<if flag.speaks_delgado>>
+delgado.neutral: Luis Delgado. Delgado's Market, thirty-one years, until the rent went to five thousand a month. I'm not here for my store. My store is gone.
+delgado.sad: When my father died, a woman at the laundromat washed the tablecloths for his wake and wouldn't take a cent. Let her granddaughter keep the lights on.
+<<endif>>
+<<if flag.speaks_priya>>
+priya.neutral: Priya Raman, ER nurse at St. Anne's, nine years on nights.
+priya.neutral: At three in the morning there are two places on Linden Street with the lights on. My emergency room, and Rosa's. You're voting on one of them.
+<<endif>>
+<<if flag.speaks_haddad>>
+haddad.neutral: Fatima Haddad. Alder Arms, apartment 3C, forty-six years. I raised four children there, and they raised seven more.
+haddad.worried: Your plan has a "laundry concierge." I don't want a concierge. I want Rosa's, where they know I like lavender.
+<<endif>>
+<<if flag.speaks_kai>>
+kai.neutral: Kai. I deliver packages, including to Crestline's sales office, where there's a model of our street with a tiny espresso bar inside Rosa's.
+kai.worried: For the record, the tiny people in the model look miserable.
+<<endif>>
+<<if flag.kai_intel>>
+: Kai's photo goes into the record: Crestline's own sales model, *Phase II*, the Alder Arms marked DEMOLITION. A council member takes off her glasses.
+<<endif>>
 <<if var.speakers == 0>>
 : None of your friends came up to the microphone. The Linden Street side of the room is very quiet.
 <<endif>>

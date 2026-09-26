@@ -38,7 +38,7 @@ export const LOCATIONS = {
     ],
     crestlineAd: { x: 2440, y: 604, w: 300, h: 190, cond: 'flag.mural_gone' },
     soldBanner: { x: 280, y: 250, cond: 'flag.alder_sold' },
-    spots: { remy: [1440, 640], june: [300, 620], maya: [2330, 648], walt: [900, 636] },
+    spots: { remy: [1440, 640], june: [300, 620], maya: [2330, 648], walt: [900, 636], delgado: [1910, 640], kai: [610, 648] },
     entries: { shop: [1080, 626], default: [700, 630], map: [1300, 640] },
     hotspots: [
       { id: 'shopdoor', x: 1060, y: 340, w: 90, h: 220, label: "Rosa's", act: 'enter_shop' },
@@ -72,7 +72,7 @@ export const LOCATIONS = {
       { s: 'decor_flower_vase', x: 900, y: 566, h: 44, when: 'weekday == 5 or weekday == 6' },
       { s: 'item_teacup', x: 930, y: 566, h: 22, when: 'weekday == 5 or weekday == 6' },
     ],
-    spots: { walt: [1250, 640], maya: [540, 646], remy: [900, 650], june: [1180, 650] },
+    spots: { walt: [1250, 640], maya: [540, 646], remy: [900, 650], june: [1180, 650], delgado: [990, 648], kai: [700, 650] },
     entries: { default: [120, 640] },
     hotspots: [
       { id: 'market', x: 800, y: 540, w: 160, h: 110, label: 'Flea market', act: 'market', when: 'weekday == 5 or weekday == 6' },
@@ -98,7 +98,7 @@ export const LOCATIONS = {
       { s: 'street_tree_autumn', x: 1690, y: 600, h: 300, tree: true, when: 'day >= 18' },
     ],
     clothesline: { x0: 100, x1: 1000, y: 300 },
-    spots: { june: [860, 648], remy: [1250, 650], walt: [560, 650], maya: [400, 650] },
+    spots: { june: [860, 648], remy: [1250, 650], walt: [560, 650], maya: [400, 650], haddad: [1010, 650] },
     entries: { default: [1500, 640] },
     hotspots: [
       { id: 'beds', x: 620, y: 520, w: 460, h: 100, label: 'Garden beds', act: 'water' },
@@ -120,7 +120,7 @@ export const LOCATIONS = {
       { s: 'furn_bench', x: 1320, y: 650, h: 124 },
       { s: 'street_lamp_post', x: 1540, y: 700, h: 320, lamp: [1540, 400] },
     ],
-    spots: { maya: [760, 660], remy: [1420, 668], walt: [460, 668], june: [1220, 668] },
+    spots: { maya: [760, 660], remy: [1420, 668], walt: [460, 668], june: [1220, 668], priya: [1000, 666] },
     entries: { default: [140, 660] },
     hotspots: [
       { id: 'view', x: 700, y: 330, w: 400, h: 150, label: 'The skyline', act: 'photo', photo: 'photo_night', title: 'The city from the river' },

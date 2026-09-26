@@ -95,10 +95,29 @@ export const EVENTS = [
   { id: 'remy_h8', on: 'talk', who: 'remy', cond: 'hearts.remy >= 7 and flag.commission_decided', node: 'remy_h8' },
   { id: 'remy_h10', on: 'talk', who: 'remy', cond: 'hearts.remy >= 9 and flag.mural_asked', node: 'remy_h10' },
 
+  // ------------------------------------------------------------------ neighbours (when they come in with laundry)
+  { id: 'delgado_intro', on: 'arrive', who: 'delgado', cond: 'not flag.met_delgado', node: 'delgado_intro' },
+  { id: 'delgado_rent', on: 'arrive', who: 'delgado', minDay: 6, maxDay: 12, node: 'delgado_rent' },
+  { id: 'delgado_last_load', on: 'arrive', who: 'delgado', minDay: 11, maxDay: 13, node: 'delgado_last_load' },
+  { id: 'delgado_after', on: 'arrive', who: 'delgado', minDay: 15, node: 'delgado_after' },
+  { id: 'priya_intro', on: 'arrive', who: 'priya', cond: 'not flag.met_priya', node: 'priya_intro' },
+  { id: 'priya_petition', on: 'arrive', who: 'priya', cond: 'flag.petition_started', node: 'priya_petition' },
+  { id: 'priya_bench', on: 'arrive', who: 'priya', minDay: 4, node: 'priya_bench' },
+  { id: 'priya_rosa_night', on: 'arrive', who: 'priya', minDay: 9, cond: 'hearts.priya >= 1', node: 'priya_rosa_night' },
+  { id: 'haddad_intro', on: 'arrive', who: 'haddad', cond: 'not flag.met_haddad', node: 'haddad_intro' },
+  { id: 'haddad_letter', on: 'arrive', who: 'haddad', minDay: 11, cond: 'flag.alder_sold', node: 'haddad_letter' },
+  { id: 'haddad_grandkids', on: 'arrive', who: 'haddad', minDay: 5, node: 'haddad_grandkids' },
+  { id: 'haddad_maamoul', on: 'arrive', who: 'haddad', minDay: 14, cond: 'hearts.haddad >= 2', node: 'haddad_maamoul' },
+  { id: 'kai_intro', on: 'arrive', who: 'kai', cond: 'not flag.met_kai', node: 'kai_intro' },
+  { id: 'kai_lucky', on: 'arrive', who: 'kai', cond: 'found("lucky")', node: 'kai_lucky' },
+  { id: 'kai_photo', on: 'arrive', who: 'kai', minDay: 19, cond: 'flag.kai_photo_asked', node: 'kai_photo' },
+  { id: 'kai_sales_office', on: 'arrive', who: 'kai', minDay: 17, node: 'kai_sales_office' },
+
   // ------------------------------------------------------------------ small things
   { id: 'debt_help', on: 'home_morning', cond: 'flag.in_debt and not flag.debt_help', node: 'debt_help' },
   { id: 'prices_high', on: 'prices', cond: 'not flag.prices_reacted', node: 'prices_reaction' },
   { id: 'all_socks', on: 'sock', cond: 'socks >= 12', node: 'all_socks' },
+  { id: 'lucky_sock', on: 'sock', cond: 'ev.id == "lucky"', node: 'lucky_sock_found' },
   { id: 'first_sock', on: 'sock', node: 'first_sock' },
   { id: 'late_night_shop', on: 'location', loc: 'laundromat', minDay: 2, cond: 'time >= 19*60 and flag.met_maya and not var.maya_here', node: 'late_night_shop' },
 ];
