@@ -2,8 +2,9 @@
 
 ## Art
 
-- **Characters, portraits, machines, furniture, props, icons and UI frames**: the sprite sheets supplied by the game's creator (`art/source/`). They were cut into individual sprites by `tools/slice_sheets.py`, and `tools/derived_sprites.py` composited the extra poses and characters.
-- **Backgrounds** (laundromat, flat, Linden Street, park, garden, riverside, skyline, map) were painted procedurally for this project by `tools/paint/`, to match the supplied art.
+- **Characters, portraits, machines, furniture, props, icons and UI frames**: the sprite sheets supplied by the game's creator (`art/source/`). They were cut into individual sprites by `tools/slice_sheets.py`, and `tools/derived_sprites.py` composited the extra player poses.
+- **Generated with Higgsfield** (GPT Image 2.5), using the supplied art as style references: the neighbours' sprites and portraits (Luis, Priya, Mrs. Haddad and Kai), full-body sprites for June and Remy, the park and riverside backgrounds, the neighbourhood map, and the lemon bars, scarf, spray paint, ma'amoul and old photo icons. The originals (lossless WebP) are in `art/source/generated/` and the prompts in `tools/art_requests.json`.
+- **Backgrounds** (laundromat, flat, Linden Street, garden, skyline) were painted procedurally for this project by `tools/paint/`, to match the supplied art.
 - **Launcher icon** was generated from the washer sprite by `tools/make_icons.py`.
 
 ## Music

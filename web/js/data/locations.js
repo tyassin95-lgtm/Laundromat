@@ -3,10 +3,10 @@
 // "when" is an expression (same language as the scripts) deciding if a prop shows.
 
 export const LOCATIONS = {
-  home: { name: 'Home', scene: 'home', icon: 'icon_home', map: [36, 49], travel: 5, blurb: 'The flat above the shop. Biscuit is probably asleep.' },
-  laundromat: { name: "Rosa's", scene: 'laundromat', icon: 'icon_washer', map: [44, 52], travel: 5, blurb: 'Closed for the night — but the lights still work.' },
+  home: { name: 'Home', scene: 'home', icon: 'icon_home', map: [55.5, 30], travel: 5, blurb: 'The flat above the shop. Biscuit is probably asleep.' },
+  laundromat: { name: "Rosa's", scene: 'laundromat', icon: 'icon_washer', map: [62, 38.5], travel: 5, blurb: 'Closed for the night — but the lights still work.' },
   street: {
-    name: 'Linden Street', scene: 'street', icon: 'icon_speech', map: [60, 42], travel: 10, music: 'street',
+    name: 'Linden Street', scene: 'street', icon: 'icon_speech', map: [72.5, 47], travel: 10, music: 'street',
     bg: 'linden', bgAlt: { cond: 'flag.bodega_closed', bg: 'linden_closed' }, lights: 'linden_lights', worldW: 2600,
     blurb: 'The Corner Cup, Delgado\'s, and the old Cap & Seal lot.',
     amb: { amb_street: 0.45, amb_city: 0.2 }, ground: [596, 664],
@@ -109,9 +109,9 @@ export const LOCATIONS = {
     sock: { id: 'holiday', x: 1400, y: 660 },
   },
   riverside: {
-    name: 'Riverside Walk', scene: 'street', icon: 'icon_map', map: [69, 86], travel: 20, music: 'home_night',
+    name: 'Riverside Walk', scene: 'street', icon: 'icon_map', map: [76, 79], travel: 20, music: 'home_night',
     bg: 'riverside', lights: 'riverside_lights', worldW: 1800, blurb: 'The river, the bridge, the whole city lit up.',
-    amb: { amb_city: 0.3, amb_rain_out: 0 }, ground: [612, 690], sky: 'wide',
+    amb: { amb_city: 0.3, amb_rain_out: 0 }, ground: [646, 692], sky: 'wide',
     props: [
       { s: 'street_lamp_post', x: 260, y: 700, h: 320, lamp: [260, 400] },
       { s: 'furn_bench', x: 560, y: 650, h: 124 },

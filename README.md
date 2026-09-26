@@ -153,11 +153,14 @@ the file and keep its name.**
 - **Character art is optional.** A character whose portrait (`face_<portrait>_<expression>`)
   isn't in the manifest speaks with just a name plate; a neighbour without an in-world sprite
   (`npc_<name>`) is heard at the counter instead of seen. Add the files and they appear, with
-  no code changes. `tools/art_requests.json` lists the art still to make, with the exact
-  text-to-image prompts. `python3 tools/import_generated.py <request> <image or URL>` keys out
-  the flat background, cuts the figures apart, scales them and registers them in the manifest
-  (`--list` shows what's still missing). `node tools/check_assets.mjs` reports which optional
-  art hasn't been added yet.
+  no code changes. `node tools/check_assets.mjs` reports any optional art that's missing.
+- **Generated art.** The neighbours, June's and Remy's full-body sprites, the park, the
+  riverside, the map and a few item icons were generated with Higgsfield using the supplied
+  art as style references. `tools/art_requests.json` records each image's model, references and
+  prompt, and the originals are in `art/source/generated/`.
+  `python3 tools/import_generated.py <request> <image or URL>` turns a generated image into
+  sprites: it keeps a transparent background or keys out a flat one, cuts the figures apart,
+  scales (and mirrors, if asked) and registers them in the manifest.
 - **Sprites** live in `web/assets/sprites/<name>.webp`, listed in `manifest.json`.
   Characters, machines, props, portraits (`face_<who>_<expression>`), icons and UI frames
   all live here. You can re-cut them from new source sheets in `art/source/` with
@@ -167,7 +170,9 @@ the file and keep its name.**
 - **Backgrounds** live in `web/assets/bg/*.webp`: the laundromat, the flat, Linden Street
   (day, closed-bodega and night-lights layers), the park, garden, riverside, skyline and
   map. They are painted procedurally by `tools/paint/scenes/*.js` and baked with
-  `node tools/bake_backgrounds.mjs [scene]`. To use your own art instead, drop in a WebP
+  `node tools/bake_backgrounds.mjs [scene]`, except the park, riverside and map paintings,
+  which were generated. The bake tool leaves those alone unless you name them exactly
+  (`park:base`) or pass `--force`. To use your own art instead, drop in a WebP
   with the same name and aspect ratio. Window areas must stay transparent, because the game
   draws the outside view behind them.
 - **Audio** lives in `web/assets/audio/{music,sfx,amb}/*.ogg`. `tools/build_audio.py`

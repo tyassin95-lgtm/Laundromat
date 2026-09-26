@@ -8,10 +8,13 @@ Usage:
 <request-id> is one of the requests in tools/art_requests.json (--list shows them, with the
 prompt to generate and which of its sprites exist already). The tool:
   1. keys out the flat background (flood-filled from the image border, so white inside a
-     character, like a shirt, stays),
+     character, like a shirt, stays); an image that already has a transparent background
+     is used as it is,
   2. finds the separate figures and matches them to the request's outputs left to right,
-  3. trims each, scales it to the output height and writes web/assets/sprites/<name>.webp,
-  4. records the size in manifest.json, and keeps the original in art/source/generated/.
+  3. trims each, scales it to the output height (mirrored if the output says "mirror") and
+     writes web/assets/sprites/<name>.webp,
+  4. records the size in manifest.json, and keeps the original (lossless WebP) in
+     art/source/generated/.
 Nothing else is needed: characters pick up their portraits and in-world sprites at the next
 launch (see web/js/data/characters.js).
 """
@@ -58,6 +61,11 @@ def read_image(src):
         with open(src, 'rb') as f:
             raw = f.read()
     return raw, Image.open(io.BytesIO(raw)).convert('RGBA')
+
+
+def has_alpha(img):
+    a = np.asarray(img)[..., 3]
+    return a.min() == 0 and (a < 8).mean() > 0.05
 
 
 def key_background(img):
@@ -140,7 +148,7 @@ def main(argv):
         out_dir = argv[argv.index('--out') + 1]
     req = reqs[rid]
     raw, img = read_image(src)
-    keyed = key_background(img)
+    keyed = img if has_alpha(img) else key_background(img)
     lab, figs = figures(keyed)
     want = len(req['outputs'])
     print(f'{rid}: found {len(figs)} figure(s) in a {img.width}x{img.height} image, need {want}')
@@ -159,6 +167,8 @@ def main(argv):
     os.makedirs(out_dir, exist_ok=True)
     for fig, o in zip(figs, req['outputs']):
         sprite = cut(keyed, lab, fig, o['height'])
+        if o.get('mirror'):
+            sprite = sprite.transpose(Image.FLIP_LEFT_RIGHT)
         path = os.path.join(out_dir, o['sprite'] + '.webp')
         sprite.save(path, 'WEBP', quality=90, method=6)
         manifest[o['sprite']] = {'w': sprite.width, 'h': sprite.height, 'sheet': 'generated:' + rid}
@@ -170,9 +180,9 @@ def main(argv):
         keyed.save(prev)
         print('  preview:', prev)
     if out_dir == SPRITES:
+        # keep the original, losslessly (WebP is far smaller than the PNG the generator returns)
         os.makedirs(ORIGINALS, exist_ok=True)
-        with open(os.path.join(ORIGINALS, rid + '.png'), 'wb') as f:
-            f.write(raw)
+        Image.open(io.BytesIO(raw)).save(os.path.join(ORIGINALS, rid + '.webp'), 'WEBP', lossless=True, quality=100, method=4, exact=True)
     return 0
 
 

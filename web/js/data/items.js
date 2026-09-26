@@ -6,18 +6,18 @@ export const ITEMS = {
   tea: { name: 'Tea', sprite: 'item_teacup', kind: 'supply', gift: true, tags: ['tea'], unit: 'cups', blurb: 'A good strong cup. +energy.' },
 
   sketch: { name: 'Sketch', sprite: 'item_sketchbook', gift: true, tags: ['sketch'], blurb: 'A page torn carefully from your sketchbook.' },
-  scarf: { name: 'Hand-knit scarf', sprite: 'item_yarn_basket', gift: true, tags: ['scarf'], blurb: 'Lumpy in places. Warm everywhere.' },
+  scarf: { name: 'Hand-knit scarf', sprite: 'item_scarf', gift: true, tags: ['scarf'], blurb: 'Lumpy in places. Warm everywhere.' },
   photo: { name: 'Photograph', sprite: 'item_camera', gift: true, tags: ['photo'], blurb: 'A print from Rosa\'s old camera.' },
   photo_night: { name: 'Night photograph', sprite: 'item_camera', gift: true, tags: ['photo', 'photo_night'], blurb: 'City lights on the river.' },
   photo_garden: { name: 'Garden photograph', sprite: 'item_camera', gift: true, tags: ['photo', 'photo_garden'], blurb: 'Tomatoes, marigolds, and one suspicious squirrel.' },
   flowers: { name: 'Garden flowers', sprite: 'decor_flower_vase', gift: true, tags: ['flowers'], blurb: 'Daisies and marigolds from the community garden.' },
   cutting: { name: 'Pothos cutting', sprite: 'item_pothos', gift: true, tags: ['cutting'], blurb: 'A rooted cutting in a little pot.' },
   coffee: { name: 'Corner Cup coffee', sprite: 'item_coffee_mug', gift: true, tags: ['coffee'], blurb: 'Still warm. Remy drew a heart in the foam.' },
-  lemon_bars: { name: 'Lemon bars', sprite: 'item_picnic_basket', gift: true, tags: ['lemon_bars'], blurb: 'June\'s famous recipe. Powdered sugar everywhere.' },
-  maamoul: { name: 'Ma\'amoul', sprite: 'item_picnic_basket', gift: true, tags: ['lemon_bars', 'maamoul'], blurb: 'Mrs. Haddad\'s date-and-walnut cookies. Her mother\'s recipe.' },
+  lemon_bars: { name: 'Lemon bars', sprite: 'item_lemon_bars', gift: true, tags: ['lemon_bars'], blurb: 'June\'s famous recipe. Powdered sugar everywhere.' },
+  maamoul: { name: 'Ma\'amoul', sprite: 'item_maamoul', gift: true, tags: ['lemon_bars', 'maamoul'], blurb: 'Mrs. Haddad\'s date-and-walnut cookies. Her mother\'s recipe.' },
   record: { name: 'Vinyl record', sprite: 'item_vinyl', gift: true, tags: ['record'], blurb: 'Second-hand, slightly warped, lovely.' },
-  spray_paint: { name: 'Spray paint', sprite: 'item_spray_bottle', gift: true, tags: ['spray_paint'], blurb: 'Six cans in "Rosa teal."' },
-  photo_rosa: { name: 'Photo of Rosa', sprite: 'item_journal', gift: false, tags: ['photo_rosa'], blurb: 'Rosa, Peg and a young Walt in front of the shop, 1974.' },
+  spray_paint: { name: 'Spray paint', sprite: 'item_spray_paint', gift: true, tags: ['spray_paint'], blurb: 'Six cans in "Rosa teal."' },
+  photo_rosa: { name: 'Photo of Rosa', sprite: 'item_photo_rosa', gift: false, tags: ['photo_rosa'], blurb: 'Rosa, Peg and a young Walt in front of the shop, 1974.' },
 };
 
 export const RECORDS = {

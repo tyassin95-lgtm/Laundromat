@@ -59,6 +59,26 @@
   "h": 220,
   "sheet": "decor_wall.png"
  },
+ "face_haddad_laugh": {
+  "w": 407,
+  "h": 560,
+  "sheet": "generated:haddad_faces"
+ },
+ "face_haddad_neutral": {
+  "w": 404,
+  "h": 560,
+  "sheet": "generated:haddad_faces"
+ },
+ "face_haddad_smile": {
+  "w": 400,
+  "h": 560,
+  "sheet": "generated:haddad_faces"
+ },
+ "face_haddad_worried": {
+  "w": 405,
+  "h": 560,
+  "sheet": "generated:haddad_faces"
+ },
  "face_june_gentle": {
   "w": 438,
   "h": 615,
@@ -88,6 +108,46 @@
   "w": 454,
   "h": 612,
   "sheet": "portrait_june.png"
+ },
+ "face_kai_excited": {
+  "w": 393,
+  "h": 560,
+  "sheet": "generated:kai_faces"
+ },
+ "face_kai_grin": {
+  "w": 393,
+  "h": 560,
+  "sheet": "generated:kai_faces"
+ },
+ "face_kai_neutral": {
+  "w": 393,
+  "h": 560,
+  "sheet": "generated:kai_faces"
+ },
+ "face_kai_worried": {
+  "w": 394,
+  "h": 560,
+  "sheet": "generated:kai_faces"
+ },
+ "face_luis_laugh": {
+  "w": 376,
+  "h": 560,
+  "sheet": "generated:luis_faces"
+ },
+ "face_luis_neutral": {
+  "w": 382,
+  "h": 560,
+  "sheet": "generated:luis_faces"
+ },
+ "face_luis_sad": {
+  "w": 383,
+  "h": 560,
+  "sheet": "generated:luis_faces"
+ },
+ "face_luis_smile": {
+  "w": 380,
+  "h": 560,
+  "sheet": "generated:luis_faces"
  },
  "face_maya_annoyed": {
   "w": 458,
@@ -163,6 +223,26 @@
   "w": 406,
   "h": 468,
   "sheet": "portrait_player.png"
+ },
+ "face_priya_laugh": {
+  "w": 366,
+  "h": 560,
+  "sheet": "generated:priya_faces"
+ },
+ "face_priya_neutral": {
+  "w": 365,
+  "h": 560,
+  "sheet": "generated:priya_faces"
+ },
+ "face_priya_smile": {
+  "w": 363,
+  "h": 560,
+  "sheet": "generated:priya_faces"
+ },
+ "face_priya_tired": {
+  "w": 366,
+  "h": 560,
+  "sheet": "generated:priya_faces"
  },
  "face_remy_excited": {
   "w": 455,
@@ -429,6 +509,16 @@
   "h": 228,
   "sheet": "items_hobby.png"
  },
+ "item_lemon_bars": {
+  "w": 259,
+  "h": 200,
+  "sheet": "generated:gift_items"
+ },
+ "item_maamoul": {
+  "w": 275,
+  "h": 220,
+  "sheet": "generated:gift_items"
+ },
  "item_novel": {
   "w": 188,
   "h": 168,
@@ -439,6 +529,11 @@
   "h": 226,
   "sheet": "items_hobby.png"
  },
+ "item_photo_rosa": {
+  "w": 223,
+  "h": 260,
+  "sheet": "generated:gift_items"
+ },
  "item_picnic_basket": {
   "w": 186,
   "h": 206,
@@ -448,6 +543,11 @@
   "w": 186,
   "h": 233,
   "sheet": "items_hobby.png"
+ },
+ "item_scarf": {
+  "w": 217,
+  "h": 260,
+  "sheet": "generated:gift_items"
  },
  "item_sketchbook": {
   "w": 192,
@@ -473,6 +573,11 @@
   "w": 76,
   "h": 176,
   "sheet": "items_laundry.png"
+ },
+ "item_spray_paint": {
+  "w": 207,
+  "h": 260,
+  "sheet": "generated:gift_items"
  },
  "item_teacup": {
   "w": 171,
@@ -534,20 +639,40 @@
   "h": 457,
   "sheet": "machines.png"
  },
+ "npc_haddad": {
+  "w": 242,
+  "h": 576,
+  "sheet": "generated:haddad_body"
+ },
  "npc_june": {
-  "w": 191,
+  "w": 188,
   "h": 575,
-  "sheet": "derived"
+  "sheet": "generated:june_body"
+ },
+ "npc_kai": {
+  "w": 224,
+  "h": 576,
+  "sheet": "generated:kai_body"
+ },
+ "npc_luis": {
+  "w": 225,
+  "h": 576,
+  "sheet": "generated:luis_body"
  },
  "npc_maya": {
   "w": 195,
   "h": 576,
   "sheet": "maya_full.png"
  },
+ "npc_priya": {
+  "w": 200,
+  "h": 576,
+  "sheet": "generated:priya_body"
+ },
  "npc_remy": {
-  "w": 188,
+  "w": 189,
   "h": 575,
-  "sheet": "derived"
+  "sheet": "generated:remy_body"
  },
  "npc_walt": {
   "w": 226,
@@ -749,13 +874,13 @@
   "h": 291,
   "sheet": "ui_panels.png"
  },
- "ui_speech_panel_r": {
+ "ui_speech_panel_n": {
   "w": 602,
   "h": 291,
   "sheet": "ui_panels.png",
   "derived": true
  },
- "ui_speech_panel_n": {
+ "ui_speech_panel_r": {
   "w": 602,
   "h": 291,
   "sheet": "ui_panels.png",
