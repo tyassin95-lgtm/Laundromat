@@ -1,5 +1,6 @@
 // Decor, upgrades and supplies. Decor goes into named slots in the laundromat (and the flat upstairs,
 // slots prefixed "h_"). comfort feeds customer happiness; some pieces also do something.
+import { G } from '../game/state.js';
 
 export const SHOP_SLOTS = {
   hang1: { x: 1000, y: 214, label: 'Ceiling hook' },
@@ -9,7 +10,7 @@ export const SHOP_SLOTS = {
   wall_b: { x: 1150, y: 170, label: 'Wall' },
   sill: { x: 1660, y: 446, label: 'Window sill' },
   sill2: { x: 1750, y: 446, label: 'Window sill' },
-  counter_top: { x: 268, y: 446, label: 'Counter' },
+  counter_top: { x: 378, y: 446, label: 'Counter' },
   lounge_table: { x: 1800, y: 668, label: 'Lounge table' },
   floor_l1: { x: 1582, y: 652, label: 'By the pillar' },
   floor_r1: { x: 1890, y: 700, label: 'By the door' },
@@ -20,10 +21,10 @@ export const SHOP_SLOTS = {
 export const HOME_SLOTS = {
   h_hang: { x: 560, y: 220, label: 'Ceiling hook' },
   h_lights: { x: 680, y: 120, label: 'Over the window' },
-  h_wall1: { x: 1020, y: 250, label: 'Wall' },
-  h_wall2: { x: 1210, y: 250, label: 'Wall' },
-  h_shelf: { x: 470, y: 410, label: 'Window seat' },
-  h_table: { x: 1060, y: 470, label: 'Desk' },
+  h_wall1: { x: 1025, y: 222, label: 'Wall' },
+  h_wall2: { x: 1256, y: 262, label: 'Wall' },
+  h_shelf: { x: 612, y: 403, label: 'Window seat' },
+  h_table: { x: 1018, y: 484, label: 'Desk' },
   h_floor: { x: 152, y: 532, label: 'By the door' },
   h_rug: { x: 760, y: 690, label: 'Floor' },
 };
@@ -51,13 +52,23 @@ export const DECOR = {
   lantern: { name: 'Old lantern', sprite: 'item_lantern', price: 28, comfort: 4, slots: ['sill', 'sill2', 'h_shelf', 'h_table'], h: 70, light: true, blurb: 'Handy when the power goes out.' },
 };
 
-// Machines & practical upgrades.
+// Machines & practical upgrades. Each one does something in the simulation (game/laundry.js,
+// game/day.js); "from" = the day it shows up in the catalog.
 export const UPGRADES = {
   cart: { name: 'Laundry cart', sprite: 'furn_laundry_cart', price: 95, blurb: 'Carry two loads at once.' },
   sign: { name: 'New shop sign', sprite: 'decor_hanging_sign', price: 60, blurb: 'A hanging sign out front — and a chance to name the place.' },
   fold_board: { name: 'Folding board', sprite: 'item_ironing_board', price: 45, blurb: 'Neater folds, faster. Folding is more forgiving.' },
   tool_kit: { name: 'Proper tool kit', sprite: 'icon_wrench', price: 70, blurb: 'Repairs go smoother and last longer.' },
+  lint_screens: { name: 'Magnetic lint screens', sprite: 'upg_lint_screen', price: 40, blurb: 'Dryer lint builds up half as fast, so dryers stay quick.' },
+  wifi: { name: 'Free Wi-Fi', sprite: 'upg_wifi', price: 45, blurb: 'Waiting is nicer online. Customers leave happier and tip better.' },
+  coin_changer: { name: 'Coin changer', sprite: 'upg_coin_changer', price: 55, blurb: 'Nobody walks out for want of quarters: more self-service walk-ins.' },
+  led_bulbs: { name: 'LED bulbs', sprite: 'upg_led_bulb', price: 65, blurb: 'Same warm light. The weekly electric bill drops by a third.' },
+  awning: { name: 'Door canopy', sprite: 'upg_awning', price: 110, from: 3, blurb: 'A striped canopy and a boot scraper at the door: rainy days bring more walk-ins and fewer muddy puddles.' },
+  vending: { name: 'Snack & soap machine', sprite: 'upg_vending', price: 120, from: 3, blurb: 'Walk-ins buy crisps and soap while they wait: a little extra every day.' },
+  cargo_bike: { name: 'Delivery bike', sprite: 'upg_cargo_bike', price: 150, from: 5, blurb: 'Pickup and delivery: one more drop-off order every day the shop is open.' },
+  water_heater: { name: 'Tankless water heater', sprite: 'upg_water_heater', price: 160, from: 5, blurb: 'Hot water on tap. Washes run 20% faster, and the gas bill eases a little.' },
 };
+export const hasUpgrade = id => G.upgrades.includes(id);
 
 export const SUPPLIES = {
   detergent: { name: 'Detergent jug', sprite: 'item_detergent', price: 16, qty: 10, unit: 'loads', blurb: 'Ten washes. Machines won\'t run without it.' },

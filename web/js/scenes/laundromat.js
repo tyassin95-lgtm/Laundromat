@@ -19,11 +19,15 @@ const WASHER_X = i => 600 + i * 150;
 const WASHER_BASE = 508, WASHER_H = 212;
 const DRYER_X = u => 1340 + u * 140;
 const DRYER_H = 300;
-const COUNTER = { x: 220, base: 578, h: 150 };
-const SHELF = { x: 180, base: 488, h: 236 };
-const FOLD = { x: 452, base: 604, h: 240 };
+// Left wall, left to right: the UPSTAIRS door (4-104), the pickup shelf against the wall, the
+// counter under the price chalkboard (213-409), the folding table, then the washers. Each stands
+// clear of its neighbours; the wall shelf of supplies hangs between the chalkboard and the window.
+const COUNTER = { x: 330, base: 578, h: 150 };
+const SHELF = { x: 178, base: 488, h: 236 };
+const FOLD = { x: 490, base: 604, h: 240 };
 const BENCH = { x: 1682, base: 646, h: 225 };
-const SUPPLY = { x: 452, y: 264, w: 132 };
+const SUPPLY = { x: 486, y: 264, w: 132 };
+export const COUNTER_SPOT = { x: COUNTER.x + 116, y: 628 };   // where a customer stands to talk
 const CLOCK = { x: 1270, y: 152, s: 62 };
 const PK = 262 / 490;     // player pose scale
 
@@ -49,6 +53,7 @@ export class LaundromatScene extends Scene {
   constructor(app) {
     super(app, { worldW: 1920, interior: true, walkBand: [540, 692] });
     this.name = 'laundromat';
+    this.counterSpot = COUNTER_SPOT;
     this.player = new Actor({ id: 'me', player: true, h: 262, x: 60, y: 560, speed: 330 });
     this.player.hitW = 90;
     this.carry = [];               // order ids in hand
@@ -148,6 +153,8 @@ export class LaundromatScene extends Scene {
     E({ id: 'supply', z: 60, draw: (r) => this.drawSupply(r),
       hit: () => ({ x: SUPPLY.x - SUPPLY.w / 2, y: SUPPLY.y - 110, w: SUPPLY.w, h: 112 }), tap: () => this.tapSupply() });
     // wall clock + price board text
+    // the coin changer (an upgrade) hangs between the third and fourth water hook-ups
+    E({ id: 'changer', z: 54, draw: (r) => { if (G.upgrades.includes('coin_changer')) r.sprite('upg_coin_changer', 975, 293, { h: 62 }); } });
     E({ id: 'clock', z: 55, draw: (r) => this.drawClock(r), hit: () => ({ x: CLOCK.x - 32, y: CLOCK.y - 32, w: 64, h: 64 }),
       tap: () => UI.toast(`${clockStr(G.time)} — ${this.shiftRunning ? 'open until 6:00 PM' : 'closed'}`, 'icon_clock') });
     E({ id: 'prices', z: 54, draw: (r) => this.drawPriceBoard(r), hit: () => ({ x: 222, y: 120, w: 180, h: 112 }),
@@ -556,10 +563,11 @@ export class LaundromatScene extends Scene {
 
   async makeTea() {
     if (!takeItem('tea', 1)) { UI.toast('Out of tea. (Order a tin from the supplies catalog.)', 'item_teacup', 'bad'); return; }
-    this.player.setPose('load', 1.0);
+    this.player.setPose('reach', 1.0);
     Sound.play('kettle', { vol: 0.5 });
     await tweens.wait(1.0);
     Sound.play('cup', { vol: 0.8 });
+    this.player.setPose('tea', 2.2);
     addStat('energy', 14);
     G.time += 10;
     this.particles.emit('steam', SHOP_SLOTS.lounge_table.x, SHOP_SLOTS.lounge_table.y - 150, 8);
@@ -583,7 +591,7 @@ export class LaundromatScene extends Scene {
   pickLitter(l) {
     this.queue({ x: l.x - 30, y: l.y + 4, face: 1, run: async () => {
       if (!L.Sim.litter.includes(l)) return;
-      this.player.setPose('load', 0.5);
+      this.player.setPose('pet', 0.7);
       await tweens.wait(0.5);
       L.Sim.litter = L.Sim.litter.filter(q => q !== l);
       if (l.kind === 'sock') this.app.menus.foundSock('shop');
@@ -605,7 +613,7 @@ export class LaundromatScene extends Scene {
     this.visitors.set(id, v);
     Sound.play('shop_bell', { vol: 0.7 });
     this.doorOpen = 0.8;
-    const dest = opts.to || (opts.order ? { x: COUNTER.x + 128, y: 620 } : this.freeLoungeSpot());
+    const dest = opts.to || (opts.order ? { x: COUNTER_SPOT.x, y: COUNTER_SPOT.y } : this.freeLoungeSpot());
     (async () => {
       await a.appear();
       await tweens.wait(0.3);
@@ -721,7 +729,7 @@ export class LaundromatScene extends Scene {
     if (!due && (G.day - (G.vars['nb_last_' + who] ?? -9) < 2 || chats >= 2 || G.talked[who] === G.day)) return;
     G.vars['nb_last_' + who] = G.day;
     G.today.nbChats = chats + 1;
-    if (hasSprite(who)) this.spawnVisitor(who, { to: { x: COUNTER.x + 150, y: 626, face: -1 }, stay: 25, neighbour: true });
+    if (hasSprite(who)) this.spawnVisitor(who, { to: { x: COUNTER_SPOT.x, y: COUNTER_SPOT.y, face: -1 }, stay: 25, neighbour: true });
     else st.neighbourChat(who);
   }
 
@@ -1091,6 +1099,10 @@ export class LaundromatScene extends Scene {
   drawShelf(r) {
     const box = r.sprite('furn_tall_shelf', SHELF.x, SHELF.base, { h: SHELF.h });
     if (!box) return;
+    if (G.upgrades.includes('wifi')) {
+      r.sprite('upg_wifi', SHELF.x + 42, box.y + 6, { h: 32 });
+      if (Math.sin(this.t * 3) > 0.6) r.glow(SHELF.x + 48, box.y - 4, 6, [140, 255, 150], 0.5);
+    }
     const levels = [0.33, 0.61, 0.9];
     const ready = G.shelf.map(id => L.order(id)).filter(Boolean);
     ready.forEach((o, i) => {

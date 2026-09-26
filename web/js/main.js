@@ -12,6 +12,7 @@ import * as L from './game/laundry.js';
 import { Story } from './game/story.js';
 import { DayFlow } from './game/day.js';
 import { Activities } from './game/activities.js';
+import { Quests } from './game/quests.js';
 import { CALLS } from './data/calls.js';
 import { ROUTINES } from './data/characters.js';
 import { comfortOf } from './data/decor.js';
@@ -66,6 +67,7 @@ class App {
     this.story = new Story(this);
     this.day = new DayFlow(this);
     this.activities = new Activities(this);
+    this.quests = new Quests(this);
     for (const [k, fn] of Object.entries(CALLS)) this.calls[k] = (...a) => fn(this, ...a);
     this.scenes = { laundromat: new LaundromatScene(this), home: new HomeScene(this), street: new StreetScene(this), title: new TitleScene(this) };
 
@@ -105,6 +107,7 @@ class App {
       tweens.update(dt);
       Sound.update(dt);
       if (this.scene) { this.scene.update(dt); this.scene.draw(); }
+      if (this.scene && this.scene.name !== 'title') this.quests.update(dt);
       if (G && this.scene && this.scene.name !== 'title') G.playSeconds = (G.playSeconds || 0) + dt;
     } catch (e) { console.error(e); }
     requestAnimationFrame(tt => this.loop(tt));

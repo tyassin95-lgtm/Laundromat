@@ -304,6 +304,16 @@
   "h": 636,
   "sheet": "portrait_walt.png"
  },
+ "furn_bed": {
+  "w": 658,
+  "h": 517,
+  "sheet": "generated:bed"
+ },
+ "furn_bed_sleep": {
+  "w": 658,
+  "h": 517,
+  "sheet": "generated:bed"
+ },
  "furn_bench": {
   "w": 316,
   "h": 290,
@@ -684,6 +694,11 @@
   "h": 454,
   "sheet": "player_poses.png"
  },
+ "player_feed": {
+  "w": 355,
+  "h": 353,
+  "sheet": "generated:player_poses2"
+ },
  "player_fold": {
   "w": 277,
   "h": 449,
@@ -704,6 +719,11 @@
   "h": 489,
   "sheet": "player_poses.png"
  },
+ "player_knit": {
+  "w": 240,
+  "h": 470,
+  "sheet": "generated:player_poses2"
+ },
  "player_load": {
   "w": 281,
   "h": 446,
@@ -719,6 +739,16 @@
   "h": 472,
   "sheet": "player_poses.png"
  },
+ "player_pet": {
+  "w": 329,
+  "h": 353,
+  "sheet": "generated:player_poses2"
+ },
+ "player_photo": {
+  "w": 189,
+  "h": 478,
+  "sheet": "generated:player_poses2"
+ },
  "player_reach": {
   "w": 244,
   "h": 470,
@@ -729,15 +759,30 @@
   "h": 470,
   "sheet": "derived"
  },
+ "player_read": {
+  "w": 271,
+  "h": 346,
+  "sheet": "generated:player_poses2"
+ },
  "player_sit": {
   "w": 328,
   "h": 421,
   "sheet": "player_poses.png"
  },
+ "player_sketch": {
+  "w": 206,
+  "h": 483,
+  "sheet": "generated:player_poses2"
+ },
  "player_stretch": {
   "w": 195,
   "h": 463,
   "sheet": "player_poses.png"
+ },
+ "player_tea": {
+  "w": 158,
+  "h": 476,
+  "sheet": "generated:player_poses2"
  },
  "player_walk1": {
   "w": 286,
@@ -748,6 +793,11 @@
   "w": 272,
   "h": 483,
   "sheet": "player_poses.png"
+ },
+ "player_water": {
+  "w": 255,
+  "h": 479,
+  "sheet": "generated:player_poses2"
  },
  "player_wave": {
   "w": 193,
@@ -885,5 +935,45 @@
   "h": 291,
   "sheet": "ui_panels.png",
   "derived": true
+ },
+ "upg_awning": {
+  "w": 221,
+  "h": 160,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_cargo_bike": {
+  "w": 230,
+  "h": 240,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_coin_changer": {
+  "w": 150,
+  "h": 200,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_led_bulb": {
+  "w": 105,
+  "h": 170,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_lint_screen": {
+  "w": 179,
+  "h": 150,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_vending": {
+  "w": 192,
+  "h": 280,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_water_heater": {
+  "w": 108,
+  "h": 220,
+  "sheet": "generated:upgrade_icons"
+ },
+ "upg_wifi": {
+  "w": 135,
+  "h": 150,
+  "sheet": "generated:upgrade_icons"
  }
 }

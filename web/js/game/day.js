@@ -40,6 +40,7 @@ export class DayFlow {
     Save.save();
     await app.story.trigger('home_morning');
     if (!app.scene || app.scene.name === 'title') return;   // the final choice ended the story
+    app.quests.morningPerks();
     await this.checkMail();
     app.hud.setGoal(G.goal || (isSunday(G.day)
       ? (sundayOpen() ? 'Pay-what-you-can Sunday: open the shop if you like, or take the day off.' : 'Sunday — the shop is closed. Rest, explore, see friends.')
@@ -86,6 +87,7 @@ export class DayFlow {
     const sc = app.scene;
     if (sc && sc.name === 'laundromat') { sc.shiftRunning = false; sc.jobs = []; sc.setCarry && sc.setCarry([]); }
     const res = L.closeShop();
+    if (G.cleanliness >= 80) G.vars.cleanCloses = (G.vars.cleanCloses || 0) + 1;
     G.phase = 'evening';
     G.time = Math.max(G.time, L.CLOSE_AT);
     if (res.leftovers) { G.time += 25 * res.leftovers; addStat('energy', -5 * res.leftovers); }
@@ -106,6 +108,7 @@ export class DayFlow {
       ['Drop-off orders', t.orders],
       ['Late', t.late],
       ['Self-service', money(t.selfServe)],
+      ...(t.vending ? [['Snack & soap machine', money(t.vending)]] : []),
       ['Tips', money(t.tips)],
       ['Spent today', '-' + money(t.expenses)],
     ];
@@ -208,10 +211,11 @@ export class DayFlow {
 
   billsFor(day) {
     const cycles = G.vars.weekCycles || 0;
+    const up = id => G.upgrades.includes(id);
     const items = [
       ['Rosa\'s loan payment', 175],
-      ['Water & gas', 55 + Math.round(cycles * 0.8)],
-      ['Electric', 35 + Math.round(cycles * 0.45)],
+      ['Water & gas' + (up('water_heater') ? ' (tankless heater)' : ''), Math.round((55 + cycles * 0.8) * (up('water_heater') ? 0.88 : 1))],
+      ['Electric' + (up('led_bulbs') ? ' (LED bulbs)' : ''), Math.round((35 + cycles * 0.45) * (up('led_bulbs') ? 0.66 : 1))],
       ['Insurance', 25],
     ];
     if (G.flags.tax_reassessed) items.push(['Property tax (reassessed)', 75]);

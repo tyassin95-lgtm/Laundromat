@@ -14,6 +14,8 @@ import { LOCATIONS, MAP_ORDER } from '../data/locations.js';
 import { LETTERS } from '../data/letters.js';
 import { CALENDAR_MARKS } from '../data/events.js';
 import { ENDINGS, CREDITS } from '../data/endings.js';
+import { ROMANCE } from '../data/romance.js';
+import { QUESTS } from '../data/quests.js';
 import { Dialogue, formatText } from './dialogue.js';
 
 const S = n => 'assets/sprites/' + n + '.webp';
@@ -79,6 +81,7 @@ export class Menus {
       diary: ['Diary', () => this.pageDiary(left, right)],
       friends: ['Friends', () => this.pageFriends(left, right)],
       neighbours: ['Neighbours', () => this.pageNeighbours(left, right)],
+      errands: ['Errands', () => this.pageErrands(left, right)],
       shop: ['The shop', () => this.pageShop(left, right)],
       collect: ['Collections', () => this.pageCollections(left, right)],
       ledger: ['Ledger', () => this.pageLedger(left, right)],
@@ -129,7 +132,7 @@ export class Menus {
       return `<div class="friend"><img class="face" src="${S('face_' + c.portrait + '_' + (h >= 6 ? c.exprs[1] : c.defaultExpr))}" style="${met ? '' : 'filter:brightness(0) opacity(.35)'}">` +
         `<div><div class="nm">${met ? c.full : '???'}</div><div class="ds">${met ? c.blurb : 'Not met yet.'}</div>` +
         `<div class="hearts">${Array.from({ length: 10 }, (_, i) => `<i class="${i < h ? 'on' : ''}"></i>`).join('')}</div>` +
-        (met ? `<div class="ds">Loves: ${this.lovesHint(w)}</div>` : '') + `</div></div>`;
+        (met ? `<div class="ds">Loves: ${this.lovesHint(w)}</div>` : '') + this.romanceLine(w) + `</div></div>`;
     };
     l.innerHTML = `<h2>Friends</h2>${card('walt')}${card('maya')}`;
     r.innerHTML = `<h2>&nbsp;</h2>${card('june')}${card('remy')}<p class="ds" style="margin-top:.6rem">Talk every day, bring gifts, and finish their laundry on time. New ♥ unlock new moments.</p>`;
@@ -144,11 +147,37 @@ export class Menus {
       const img = face ? `<img class="face" src="${S(face)}">` : `<img class="face icon" src="${S(c.icon)}" style="${met ? '' : 'opacity:.45'}">`;
       return `<div class="friend">${img}<div><div class="nm">${c.full}</div>` +
         `<div class="ds">${met ? c.blurb : 'You know the name from the laundry tickets. You haven\'t really talked yet.'}</div>` +
-        `<div class="hearts">${Array.from({ length: 5 }, (_, i) => `<i class="${i < h ? 'on' : ''}"></i>`).join('')}</div></div></div>`;
+        `<div class="hearts">${Array.from({ length: 5 }, (_, i) => `<i class="${i < h ? 'on' : ''}"></i>`).join('')}</div>${this.romanceLine(w)}</div></div>`;
     };
     const [a, b, c, d] = NEIGHBOUR_IDS;
     l.innerHTML = `<h2>Neighbours</h2>${card(a)}${card(b)}`;
     r.innerHTML = `<h2>&nbsp;</h2>${card(c)}${card(d)}<p class="ds" style="margin-top:.6rem">Regulars stop to talk when they bring laundry in. Finish it on time. The ones who like you will stand up for the shop.</p>`;
+  }
+
+  romanceLine(w) {
+    const st = this.app.quests && this.app.quests.status(w);
+    return st ? `<div class="rom">♥ ${st}</div>` : '';
+  }
+
+  pageErrands(l, r) {
+    const Q = this.app.quests;
+    const face = id => { const q = QUESTS[id]; return q.giver === 'biscuit' ? q.icon : (portraitFor(q.giver) || q.icon); };
+    const active = Object.entries(G.quests || {}).filter(([id, s]) => QUESTS[id] && s.state === 'active');
+    const done = Object.entries(G.quests || {}).filter(([id, s]) => QUESTS[id] && s.state === 'done');
+    const card = id => {
+      const q = QUESTS[id];
+      const n = Q.stepsDone(id);
+      const who = q.giver === 'biscuit' ? 'Biscuit' : CHARACTERS[q.giver].name;
+      const steps = q.steps.map((st, i) => `<li class="${i < n ? 'done' : ''}">${escapeHtml(st.text)}${i >= n ? Q.progress(id, st) : ''}</li>`).join('');
+      const ready = n >= q.steps.length ? `<div class="rom">Done! ${q.giver === 'biscuit' ? 'Go and see Biscuit.' : 'Tell ' + who + '.'}</div>` : '';
+      return `<div class="friend errand"><img class="face${q.giver === 'biscuit' ? ' icon' : ''}" src="${S(face(id))}"><div><div class="nm">${escapeHtml(q.title)}</div>` +
+        `<div class="ds">${escapeHtml(q.blurb)}</div><ul class="goal-list">${steps}</ul>${ready}<div class="ds">Reward: ${escapeHtml(q.reward.text)}</div></div></div>`;
+    };
+    l.innerHTML = `<h2>Errands</h2>` + (active.length ? active.map(([id]) => card(id)).join('')
+      : '<p class="ds">Nothing on your list. Friends and neighbours sometimes ask for a hand when you talk to them — once they know you a little.</p>');
+    const left = Object.keys(QUESTS).length - active.length - done.length;
+    r.innerHTML = `<h2>Done</h2>` + (done.length ? `<ul class="goal-list plain">${done.map(([id]) => `<li class="done">${escapeHtml(QUESTS[id].title)} <span class="ds">— ${escapeHtml(QUESTS[id].reward.text)}</span></li>`).join('')}</ul>` : '<p class="ds">None yet.</p>') +
+      (left > 0 ? `<p class="ds" style="margin-top:.6rem">${left} more errand${left > 1 ? 's' : ''} to find around Linden Street.</p>` : '<p class="ds" style="margin-top:.6rem">You\'ve found every errand on Linden Street. Rosa would be proud. And tired.</p>');
   }
 
   lovesHint(w) {
@@ -204,6 +233,7 @@ export class Menus {
     const pages = market ? { market: ['Flea market', () => this.pageMarket(left, right, refresh)] } : {
       supplies: ['Supplies', () => this.pageSupplies(left, right, refresh)],
       machines: ['Machines', () => this.pageMachines(left, right, refresh)],
+      upgrades: ['Upgrades', () => this.pageUpgrades(left, right, refresh)],
       decor: ['Decor', () => this.pageDecor(left, right, refresh)],
       prices: ['Prices', () => this.pagePrices(left, right, refresh)],
     };
@@ -296,16 +326,25 @@ export class Menus {
       L.ensureMachineFields();
       UI.toast('A second dryer tower! Two more drums.', 'icon_dryer'); refresh();
     }, !canStack));
-    for (const [id, u] of Object.entries(UPGRADES)) {
-      const owned = G.upgrades.includes(id);
-      r.appendChild(this.row(u.sprite, `${u.name} · ${money(u.price)}`, u.blurb, owned ? 'Owned' : 'Buy', async () => {
+    r.appendChild(el('p', 'ds', 'Carts, lint screens, Wi-Fi and more are on the Upgrades page.'));
+  }
+
+  pageUpgrades(l, r, refresh) {
+    const list = Object.entries(UPGRADES).filter(([, u]) => !u.from || G.day >= u.from);
+    const owned = list.filter(([id]) => G.upgrades.includes(id)).length;
+    l.appendChild(el('h2', '', 'Upgrades'));
+    l.appendChild(el('p', 'ds', `${owned} of ${list.length} installed. Each one pays for itself, eventually.`));
+    r.appendChild(el('h2', '', '&nbsp;'));
+    list.forEach(([id, u], i) => {
+      const have = G.upgrades.includes(id);
+      (i < Math.ceil(list.length / 2) ? l : r).appendChild(this.row(u.sprite, `${u.name} · ${money(u.price)}`, u.blurb, have ? 'Owned' : 'Buy', async () => {
         if (!this.spend(u.price, 'Upgrade: ' + u.name)) return;
         G.upgrades.push(id);
         UI.toast(`${u.name}!`, u.sprite); Sound.play('sparkle', { vol: 0.6 });
         if (id === 'sign') await this.renameShop();
         refresh();
-      }, owned));
-    }
+      }, have));
+    });
   }
 
   async renameShop() {
@@ -471,6 +510,7 @@ export class Menus {
   }
 
   foundSock(where, id) {
+    G.vars.socksFound = (G.vars.socksFound || 0) + 1;
     let sock = id ? SOCKS.find(s => s.id === id) : SOCKS.find(s => s.where === where && !G.collections.socks.includes(s.id));
     if (!sock || G.collections.socks.includes(sock.id)) {
       UI.toast('Another stray sock. Into the lost-and-found basket it goes.', 'item_sock');
@@ -542,6 +582,10 @@ export class Menus {
       if (loc === 'laundromat' && ev.laundromat_night && ev.laundromat_night.includes(wd) && G.time >= 20 * 60) { out.push(w); continue; }
       if (ev[loc] && ev[loc].includes(wd)) out.push(w);
     }
+    // whoever you have a date with this evening is waiting there
+    for (const [w, R] of Object.entries(ROMANCE)) {
+      if (G.vars['date_' + w] === G.day && R.place === loc && !out.includes(w)) out.push(w);
+    }
     return out;
   }
 
@@ -592,6 +636,9 @@ export class Menus {
       <p><b>Chores:</b> mop puddles, clean dryer lint, fix broken machines (you'll need spare parts), and keep detergent stocked.</p>
       <p><b>Energy</b> (the bar under your stars) drains as you work. When it runs low you slow down: sit on the bench, have a cup of tea, or pet Biscuit.</p>
       <p><b>Evenings</b> are yours: see friends, take photos, sketch, knit, explore. Talk to people every day and bring gifts they love.</p>
+      <p><b>Errands:</b> friends and neighbours sometimes ask for a hand. The Journal's Errands page tracks them; finishing one pays off.</p>
+      <p><b>Upgrades</b> in the catalog change how the shop runs: faster washes, cheaper bills, more customers.</p>
+      <p><b>Romance</b> is up to you. When someone close to you says something that matters, your answer decides whether it becomes more.</p>
       <p><b>Bills</b> come every Sunday night. Don't let Rosa's go under.</p>`, { ok: 'Got it' });
   }
 

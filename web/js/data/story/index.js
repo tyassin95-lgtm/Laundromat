@@ -9,5 +9,7 @@ import june from './june.js';
 import remy from './remy.js';
 import misc from './misc.js';
 import neighbours from './neighbours.js';
+import quests from './quests.js';
+import romance from './romance.js';
 
-export const SCRIPTS = { week1, week2, week3, week4, walt, maya, june, remy, misc, neighbours };
+export const SCRIPTS = { week1, week2, week3, week4, walt, maya, june, remy, misc, neighbours, quests, romance };

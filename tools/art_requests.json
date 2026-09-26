@@ -1,266 +1,398 @@
 {
-  "about": "Character art made with Higgsfield (model gpt_image_2_5, quality medium, resolution 1k, background transparent: 0.5 credits an image). Each request is one image; tools/import_generated.py cuts it into the named sprites, matching figures to outputs left to right. refs are the reference images given to the model, in order.",
-  "references": {
-    "ref_bodies": "npc_walt, npc_maya and player_idle side by side on white: style, proportions and pose",
-    "ref_faces": "face_walt_neutral, face_maya_content and face_june_gentle side by side on white: portrait style and framing",
-    "ref_june": "face_june_neutral and face_june_happy: June's likeness",
-    "ref_remy": "face_remy_neutral and face_remy_excited: Remy's likeness",
-    "<name>_body": "the generated full-body image of that character: keeps the portraits consistent with the sprite",
-    "ref_items": "item_coffee_mug, item_teacup, item_picnic_basket, item_camera and item_novel side by side on white: item style"
-  },
-  "style": "See the prompts: every request asks for the game's hand-painted style (ink outlines, textured gouache and coloured-pencil shading) and a transparent background.",
-  "characters": {},
-  "requests": [
+ "about": "Character art made with Higgsfield (model gpt_image_2_5, quality medium, resolution 1k unless a request says otherwise, background transparent: 0.5 credits an image at 1k, 1 at 2k). Each request is one image; tools/import_generated.py cuts it into the named sprites, matching figures to outputs left to right. refs are the reference images given to the model, in order.",
+ "references": {
+  "ref_bodies": "npc_walt, npc_maya and player_idle side by side on white: style, proportions and pose",
+  "ref_faces": "face_walt_neutral, face_maya_content and face_june_gentle side by side on white: portrait style and framing",
+  "ref_june": "face_june_neutral and face_june_happy: June's likeness",
+  "ref_remy": "face_remy_neutral and face_remy_excited: Remy's likeness",
+  "<name>_body": "the generated full-body image of that character: keeps the portraits consistent with the sprite",
+  "ref_items": "item_coffee_mug, item_teacup, item_picnic_basket, item_camera and item_novel side by side on white: item style",
+  "ref_player_poses": "art/source/player_poses.png on white, 1280 px: the player character's look, style and scale",
+  "ref_furniture": "art/source/furniture.png on white, 1280 px: furniture style (linework, texture, three-quarter view)"
+ },
+ "style": "See the prompts: every request asks for the game's hand-painted style (ink outlines, textured gouache and coloured-pencil shading) and a transparent background.",
+ "characters": {},
+ "requests": [
+  {
+   "id": "luis_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_bodies"
+   ],
+   "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Luis Delgado, a warm Latino corner-store owner in his mid 60s, stocky build, grey swept-back hair, thick grey moustache, deep smile lines, blue plaid flannel shirt with the sleeves rolled up under a faded olive-green canvas shop apron, brown work trousers, worn black work shoes, a pencil tucked behind one ear. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
     {
-      "id": "luis_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_bodies"
-      ],
-      "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Luis Delgado, a warm Latino corner-store owner in his mid 60s, stocky build, grey swept-back hair, thick grey moustache, deep smile lines, blue plaid flannel shirt with the sleeves rolled up under a faded olive-green canvas shop apron, brown work trousers, worn black work shoes, a pencil tucked behind one ear. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_luis",
-          "height": 576
-        }
-      ]
-    },
-    {
-      "id": "priya_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_bodies"
-      ],
-      "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Priya Raman, a South Asian woman in her early 30s who works night shifts as an ER nurse, long black hair in a loose low braid over one shoulder, small gold nose stud, tired but kind eyes, teal hospital scrubs under an enormous mustard-yellow knit cardigan, an ID badge on a lanyard, white sneakers, holding a paper coffee cup in one hand. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_priya",
-          "height": 576
-        }
-      ]
-    },
-    {
-      "id": "haddad_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_bodies"
-      ],
-      "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Fatima Haddad, a small, round-faced Lebanese grandmother in her 70s with a kind but appraising look, a plum-purple patterned headscarf, reading glasses on a beaded chain around her neck, a long dark-green cardigan over a long navy skirt, sensible black shoes, a cloth shopping bag over one arm. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_haddad",
-          "height": 576
-        }
-      ]
-    },
-    {
-      "id": "kai_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_bodies"
-      ],
-      "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Kai, a cheerful androgynous bike courier in their early 20s, East Asian, short messy black hair with one bleached streak, a bright orange rain jacket worn open over a grey hoodie, black cargo trousers rolled at the ankles, high-top sneakers, a big grey messenger bag worn across the body with a bike helmet clipped to its strap. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_kai",
-          "height": 576
-        }
-      ]
-    },
-    {
-      "id": "june_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_june",
-        "ref_bodies"
-      ],
-      "prompt": "Draw the woman from the first reference image (June, the elderly woman with short curly grey hair and round glasses, in her rust-orange cardigan over a cream floral blouse) as a full-body game character in exactly the same hand-painted style as the characters in the second reference image: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, the same semi-realistic proportions and line weight. Keep her face, hair, glasses and clothes exactly as in her portrait. Add khaki trousers and brown lace-up boots; she is small and a little stooped, with a gentle smile. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_june",
-          "height": 575
-        }
-      ]
-    },
-    {
-      "id": "remy_body",
-      "priority": 1,
-      "aspect_ratio": "2:3",
-      "refs": [
-        "ref_remy",
-        "ref_bodies"
-      ],
-      "prompt": "Draw the young woman from the first reference image (Remy, with pink hair tied up in a messy bun, small hoop earrings, a black denim jacket over a dark red button-up shirt) as a full-body game character in exactly the same hand-painted style as the characters in the second reference image: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, the same semi-realistic proportions and line weight. Keep her face, hair and clothes exactly as in her portrait, with the jacket sleeves pushed up. Add dark jeans flecked with paint and black boots. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides. Transparent background, no ground shadow, no scenery, no text.",
-      "outputs": [
-        {
-          "sprite": "npc_remy",
-          "height": 575
-        }
-      ]
-    },
-    {
-      "id": "luis_faces",
-      "priority": 2,
-      "aspect_ratio": "16:9",
-      "refs": [
-        "luis_body",
-        "ref_faces"
-      ],
-      "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the man from the first reference image (same face, grey swept-back hair, grey moustache, blue plaid flannel shirt and olive-green shop apron, pencil behind his ear), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) calm and kind, 2) a warm broad smile, 3) tired and sad, 4) laughing with his eyes crinkled shut. Transparent background, no text, no labels, no numbers.",
-      "outputs": [
-        {
-          "sprite": "face_luis_neutral",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_luis_smile",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_luis_sad",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_luis_laugh",
-          "height": 560,
-          "mirror": true
-        }
-      ]
-    },
-    {
-      "id": "priya_faces",
-      "priority": 2,
-      "aspect_ratio": "16:9",
-      "refs": [
-        "priya_body",
-        "ref_faces"
-      ],
-      "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the woman from the first reference image (same face, long black hair in a loose low braid, small gold nose stud, teal hospital scrubs under an enormous mustard-yellow knit cardigan, ID badge lanyard), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) dry and deadpan, 2) a small warm smile, 3) exhausted with heavy eyelids, 4) laughing. Transparent background, no text, no labels, no numbers.",
-      "outputs": [
-        {
-          "sprite": "face_priya_neutral",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_priya_smile",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_priya_tired",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_priya_laugh",
-          "height": 560,
-          "mirror": true
-        }
-      ]
-    },
-    {
-      "id": "haddad_faces",
-      "priority": 2,
-      "aspect_ratio": "16:9",
-      "refs": [
-        "haddad_body",
-        "ref_faces"
-      ],
-      "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the elderly woman from the first reference image (same round face, plum-purple patterned headscarf, reading glasses on a beaded chain, dark-green cardigan), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) appraising you over her glasses, 2) a fond smile, 3) worried, 4) laughing. Transparent background, no text, no labels, no numbers.",
-      "outputs": [
-        {
-          "sprite": "face_haddad_neutral",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_haddad_smile",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_haddad_worried",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_haddad_laugh",
-          "height": 560,
-          "mirror": true
-        }
-      ]
-    },
-    {
-      "id": "kai_faces",
-      "priority": 2,
-      "aspect_ratio": "16:9",
-      "refs": [
-        "kai_body",
-        "ref_faces"
-      ],
-      "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the young person from the first reference image (same face, short messy black hair with one bleached streak, bright orange rain jacket over a grey hoodie, messenger bag strap across the chest), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) curious, 2) a big grin, 3) worried with raised eyebrows, 4) wide-eyed and excited with an open mouth. Transparent background, no text, no labels, no numbers.",
-      "outputs": [
-        {
-          "sprite": "face_kai_neutral",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_kai_grin",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_kai_worried",
-          "height": 560,
-          "mirror": true
-        },
-        {
-          "sprite": "face_kai_excited",
-          "height": 560,
-          "mirror": true
-        }
-      ]
-    },
-    {
-      "id": "gift_items",
-      "priority": 3,
-      "aspect_ratio": "16:9",
-      "refs": [
-        "ref_items"
-      ],
-      "prompt": "Five separate item icons for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference items: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, slight three-quarter top-down view, similar size and detail. Arrange them side by side in one row, evenly spaced with clear empty gaps between them so they do not touch. From left to right: 1) a small plate of lemon bars dusted with powdered sugar, 2) a lumpy hand-knit scarf in teal and rust stripes, loosely folded, 3) three spray paint cans, one teal, one rust red, one mustard yellow, 4) a round decorative tin, lid leaning against it, full of ma'amoul (round Lebanese date cookies with patterned tops), 5) an old faded sepia photograph with a white border showing three people standing in front of a small laundromat shopfront. Transparent background, no shadows under the items, no text, no labels, no numbers.",
-      "outputs": [
-        {
-          "sprite": "item_lemon_bars",
-          "height": 200
-        },
-        {
-          "sprite": "item_scarf",
-          "height": 260
-        },
-        {
-          "sprite": "item_spray_paint",
-          "height": 260
-        },
-        {
-          "sprite": "item_maamoul",
-          "height": 220
-        },
-        {
-          "sprite": "item_photo_rosa",
-          "height": 260
-        }
-      ]
+     "sprite": "npc_luis",
+     "height": 576
     }
-  ]
+   ]
+  },
+  {
+   "id": "priya_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_bodies"
+   ],
+   "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Priya Raman, a South Asian woman in her early 30s who works night shifts as an ER nurse, long black hair in a loose low braid over one shoulder, small gold nose stud, tired but kind eyes, teal hospital scrubs under an enormous mustard-yellow knit cardigan, an ID badge on a lanyard, white sneakers, holding a paper coffee cup in one hand. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
+    {
+     "sprite": "npc_priya",
+     "height": 576
+    }
+   ]
+  },
+  {
+   "id": "haddad_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_bodies"
+   ],
+   "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Fatima Haddad, a small, round-faced Lebanese grandmother in her 70s with a kind but appraising look, a plum-purple patterned headscarf, reading glasses on a beaded chain around her neck, a long dark-green cardigan over a long navy skirt, sensible black shoes, a cloth shopping bag over one arm. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
+    {
+     "sprite": "npc_haddad",
+     "height": 576
+    }
+   ]
+  },
+  {
+   "id": "kai_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_bodies"
+   ],
+   "prompt": "A new character for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference characters: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle speckles, warm muted palette, the same semi-realistic proportions, head size and line weight. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides, like the reference poses. The character: Kai, a cheerful androgynous bike courier in their early 20s, East Asian, short messy black hair with one bleached streak, a bright orange rain jacket worn open over a grey hoodie, black cargo trousers rolled at the ankles, high-top sneakers, a big grey messenger bag worn across the body with a bike helmet clipped to its strap. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
+    {
+     "sprite": "npc_kai",
+     "height": 576
+    }
+   ]
+  },
+  {
+   "id": "june_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_june",
+    "ref_bodies"
+   ],
+   "prompt": "Draw the woman from the first reference image (June, the elderly woman with short curly grey hair and round glasses, in her rust-orange cardigan over a cream floral blouse) as a full-body game character in exactly the same hand-painted style as the characters in the second reference image: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, the same semi-realistic proportions and line weight. Keep her face, hair, glasses and clothes exactly as in her portrait. Add khaki trousers and brown lace-up boots; she is small and a little stooped, with a gentle smile. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
+    {
+     "sprite": "npc_june",
+     "height": 575
+    }
+   ]
+  },
+  {
+   "id": "remy_body",
+   "priority": 1,
+   "aspect_ratio": "2:3",
+   "refs": [
+    "ref_remy",
+    "ref_bodies"
+   ],
+   "prompt": "Draw the young woman from the first reference image (Remy, with pink hair tied up in a messy bun, small hoop earrings, a black denim jacket over a dark red button-up shirt) as a full-body game character in exactly the same hand-painted style as the characters in the second reference image: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, the same semi-realistic proportions and line weight. Keep her face, hair and clothes exactly as in her portrait, with the jacket sleeves pushed up. Add dark jeans flecked with paint and black boots. One single character only, full body from the top of the head down to the shoes, centred, standing relaxed in a three-quarter view with the body and face turned slightly towards the viewer's right, arms at the sides. Transparent background, no ground shadow, no scenery, no text.",
+   "outputs": [
+    {
+     "sprite": "npc_remy",
+     "height": 575
+    }
+   ]
+  },
+  {
+   "id": "luis_faces",
+   "priority": 2,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "luis_body",
+    "ref_faces"
+   ],
+   "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the man from the first reference image (same face, grey swept-back hair, grey moustache, blue plaid flannel shirt and olive-green shop apron, pencil behind his ear), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) calm and kind, 2) a warm broad smile, 3) tired and sad, 4) laughing with his eyes crinkled shut. Transparent background, no text, no labels, no numbers.",
+   "outputs": [
+    {
+     "sprite": "face_luis_neutral",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_luis_smile",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_luis_sad",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_luis_laugh",
+     "height": 560,
+     "mirror": true
+    }
+   ]
+  },
+  {
+   "id": "priya_faces",
+   "priority": 2,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "priya_body",
+    "ref_faces"
+   ],
+   "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the woman from the first reference image (same face, long black hair in a loose low braid, small gold nose stud, teal hospital scrubs under an enormous mustard-yellow knit cardigan, ID badge lanyard), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) dry and deadpan, 2) a small warm smile, 3) exhausted with heavy eyelids, 4) laughing. Transparent background, no text, no labels, no numbers.",
+   "outputs": [
+    {
+     "sprite": "face_priya_neutral",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_priya_smile",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_priya_tired",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_priya_laugh",
+     "height": 560,
+     "mirror": true
+    }
+   ]
+  },
+  {
+   "id": "haddad_faces",
+   "priority": 2,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "haddad_body",
+    "ref_faces"
+   ],
+   "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the elderly woman from the first reference image (same round face, plum-purple patterned headscarf, reading glasses on a beaded chain, dark-green cardigan), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) appraising you over her glasses, 2) a fond smile, 3) worried, 4) laughing. Transparent background, no text, no labels, no numbers.",
+   "outputs": [
+    {
+     "sprite": "face_haddad_neutral",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_haddad_smile",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_haddad_worried",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_haddad_laugh",
+     "height": 560,
+     "mirror": true
+    }
+   ]
+  },
+  {
+   "id": "kai_faces",
+   "priority": 2,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "kai_body",
+    "ref_faces"
+   ],
+   "prompt": "Character expression sheet for a 2D game: four head-and-shoulders bust portraits of the young person from the first reference image (same face, short messy black hair with one bleached streak, bright orange rain jacket over a grey hoodie, messenger bag strap across the chest), side by side in one row, evenly spaced with clear empty gaps between them so they do not touch, all the same size and framing. Draw them exactly like the dialogue portraits in the second reference image: bust cut off just below the shoulders with a soft rounded bottom edge, head turned slightly towards the viewer's left, same hand-painted style with fine dark-brown ink outlines and textured gouache and coloured-pencil shading. Expressions from left to right: 1) curious, 2) a big grin, 3) worried with raised eyebrows, 4) wide-eyed and excited with an open mouth. Transparent background, no text, no labels, no numbers.",
+   "outputs": [
+    {
+     "sprite": "face_kai_neutral",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_kai_grin",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_kai_worried",
+     "height": 560,
+     "mirror": true
+    },
+    {
+     "sprite": "face_kai_excited",
+     "height": 560,
+     "mirror": true
+    }
+   ]
+  },
+  {
+   "id": "gift_items",
+   "priority": 3,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "ref_items"
+   ],
+   "prompt": "Five separate item icons for the same 2D game as the reference image, drawn in exactly the same hand-painted style as the reference items: fine dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted palette, slight three-quarter top-down view, similar size and detail. Arrange them side by side in one row, evenly spaced with clear empty gaps between them so they do not touch. From left to right: 1) a small plate of lemon bars dusted with powdered sugar, 2) a lumpy hand-knit scarf in teal and rust stripes, loosely folded, 3) three spray paint cans, one teal, one rust red, one mustard yellow, 4) a round decorative tin, lid leaning against it, full of ma'amoul (round Lebanese date cookies with patterned tops), 5) an old faded sepia photograph with a white border showing three people standing in front of a small laundromat shopfront. Transparent background, no shadows under the items, no text, no labels, no numbers.",
+   "outputs": [
+    {
+     "sprite": "item_lemon_bars",
+     "height": 200
+    },
+    {
+     "sprite": "item_scarf",
+     "height": 260
+    },
+    {
+     "sprite": "item_spray_paint",
+     "height": 260
+    },
+    {
+     "sprite": "item_maamoul",
+     "height": 220
+    },
+    {
+     "sprite": "item_photo_rosa",
+     "height": 260
+    }
+   ]
+  },
+  {
+   "id": "player_poses2",
+   "priority": 2,
+   "aspect_ratio": "3:2",
+   "resolution": "2k",
+   "refs": [
+    "ref_player_poses"
+   ],
+   "rows": 2,
+   "merge": 10,
+   "uniform": {
+    "ref": [
+     "player_tea",
+     "player_sketch",
+     "player_water",
+     "player_photo"
+    ],
+    "height": 470
+   },
+   "prompt": "Character pose sheet for a cosy 2D game: the same young woman as in the reference image (curly brown hair in a loose high bun, dark grey hoodie with the sleeves pushed up, dark denim bib apron with pockets and a small name tag, rolled-up blue jeans, grey canvas sneakers), drawn in exactly the same style (dark-brown ink outlines, textured gouache and coloured-pencil shading) and at the same scale as the reference. Eight separate full-body poses on a fully transparent background, arranged in two rows of four, well spaced so that no two poses touch, all facing three-quarters to the right. Top row: (1) kneeling on one knee, leaning forward and reaching down with one hand as if stroking a cat on the floor (no cat); (2) standing, holding a steaming mug of tea in both hands near her chin, eyes closed, smiling; (3) sitting cross-legged on the floor, reading an open book in her lap; (4) sitting on a small round wooden stool, knitting a long red scarf with two needles, a ball of red yarn in her lap. Bottom row: (5) standing, drawing with a pencil in an open sketchbook held in the crook of her arm; (6) standing, watering plants with a small tin watering can, a stream of water pouring from the spout; (7) standing, holding a vintage film camera up to her eye, taking a photo; (8) crouching down, tossing breadcrumbs from her open hand as if feeding pigeons (no birds). No floor, no shadows, no background, no text.",
+   "outputs": [
+    {
+     "sprite": "player_pet"
+    },
+    {
+     "sprite": "player_tea"
+    },
+    {
+     "sprite": "player_read"
+    },
+    {
+     "sprite": "player_knit"
+    },
+    {
+     "sprite": "player_sketch"
+    },
+    {
+     "sprite": "player_water"
+    },
+    {
+     "sprite": "player_photo"
+    },
+    {
+     "sprite": "player_feed"
+    }
+   ]
+  },
+  {
+   "id": "bed",
+   "priority": 2,
+   "aspect_ratio": "16:9",
+   "refs": [
+    "ref_furniture",
+    "ref_player_poses"
+   ],
+   "uniform": {
+    "ref": [
+     "furn_bed"
+    ],
+    "height": 505
+   },
+   "prompt": "Game sprite sheet in exactly the art style of the reference images: dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted colours, slightly worn and cosy. Two separate drawings side by side on a fully transparent background, well apart so they do not touch, both at the same scale and in the same slight three-quarter front view as the furniture in the first reference. LEFT: a cosy single bed seen from its long side, with a sturdy honey-coloured wooden frame and turned posts, a tall rounded headboard at the RIGHT end and a lower footboard at the LEFT end, a thick mattress with a hand-sewn patchwork quilt in rust, mustard, teal and cream squares neatly tucked in, two plump white pillows against the headboard, and a folded cream knitted blanket over the foot end. RIGHT: exactly the same bed with the same quilt and pillows, with the young woman from the second reference (curly brown hair in a loose bun) asleep in it on her side, her head on the pillows at the right end, eyes closed, the quilt pulled up to her shoulders, peaceful. No floor, no shadow, no background, no text.",
+   "outputs": [
+    {
+     "sprite": "furn_bed"
+    },
+    {
+     "sprite": "furn_bed_sleep",
+     "match": "furn_bed"
+    }
+   ]
+  },
+  {
+   "id": "upgrade_icons",
+   "priority": 3,
+   "aspect_ratio": "3:2",
+   "refs": [
+    "ref_furniture"
+   ],
+   "rows": 2,
+   "prompt": "Game item sheet in exactly the art style of the reference image: dark-brown ink outlines, textured gouache and coloured-pencil shading, warm muted colours with teal and rust accents, slightly worn and cosy. Eight separate objects on a fully transparent background, arranged in two rows of four, well spaced so that nothing touches, each drawn about the same size, in a slight three-quarter view. Top row: (1) a wall-mounted coin changer machine, a small steel box with a coin slot, a bill slot and a coin cup; (2) a white tankless water heater unit with a small dial and copper pipes; (3) a rectangular dryer lint screen, a mesh filter in a teal frame with a little tuft of grey lint; (4) a single glowing warm LED light bulb. Bottom row: (5) a small retro vending machine with snacks and tiny soap boxes behind its glass front; (6) a small Wi-Fi router with two antennas and a tiny green light; (7) a scalloped canvas shop awning with rust and cream stripes; (8) a sturdy cargo bicycle with a big wicker basket on the front holding a bundle of folded laundry. No floor, no shadows, no background, no text or lettering.",
+   "outputs": [
+    {
+     "sprite": "upg_coin_changer",
+     "height": 200
+    },
+    {
+     "sprite": "upg_water_heater",
+     "height": 220
+    },
+    {
+     "sprite": "upg_lint_screen",
+     "height": 150
+    },
+    {
+     "sprite": "upg_led_bulb",
+     "height": 170
+    },
+    {
+     "sprite": "upg_vending",
+     "height": 280
+    },
+    {
+     "sprite": "upg_wifi",
+     "height": 150
+    },
+    {
+     "sprite": "upg_awning",
+     "height": 160
+    },
+    {
+     "sprite": "upg_cargo_bike",
+     "height": 240
+    }
+   ],
+   "merge": 2
+  }
+ ],
+ "scenes": {
+  "about": "Backgrounds repainted from the existing ones: the current background (window glass white, padded at the bottom to the model's aspect ratio) is the composition reference, so the painting lands on the same coordinates. gpt_image_2_5, quality medium, resolution 4k (1.25 credits). Import with: python3 tools/import_scene.py <name> <image>.",
+  "laundromat": {
+   "aspect_ratio": "21:9",
+   "reference": "laundromat.webp (the fire extinguisher by the door painted out), padded with floor to 2880x1234",
+   "prompt": "Repaint this side-scrolling 2D game background — the empty interior of an old neighbourhood laundromat, back wall and floor seen straight on — as a rich hand-painted storybook illustration: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, a warm, slightly worn, lived-in look, soft warm daylight. Keep EXACTLY the same composition, proportions and positions as the reference image: the pressed-tin ceiling strip along the top with a thin electrical conduit, the four teal enamel pendant lamps hanging at the same places, the pale mint-green beadboard upper wall, the wooden chair rail, the cream square-tile wainscot below it, the teal-and-cream diamond checkerboard floor seen in perspective, the wooden door at the far left with a small plaque reading UPSTAIRS and the small sign above it reading ATTENDANT / on duty 8-6, the empty dark-green chalkboard in a wooden frame (leave it completely blank, no writing at all), the long back window with three panes, the five copper water hook-ups with one red and one blue tap each, spaced evenly along the wall, the two silver dryer vent ducts coming down from the ceiling on the right with the small sign reading LINT / clean traps between them, the tall shop-front window on the right with a low wooden ledge along its bottom, the glass front door at the far right with a PUSH plate and a small brass bell above it, the WELCOME doormat by the door and the round floor drain. Every window pane and the glass of the front door and its transom must stay pure flat white (#FFFFFF) with nothing seen through them, no reflections, no curtains and no lettering. Add gentle painterly detail: scuffs and chips on the tiles, faint water stains, worn paint, a couple of electrical outlets. Do NOT add any washing machines, dryers, furniture, tables, benches, shelves, plants, posters, clocks, people, animals, or any other text."
+  },
+  "home": {
+   "aspect_ratio": "16:9",
+   "reference": "home.webp with the painted bed replaced by wall and floor, padded with floor to 2100x1181",
+   "prompt": "Repaint this side-scrolling 2D game background — the inside of a small, cosy, slightly shabby studio flat above a laundromat, seen straight on — as a rich hand-painted storybook illustration: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted colours, soft warm light. Keep EXACTLY the same composition, proportions and positions as the reference image: the dark wooden ceiling beams along the top, the faded rose striped wallpaper with small dots, the wooden wainscot panelling along the bottom of the walls, the warm honey-coloured wooden floorboards seen in perspective, the plain wooden front door at the far left, the peg rail with a teal and an orange tea towel, the small kitchenette with a white tiled splashback, a two-ring hob and a small sink, the teal painted cabinets under a worn wooden counter top, the wall shelf above it with jars and tins, the big six-pane window in the middle with rust-red curtains tied back on both sides, the round pendant lamp hanging in front of the window, the teal cushioned window seat with a mustard and a rust cushion, the radiator under it, and the wall shelf of books on the right. Every glass pane of the window must stay pure flat white (#FFFFFF) with nothing seen through it: no sky, no buildings, no reflections. Keep the right third of the room empty: plain wallpaper and wainscot with bare floorboards in front (a bed will be placed there later). Do NOT add any bed, table, desk, chair, stool, rug, plant, picture frame, lamp, person, animal or text."
+  }
+ }
 }

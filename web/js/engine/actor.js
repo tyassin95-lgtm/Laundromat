@@ -15,6 +15,15 @@ export const PLAYER_POSES = {
   reach: { s: 'player_reach_clean', ax: 0.42 },
   wave: { s: 'player_wave', ax: 0.45 },
   stretch: { s: 'player_stretch', ax: 0.5 },
+  // hobbies (art/source/generated/player_poses2.webp)
+  pet: { s: 'player_pet', ax: 0.4 },
+  tea: { s: 'player_tea', ax: 0.51 },
+  read: { s: 'player_read', ax: 0.5 },
+  knit: { s: 'player_knit', ax: 0.52 },
+  sketch: { s: 'player_sketch', ax: 0.4 },
+  water: { s: 'player_water', ax: 0.33 },
+  photo: { s: 'player_photo', ax: 0.46 },
+  feed: { s: 'player_feed', ax: 0.3 },
 };
 const PLAYER_REF_H = 490;   // natural height of player_idle; all poses share its scale
 
@@ -278,7 +287,8 @@ export class Actor {
     if (this.carrying && (this.pose === 'idle' || this.pose === 'look')) return Object.assign({ k }, PLAYER_POSES.carry);
     let p = this.pose;
     if (p === 'idle' && this.idleT < 2.5) p = 'look';
-    return Object.assign({ k }, PLAYER_POSES[p] || PLAYER_POSES.idle);
+    const pose = PLAYER_POSES[p];
+    return Object.assign({ k }, pose && Assets.has(pose.s) ? pose : PLAYER_POSES.idle);
   }
 
   bounds() {

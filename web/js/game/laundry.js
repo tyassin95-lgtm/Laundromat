@@ -42,9 +42,12 @@ export function dryers() { return G.machines.filter(m => m.kind === 'dryer').sor
 export function machine(id) { return G.machines.find(m => m.id === id); }
 export function modelOf(m) { return MODELS[m.model] || MODELS.classic; }
 
+const up = id => G.upgrades.includes(id);
+
 export function cycleMinutes(m) {
   let c = modelOf(m).cycle;
   if (m.kind === 'dryer' && m.lint >= 5) c *= 1.35;
+  if (m.kind === 'washer' && up('water_heater')) c *= 0.8;
   return c;
 }
 
@@ -75,7 +78,7 @@ export function startCycle(m, load) {
   const breakChance = m.cond < 12 ? 0.55 : m.cond < 25 ? 0.2 : m.cond < 40 ? 0.05 : 0.0;
   m.load = load; m.state = 'running'; m.t = 0; m.dur = cycleMinutes(m);
   m.uses++;
-  if (m.kind === 'dryer') m.lint = (m.lint || 0) + 1;
+  if (m.kind === 'dryer') m.lint = (m.lint || 0) + (up('lint_screens') ? 0.5 : 1);
   G.stats.cycles++;
   G.vars.cyclesToday = (G.vars.cyclesToday || 0) + 1;
   G.vars.weekCycles = (G.vars.weekCycles || 0) + 1;
@@ -163,7 +166,7 @@ export function finishOrder(o, when) {
 export function pickup(o) {
   const onTime = !o.late && (o.readyAt ?? G.time) <= o.due + 5;
   const foldQ = o.fold === null ? 0.8 : o.fold;
-  let q = (onTime ? 0.55 : 0.2) + foldQ * 0.25 + (G.cleanliness / 100) * 0.1 + comfortScore() * 0.1;
+  let q = (onTime ? 0.55 : 0.2) + foldQ * 0.25 + (G.cleanliness / 100) * 0.1 + comfortScore() * 0.1 + (up('wifi') ? 0.05 : 0);
   if (o.softenerWanted !== undefined) q += o.softenerOk ? 0.05 : -0.08;
   q = clamp(q, 0, 1);
   const pwyc = pwycToday();
@@ -201,7 +204,9 @@ export function planDay(extra = []) {
   if (G.day === 1) n = 2;
   if (G.flags.storm_day || G.weather === 'storm') n = Math.max(2, n - 2);
   if (pwycToday()) n += 1;
-  n = clamp(n, 1, 10);
+  if (up('cargo_bike') && G.day > 1) n += 1;                       // pickup & delivery
+  if (G.flags.er_scrubs && (wd === 1 || wd === 3)) n += 1;         // Priya's night crew
+  n = clamp(n, 1, 11);
   const pool = REGULARS.filter(r => (!r.from || G.day >= r.from) && (!r.until || G.day <= r.until) && (!r.flag || G.flags[r.flag]) && (!r.notFlag || !G.flags[r.notFlag]));
   const picks = rng.shuffle(pool).slice(0, n);
   const plan = [];
@@ -239,7 +244,8 @@ function walkInRate() {
   const w = G.weather === 'rain' ? 1.3 : G.weather === 'storm' ? 0.6 : 1;
   const price = G.policies.prices === 'high' ? 0.75 : G.policies.prices === 'low' ? 1.2 : 1;
   const comfort = 0.85 + comfortScore() * 0.4;
-  return 0.55 * (0.35 + stars() / 4) * peak * w * price * comfort;
+  const extras = (up('coin_changer') ? 1.15 : 1) * (up('awning') && G.weather !== 'clear' && G.weather !== 'cloudy' ? 1.2 : 1);
+  return 0.55 * (0.35 + stars() / 4) * peak * w * price * comfort * extras;
 }
 
 // ------------------------------------------------------------------ tick (game minutes)
@@ -309,6 +315,11 @@ export function tick(dm) {
       const wash = SELF_WASH * (pwycToday() ? 0.5 : 1);
       addMoney(wash, null, 'self');
       G.today.selfServe += wash;
+      if (up('vending') && Math.random() < 0.45) {
+        const snack = Math.random() < 0.5 ? 1.5 : 2.5;
+        addMoney(snack, null, 'vending');
+        G.today.vending = (G.today.vending || 0) + snack;
+      }
       emit('walkIn', { m });
     } else {
       addStat('reputation', -0.25);
@@ -324,9 +335,9 @@ export function tick(dm) {
     }
   }
   // cleanliness drift, puddles, litter
-  const traffic = 0.012 * dm * (1 + (G.weather === 'rain' ? 0.8 : 0) + (G.weather === 'storm' ? 1.5 : 0));
+  const traffic = 0.012 * dm * (1 + (G.weather === 'rain' ? 0.8 : 0) + (G.weather === 'storm' ? 1.5 : 0)) * (G.flags.spotless_habit ? 0.8 : 1);
   addStat('cleanliness', -traffic);
-  const puddleChance = (G.weather === 'rain' ? 0.011 : G.weather === 'storm' ? 0.02 : 0.003) * dm;
+  const puddleChance = (G.weather === 'rain' ? 0.011 : G.weather === 'storm' ? 0.02 : 0.003) * dm * (up('awning') ? 0.6 : 1);
   if (Math.random() < puddleChance && Sim.puddles.length < 4) {
     const nearDoor = Math.random() < 0.7;
     const p = { id: Sim.seq++, x: nearDoor ? 1640 + Math.random() * 200 : 560 + Math.random() * 700, y: 600 + Math.random() * 70, size: 0.7 + Math.random() * 0.5 };

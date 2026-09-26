@@ -8,8 +8,16 @@ import { clamp, rand } from '../engine/util.js';
 import { G } from '../game/state.js';
 import { HOME_SLOTS, DECOR } from '../data/decor.js';
 import { UI } from '../ui/ui.js';
+import { tweens } from '../engine/tween.js';
 
+// Where things stand, in world px (the painting is 1.5x this). The counter top of the kitchenette
+// is at y 302 (hob 217-305, sink 345-412), the window seat at y 402 (cushions at 495-565 and
+// 795-865), the wall shelf of books at 920-1130.
 const WIN = { x: 480, y: 96, w: 400, h: 304 };
+const DESK = { x: 1010, base: 612, h: 152 };
+const BED = { x: 1254, base: 690, h: 225 };
+const LANTERN = { x: 742, y: 403 };
+const DESK_TOP = DESK.base - 128;            // where things stand on the desk
 
 export class HomeScene extends Scene {
   constructor(app) {
@@ -26,8 +34,14 @@ export class HomeScene extends Scene {
     this.player.visible = true;
     this.player.carrying = false;
     this.player.stop();
-    if (opts.from === 'bed') { this.player.x = 1110; this.player.y = 648; this.player.facing = -1; this.player.setPose('stretch', 1.4); }
-    else { this.player.x = 70; this.player.y = 580; this.player.facing = 1; }
+    this.asleep = 0;
+    if (opts.from === 'bed') {
+      // the morning starts in bed; she gets up a moment later
+      this.player.x = BED.x - 170; this.player.y = 664; this.player.facing = -1;
+      this.player.visible = false;
+      this.asleep = 1;
+      this.wakeUp();
+    } else { this.player.x = 70; this.player.y = 580; this.player.facing = 1; }
     if (!G.placed.h_table) G.placed.h_table = 'record_player';
     if (!G.placed.h_shelf) G.placed.h_shelf = 'pothos';
     this.buildEntities();
@@ -40,6 +54,26 @@ export class HomeScene extends Scene {
     if ((G.phase === 'evening' || G.phase === 'night') && /upstairs/.test(G.goal || '') && !/back door/.test(G.goal || '')) {
       this.app.hud.setGoal('A quiet evening at home. Sketch, knit, read by the window, or sleep when you\'re ready.');
     }
+  }
+
+  async wakeUp() {
+    await tweens.wait(0.9);
+    if (this.app.scene !== this || !this.asleep) return;
+    this.bedFade = 1;
+    this.asleep = 0;
+    this.player.setPose('stretch', 1.6);
+    await this.player.appear();
+  }
+
+  // Into bed: she vanishes and the bed shows her asleep under the quilt.
+  async tuckIn() {
+    const p = this.player;
+    await Promise.race([p.vanish(), tweens.wait(0.7)]);
+    p.stop(); p.visible = false;
+    this.asleep = 1;
+    this.bedFade = 1;
+    this.particles.emit('zzz', BED.x + 90, BED.base - BED.h + 40, 2);
+    await tweens.wait(0.9);
   }
 
   updateSound() {
@@ -57,18 +91,18 @@ export class HomeScene extends Scene {
     const E = e => { this.ents.push(e); return e; };
     const act = (id, x, y, face) => () => this.walkThen(x, y, face, () => this.app.activities.run(id, { loc: 'home' }));
     // furniture & props
-    E({ id: 'desk', z: 610, draw: r => { r.sprite('furn_work_table', 1062, 612, { h: 152 }); r.sprite('item_pencil_cup', 1120, 486, { h: 46 }); r.sprite('item_sketchbook', 1010, 492, { h: 34, rot: -0.1 }); if (!G.placed.h_table) r.sprite('item_journal', 1070, 494, { h: 30 }); },
-      hit: { x: 980, y: 460, w: 90, h: 150 }, tap: act('sketch', 980, 640, 1) });
-    E({ id: 'journal', z: 612, draw: r => r.sprite('item_journal', 1128, 612, { h: 40, rot: 0.2 }), hit: { x: 1100, y: 570, w: 60, h: 46 }, tap: act('rosa_journal', 1090, 650, 1) });
-    E({ id: 'stool', z: 640, draw: r => r.sprite('furn_stool', 990, 642, { h: 128 }) });
-    E({ id: 'cat', z: 692, draw: r => this.drawCat(r), hit: { x: 830, y: 630, w: 110, h: 64 }, tap: act('pet_cat', 760, 676, 1) });
-    E({ id: 'yarn', z: 662, draw: r => r.sprite('item_yarn_basket', 572, 664, { h: 62 }), hit: { x: 535, y: 600, w: 80, h: 66 }, tap: act('knit', 520, 680, 1) });
-    E({ id: 'kettle', z: 300, draw: r => r.sprite('decor_kettle', 250, 296, { h: 54 }), hit: { x: 215, y: 236, w: 80, h: 64 }, tap: act('tea', 250, 560, 1) });
-    E({ id: 'lantern', z: 300, draw: r => r.sprite('item_lantern', 410, 300, { h: 56 }) });
-    E({ id: 'mug', z: 300, draw: r => r.sprite('item_coffee_mug', 360, 300, { h: 30 }) });
-    E({ id: 'bed', z: 600, hit: { x: 1146, y: 470, w: 246, h: 190 }, tap: act('sleep', 1110, 660, 1) });
+    E({ id: 'desk', z: DESK.base, draw: r => { r.sprite('furn_work_table', DESK.x, DESK.base, { h: DESK.h }); r.sprite('item_pencil_cup', DESK.x + 62, DESK_TOP + 2, { h: 46 }); r.sprite('item_sketchbook', DESK.x - 50, DESK_TOP + 8, { h: 34, rot: -0.1 }); if (!G.placed.h_table) r.sprite('item_journal', DESK.x + 8, DESK_TOP + 10, { h: 30 }); },
+      hit: { x: DESK.x - 80, y: DESK.base - DESK.h, w: 160, h: DESK.h }, tap: act('sketch', DESK.x - 60, 642, 1) });
+    E({ id: 'journal', z: DESK.base + 2, draw: r => r.sprite('item_journal', DESK.x + 84, DESK.base + 2, { h: 40, rot: 0.2 }), hit: { x: DESK.x + 56, y: DESK.base - 44, w: 60, h: 48 }, tap: act('rosa_journal', DESK.x + 40, 652, 1) });
+    E({ id: 'stool', z: 648, draw: r => r.sprite('furn_stool', DESK.x - 62, 648, { h: 128 }) });
+    E({ id: 'cat', z: 692, draw: r => this.drawCat(r), hit: { x: 830, y: 630, w: 110, h: 64 }, tap: act('pet_cat', 790, 684, 1) });
+    E({ id: 'yarn', z: 662, draw: r => r.sprite('item_yarn_basket', 572, 664, { h: 62 }), hit: { x: 535, y: 600, w: 80, h: 66 }, tap: act('knit', 500, 684, 1) });
+    E({ id: 'kettle', z: 302, draw: r => r.sprite('decor_kettle', 258, 302, { h: 54 }), hit: { x: 220, y: 240, w: 80, h: 64 }, tap: act('tea', 262, 560, 1) });
+    E({ id: 'mug', z: 302, draw: r => r.sprite('item_coffee_mug', 326, 302, { h: 30 }) });
+    E({ id: 'lantern', z: LANTERN.y, draw: r => r.sprite('item_lantern', LANTERN.x, LANTERN.y, { h: 56 }) });
+    E({ id: 'bed', z: BED.base, draw: r => this.drawBed(r), hit: { x: BED.x - 140, y: BED.base - BED.h + 30, w: 285, h: BED.h - 30 }, tap: act('sleep', BED.x - 170, 664, 1) });
     E({ id: 'window', z: 50, hit: { x: WIN.x, y: WIN.y, w: WIN.w, h: WIN.h }, tap: act('window', 680, 560, 1) });
-    E({ id: 'seat', z: 430, hit: { x: 470, y: 380, w: 420, h: 70 }, tap: act('read', 640, 556, 1) });
+    E({ id: 'seat', z: 430, hit: { x: 470, y: 360, w: 420, h: 100 }, tap: act('read', 660, 560, 1) });
     E({ id: 'door', z: 60, hit: { x: 12, y: 180, w: 100, h: 292 }, tap: act('door', 60, 560, -1) });
     if (G.flags.has_camera) E({ id: 'camera', z: 412, draw: r => r.sprite('item_camera', 820, 398, { h: 34 }), hit: { x: 790, y: 360, w: 60, h: 40 }, tap: () => UI.toast('Rosa\'s old camera. Take it out in the evenings — photo spots are marked with a dot.', 'item_camera') });
     // decor slots
@@ -86,14 +120,14 @@ export class HomeScene extends Scene {
     const k = d.h ? d.h / im.naturalHeight : d.w / im.naturalWidth;
     const w = im.naturalWidth * k, h = im.naturalHeight * k;
     let y = pos.y - h * (d.ay ?? 1);
-    if (slot === 'h_table') y = 480 - h;
+    if (slot === 'h_table') y = DESK_TOP - h;
     return { x: pos.x - w / 2, y, w, h };
   }
 
   tapSlot(slot) {
     const id = G.placed[slot];
     if (!id) return;
-    if (id === 'record_player') { this.walkThen(1000, 640, 1, () => this.app.menus.recordPicker('home')); return; }
+    if (id === 'record_player') { this.walkThen(DESK.x - 60, 642, 1, () => this.app.menus.recordPicker('home')); return; }
     if (id === 'pothos' || id === 'cat_planter' || id === 'hanging_plant' || id === 'potted_plant') { this.walkThen(clamp(HOME_SLOTS[slot].x - 60, 60, 1300), 600, 1, () => this.app.activities.run('water', { loc: 'home' })); return; }
     const d = DECOR[id]; UI.toast(`${d.name} — ${d.blurb}`);
   }
@@ -102,12 +136,21 @@ export class HomeScene extends Scene {
     const id = G.placed[slot];
     if (!id) return;
     const d = DECOR[id]; if (!d) return;
-    if (slot === 'h_table') { r.sprite(d.sprite, 1060, 482, d.h ? { h: d.h } : { w: d.w }); return; }
+    if (slot === 'h_table') { r.sprite(d.sprite, pos.x, DESK_TOP, d.h ? { h: d.h } : { w: d.w }); return; }
     if (slot === 'h_hang') { r.sprite(d.sprite, pos.x, 66, { h: d.h, ay: 0, rot: Math.sin(this.t * 1.1) * 0.02 }); return; }
     if (d.flat) { r.sprite(d.sprite, pos.x, pos.y, { w: d.w, sy: 0.55 }); return; }
     const o = d.h ? { h: d.h } : { w: d.w };
     if (d.ay !== undefined) o.ay = d.ay;
     r.sprite(d.sprite, pos.x, pos.y, o);
+  }
+
+  drawBed(r) {
+    // cross-fade between the made bed and the one she's asleep in
+    const f = this.bedFade || 0;
+    const now = this.asleep ? 'furn_bed_sleep' : 'furn_bed', before = this.asleep ? 'furn_bed' : 'furn_bed_sleep';
+    if (f > 0.01) r.sprite(before, BED.x, BED.base, { h: BED.h });
+    r.ctx.save(); r.ctx.globalAlpha = 1 - f; r.sprite(now, BED.x, BED.base, { h: BED.h }); r.ctx.restore();
+    if (this.asleep && f < 0.5 && Math.random() < 0.01) this.particles.emit('zzz', BED.x + 90, BED.base - BED.h + 40, 1);
   }
 
   drawCat(r) {
@@ -134,10 +177,11 @@ export class HomeScene extends Scene {
     this.particles.update(dt);
     this.glass.intensity = G.weather === 'rain' ? 0.8 : G.weather === 'storm' ? 1 : 0;
     this.glass.update(dt);
+    if (this.bedFade) this.bedFade = Math.max(0, this.bedFade - dt * 2.5);
     this.fitView();
     this.applyFatigue(300, null);
     this.follow(this.player, dt);
-    if (G.record && G.placed.h_table === 'record_player' && Math.random() < dt * 0.5) this.particles.emit('note', 1060, 440, 1);
+    if (G.record && G.placed.h_table === 'record_player' && Math.random() < dt * 0.5) this.particles.emit('note', HOME_SLOTS.h_table.x, DESK_TOP - 50, 1);
     if (nightness(G.time) < 0.4 && Math.random() < dt * 1.2) this.particles.emit('dust', WIN.x + rand() * WIN.w, WIN.y + 100 + rand() * 300, 1);
   }
 
@@ -187,13 +231,13 @@ export class HomeScene extends Scene {
       { x: 700, y: 150, r: 520, c: [255, 210, 150], i: 0.55 * lamp },
       { x: 700, y: 620, r: 420, c: [255, 200, 140], i: 0.35 * lamp, sy: 0.5 },
       { x: 680, y: 260, r: 560, c: [215, 228, 255], i: 0.6 * (1 - night) },
-      { x: 410, y: 280, r: 150, c: [255, 180, 90], i: 0.45 * night },
+      { x: LANTERN.x, y: LANTERN.y - 30, r: 160, c: [255, 180, 90], i: 0.45 * night },
     ];
     if (G.placed.h_lights) lights.push({ x: HOME_SLOTS.h_lights.x, y: 150, r: 300, c: [255, 190, 110], i: 0.5 * night + 0.1 });
     r.applyLighting(this.ambient(), lights, r.cam.x);
     r.glow(700, 132, 60, [255, 220, 150], 0.3 * lamp);
     this.drawOutsideGlow(r, night);
-    r.glow(410, 270, 40, [255, 190, 100], 0.4 * night);
+    r.glow(LANTERN.x, LANTERN.y - 32, 40, [255, 190, 100], 0.4 * night);
     for (const a of this.actors) a.drawEmote(r, this.t);
     r.vignette(0.32);
   }

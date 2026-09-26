@@ -1,6 +1,6 @@
 // Endings: epilogue cards (conditional on relationships and choices) and the credits roll.
 import { heartsOf, NEIGHBOURS } from '../game/state.js';
-import { faceOrIcon } from './characters.js';
+import { faceOrIcon, CHARACTERS } from './characters.js';
 
 const h = w => heartsOf(w);
 
@@ -51,12 +51,31 @@ function neighboursCard(G, sold) {
   return [{ img: faceOrIcon(known[0], 'smile'), title: 'The neighbours', text: known.map(w => lines[w]).join(' ') }];
 }
 
+// If you're with someone at the end, they get a card of their own.
+function partnerCard(G, sold) {
+  const p = G.flags.partner;
+  if (!p || !CHARACTERS[p]) return [];
+  const T = {
+    maya: sold ? 'Maya followed you across the river and turned the new bathroom into a recording booth. The acoustics, she says, are "honest." Some nights she plays you the washing-machine song and you both pretend not to cry.'
+      : G.flags.maya_goes ? 'Maya tours in the spring and comes home in the summer, to the flat above the shop, with a suitcase full of field recordings. The last track on every album is the dryers on Linden Street. The liner notes thank you by name. Small. Very small. But it\'s there.'
+        : 'Maya moved her keyboard into the flat above the shop. She records at three in the morning with the window open, and the neighbours have stopped complaining, because the songs are about them.',
+    remy: sold ? 'Remy painted your new kitchen wall with Linden Street at sunrise, exactly as it was. You eat breakfast in front of it every morning. Most days that helps.'
+      : 'Remy paints in the back of the shop on Mondays, when it\'s quiet. There\'s a portrait of you on the wall by the dryers, folding a shirt, frowning in concentration. You hate it. Everyone else loves it.',
+    kai: sold ? 'Kai still rides past the old corner every day, then rides on to your new place with two coffees and a new theory. The sock spreadsheet has a tab with your name on it. It is forty rows long now.'
+      : 'Kai runs the shop\'s pickups and deliveries now, and stops by every evening with clementines and a new theory. The sock spreadsheet has a tab with your name on it. It is forty rows long now.',
+    priya: sold ? 'Priya works days now. She says she wanted to see you in daylight at least once. She still folds her scrubs like presents — for you — and leaves a mint on top.'
+      : 'Priya switched to days in the spring. On her nights off you lock up together and sit on the bench in the dark with a pot of tea until one of you falls asleep. It\'s usually her. There\'s always a mint on her pillow.',
+  };
+  return [{ img: faceOrIcon(p, 'smile'), title: `${CHARACTERS[p].name} & ${G.name}`, text: T[p] || `${CHARACTERS[p].name} is still here. So are you.` }];
+}
+
 export const ENDINGS = {
   sold: {
     title: 'The Last Load', tagline: 'Rosa\'s Laundromat closed on October 1st.', music: 'bittersweet',
     cards: G => [
       { img: 'machine_washer_idle', title: 'Rosa\'s', text: 'The machines went to a scrapyard in Jersey. The sign went into your closet. The Linden opened eighteen months later: 212 residences, a gym, a "laundry concierge." The lobby smells like expensive candles.' },
       { img: 'face_player_sad', title: G.name, text: 'The money paid Rosa\'s debts, and yours, and then some. You went back to school. Some nights you still dream about the rhythm of number two.' },
+      ...partnerCard(G, true),
       waltCard(G, true), juneCard(G, true), mayaCard(G, true), remyCard(G, true), ...neighboursCard(G, true),
       { img: 'item_cat_bed', title: 'Biscuit', text: 'Biscuit moved with you. He sleeps on the warm spot on top of your fridge and has forgiven no one.' },
     ],
@@ -66,6 +85,7 @@ export const ENDINGS = {
     cards: G => [
       { img: 'machine_stack_unit', title: 'Rosa\'s', text: `The Linden went up next door, glass and steel and a "laundry concierge." ${G.shop} stayed exactly where it was, squat and stubborn and warm, the last laundromat on Linden Street. The new tenants started coming in by November. Their machines broke. Ours didn't.` },
       { img: 'face_player_smug', title: G.name, text: 'Money is still tight. The roof still leaks over dryer two. You still sketch the machines on slow afternoons. You\'ve never been so tired, or so sure.' },
+      ...partnerCard(G, false),
       waltCard(G, false), juneCard(G, false), mayaCard(G, false), remyCard(G, false), ...neighboursCard(G, false),
       { img: 'item_cat_bed', title: 'Biscuit', text: 'Biscuit sleeps on the warm dryer every afternoon at three. Customers schedule around him.' },
     ],
@@ -76,6 +96,7 @@ export const ENDINGS = {
       { img: 'furn_bulletin_board', title: 'The Council', text: `Rezoning application #2291 was denied, ${G.vars.speakers > 1 ? G.vars.speakers + ' neighbours' : 'the neighbours'} having spoken and ${G.petition >= 20 ? G.petition + ' people' : 'half the street'} having signed. Crestline built on the old lot anyway — smaller, with a line of affordable units the city insisted on. Linden Street kept its face.` },
       { img: 'machine_washer_blue', title: G.shop, text: 'Rosa\'s became a co-op in the spring: the regulars own a share, the Night Wash happens on the last Saturday of every month, and there\'s a pay-what-you-can shelf of detergent by the door. The lights stay on until midnight.' },
       { img: 'face_player_laugh', title: G.name, text: 'You run the place, sort of. Mostly you fold, and fix, and listen, and draw the regulars on the backs of tickets. Your sketches cover a whole wall now. Abuela would say you finally found the right crayon.' },
+      ...partnerCard(G, false),
       waltCard(G, false), juneCard(G, false), mayaCard(G, false), remyCard(G, false), ...neighboursCard(G, false),
       { img: 'item_cat_bed', title: 'Biscuit', text: 'Biscuit is the co-op\'s official mascot. He attends every meeting. He votes no on everything.' },
     ],

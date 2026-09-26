@@ -57,6 +57,15 @@ for who in ['walt', 'maya', 'june', 'remy', 'delgado', 'priya', 'haddad', 'kai']
         refs.append((f'gift_{who}_{react}', 'story.giftTo'))
 refs.append(('chat_generic', 'story.pickChatter'))
 refs.append(('prologue', 'main.prologue'))
+# errands and romance generate their events: q_<id>_offer/done and rom_<who>_<step>
+quests_src = open(os.path.join(DATA, 'quests.js'), encoding='utf8').read()
+qbody = quests_src.split('export const QUESTS = {', 1)[1].split('\n};', 1)[0]
+for qid in re.findall(r'^\s{2}(\w+):\s*\{', qbody, re.M):
+    refs += [(f'q_{qid}_offer', 'quests.js'), (f'q_{qid}_done', 'quests.js')]
+rom_src = open(os.path.join(DATA, 'romance.js'), encoding='utf8').read()
+rbody = rom_src.split('export const ROMANCE = {', 1)[1].split('\n};', 1)[0]
+for who in re.findall(r'^\s{2}(\w+):\s*\{', rbody, re.M):
+    refs += [(f'rom_{who}_{step}', 'romance.js') for step in ('spark', 'invite', 'date', 'missed', 'confess')]
 
 for n, where in refs:
     if n not in nodes:

@@ -29,6 +29,16 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
   the corner market, Priya the ER night nurse, Mrs. Haddad from the Alder Arms and Kai the bike
   courier. Each has a small story of their own, five friendship levels, and a voice at the
   council hearing if they like you enough.
+- **Errands.** Nine side missions from friends, neighbours and one very judgemental cat: knit
+  Walt a scarf, shoot cover art for Maya, sketch studies for Remy's mural, find Kai field data
+  on vanishing socks, send Priya's night crew a care package… Each pays off in money, skills or
+  a lasting perk, and the Journal's Errands page keeps track.
+- **Upgrades.** Twelve practical upgrades that change how the shop runs: faster washes, slower
+  lint, a coin changer, Wi-Fi, a snack machine, a delivery bike, cheaper bills and more.
+- **Romance, if you like.** Maya, Remy, Kai and Priya can become more than friends. It is all
+  opt-in: a moment when you're close, a date somewhere in the neighbourhood, and later a real
+  question. Choose "just friends" at any point and that's that. A partner changes a few mornings
+  and gets a card of their own in the epilogue.
 - **Your choices matter.** Your prices, house rules and story decisions change the shop's
   reputation and community spirit. Friendships decide who stands up for the shop when it
   matters. There are three endings.
@@ -63,8 +73,8 @@ it survives the WebView cache being cleared.
 | Close up for the day | 🏠 button during a shift (closing before 5 PM costs a little reputation) |
 | Menu / settings / save & quit | ⚙ button, or the Android back button |
 
-The Journal (📓) holds friendships, your diary, collections and the ledger. The detergent
-button opens the catalogue for supplies, machines, decor and upgrades. After Day 1 the map
+The Journal (📓) holds friendships, your diary, errands, collections and the ledger. The
+detergent button opens the catalogue for supplies, machines, upgrades, decor and prices. After Day 1 the map
 button takes you around the neighbourhood.
 
 ## Project layout
@@ -154,13 +164,18 @@ the file and keep its name.**
   isn't in the manifest speaks with just a name plate; a neighbour without an in-world sprite
   (`npc_<name>`) is heard at the counter instead of seen. Add the files and they appear, with
   no code changes. `node tools/check_assets.mjs` reports any optional art that's missing.
-- **Generated art.** The neighbours, June's and Remy's full-body sprites, the park, the
-  riverside, the map and a few item icons were generated with Higgsfield using the supplied
-  art as style references. `tools/art_requests.json` records each image's model, references and
+- **Generated art.** The neighbours, June's and Remy's full-body sprites, the laundromat and
+  flat backgrounds, the park, the riverside, the map, the bed, the player's hobby poses, the
+  upgrade icons and a few item icons were generated with Higgsfield using the supplied art as
+  style references. `tools/art_requests.json` records each image's model, references and
   prompt, and the originals are in `art/source/generated/`.
   `python3 tools/import_generated.py <request> <image or URL>` turns a generated image into
-  sprites: it keeps a transparent background or keys out a flat one, cuts the figures apart,
-  scales (and mirrors, if asked) and registers them in the manifest.
+  sprites: it keeps a transparent background or keys out a flat one, cuts the figures apart
+  (row by row for sheets), scales them (one shared scale for a character's poses, so they
+  match) and registers them in the manifest.
+  `python3 tools/import_scene.py <scene> <image or URL>` does the same for a repainted
+  background: the painting is made from the old background as a composition reference, so it
+  is scaled back onto the same coordinates and its white window glass is cut out.
 - **Sprites** live in `web/assets/sprites/<name>.webp`, listed in `manifest.json`.
   Characters, machines, props, portraits (`face_<who>_<expression>`), icons and UI frames
   all live here. You can re-cut them from new source sheets in `art/source/` with
@@ -170,9 +185,9 @@ the file and keep its name.**
 - **Backgrounds** live in `web/assets/bg/*.webp`: the laundromat, the flat, Linden Street
   (day, closed-bodega and night-lights layers), the park, garden, riverside, skyline and
   map. They are painted procedurally by `tools/paint/scenes/*.js` and baked with
-  `node tools/bake_backgrounds.mjs [scene]`, except the park, riverside and map paintings,
-  which were generated. The bake tool leaves those alone unless you name them exactly
-  (`park:base`) or pass `--force`. To use your own art instead, drop in a WebP
+  `node tools/bake_backgrounds.mjs [scene]`, except the laundromat, flat, park, riverside and
+  map paintings, which were generated. The bake tool leaves those alone unless you name them
+  exactly (`laundromat:base`) or pass `--force`. To use your own art instead, drop in a WebP
   with the same name and aspect ratio. Window areas must stay transparent, because the game
   draws the outside view behind them.
 - **Audio** lives in `web/assets/audio/{music,sfx,amb}/*.ogg`. `tools/build_audio.py`
@@ -202,8 +217,8 @@ All content is data in `web/js/data/`:
   ```
 
   Commands include `rel`, `money`, `community`, `petition`, `flag`, `set`, `give`, `decor`,
-  `upgrade`, `visit`, `leave`, `emote`, `sfx`, `music`, `letter`, `goal`, `scene`, `call`
-  and `ending`. The full list is in `game/story.js`, under `command()`.
+  `upgrade`, `visit`, `leave`, `emote`, `pose`, `sfx`, `music`, `letter`, `goal`, `scene`,
+  `call`, `quest`, `romance` and `ending`. The full list is in `game/story.js`, under `command()`.
 - `events.js` says when each script plays: on a trigger (morning, mail, shift start or end,
   a friend arriving, a location, talking, a time of day and so on) with day, weekday and
   condition filters.
@@ -212,9 +227,17 @@ All content is data in `web/js/data/`:
   `regulars.js`) and talk at the counter; their scenes are in `story/neighbours.js`.
   `chatter.js` holds everyday conversation pools.
 - `regulars.js` has drop-off customers and the notes they leave. `decor.js`, `items.js` and
-  `locations.js` define the catalogue, the inventory and the explorable places.
+  `locations.js` define the catalogue (decor, upgrades and supplies), the inventory and the
+  explorable places.
+- `quests.js` defines the errands: who offers each one and when, its steps (conditions ticked
+  off automatically) and its reward. The offer and thank-you scenes are `q_<id>_offer` and
+  `q_<id>_done` in `story/quests.js`, and `<<quest start|later|done id>>` drives them.
+- `romance.js` sets who can be romanced, where their date is and the friendship each step needs;
+  the scenes (`rom_<who>_spark|invite|date|missed|confess`) are in `story/romance.js`, driven by
+  `<<romance who spark|friend|invite|later|dated|missed|slow|partner>>`.
 
 To add a day's story beat, write a node in `story/`, add an entry in `events.js`, and it plays.
+To add an errand, add it to `quests.js` and write its two scenes.
 
 ## Credits
 

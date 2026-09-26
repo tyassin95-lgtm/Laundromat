@@ -19,6 +19,13 @@ for (const f of files) {
   const text = fs.readFileSync(f, 'utf8');
   for (const m of text.matchAll(/<<\s*(?:if|elseif)\s+(.+?)>>/g)) exprs.push([m[1], path.basename(f)]);
   for (const m of text.matchAll(/\b(?:cond|when|flagCond):\s*'([^']+)'/g)) exprs.push([m[1], path.basename(f)]);
+  // errand offers and steps, romance thresholds
+  for (const m of text.matchAll(/\b(?:offer|done|spark|invite|confess):\s*'([^']+)'/g)) exprs.push([m[1], path.basename(f)]);
+}
+// events generated from data (errands, romance): check their conditions as built
+for (const [file, key] of [['quests.js', 'QUEST_EVENTS'], ['romance.js', 'ROMANCE_EVENTS']]) {
+  const mod = await import('file://' + path.join(DATA, file));
+  for (const ev of mod[key]) if (ev.cond) exprs.push([ev.cond, file + ' (' + ev.id + ')']);
 }
 let bad = 0;
 for (const [e, where] of exprs) {

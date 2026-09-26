@@ -78,7 +78,7 @@ export const Save = {
 function migrate(s) {
   const base = newState(s.name);
   const out = Object.assign(base, s);
-  for (const k of ['flags', 'vars', 'hearts', 'inv', 'placed', 'skills', 'collections', 'policies', 'stats', 'today', 'talked', 'gifted', 'seen']) {
+  for (const k of ['flags', 'vars', 'hearts', 'inv', 'placed', 'skills', 'collections', 'policies', 'stats', 'today', 'talked', 'gifted', 'seen', 'quests']) {
     out[k] = Object.assign({}, base[k], s[k] || {});
   }
   out.version = SAVE_VERSION;

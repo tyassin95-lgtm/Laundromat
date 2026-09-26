@@ -7,6 +7,7 @@ import { clamp, rand, makeRng } from '../engine/util.js';
 import { G, weekday } from '../game/state.js';
 import { LOCATIONS } from '../data/locations.js';
 import { CHARACTERS, ROUTINES, NEIGHBOUR_IDS, hasSprite } from '../data/characters.js';
+import { ROMANCE } from '../data/romance.js';
 import { compileExpr } from '../game/script.js';
 import { UI } from '../ui/ui.js';
 
@@ -189,7 +190,7 @@ export class StreetScene extends Scene {
     if (sk && !G.collections.socks.includes(sk.id) && G.day >= 3) {
       const e = { id: 'sock', z: sk.y, draw: (r) => r.sprite('item_sock', sk.x, sk.y, { h: 24, rot: 0.6 }), hit: { x: sk.x - 24, y: sk.y - 30, w: 48, h: 36 }, tapZ: 10,
         tap: () => this.walkThen(sk.x - 30, sk.y + 4, async () => {
-          this.player.setPose('load', 0.5);
+          this.player.setPose('pet', 0.7);
           this.ents = this.ents.filter(x => x !== e);
           this.app.menus.foundSock(this.loc, sk.id);
         }) };
@@ -215,6 +216,8 @@ export class StreetScene extends Scene {
         if (G.phase === 'morning' && !(wd === 6)) present = false;
         if (G.time >= 22 * 60 + 30) present = false;
       }
+      // a date: they're waiting at the spot that evening
+      if (G.vars['date_' + id] === G.day && ROMANCE[id] && ROMANCE[id].place === this.loc && G.time >= 17 * 60 && G.phase !== 'shift') present = true;
       if (present) here.push(id);
     }
     for (const id of here) {

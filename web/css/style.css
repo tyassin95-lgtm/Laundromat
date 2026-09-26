@@ -231,6 +231,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .friend .nm { font-family: 'Fraunces', serif; font-size: calc(1.15rem * var(--ts)); }
 .friend .ds { font-size: calc(1rem * var(--ts)); color: var(--ink-soft); line-height: 1.15; }
 .hearts { display: flex; gap: .08rem; margin-top: .15rem; }
+.friend .rom { font-family: 'Caveat', cursive; font-weight: 700; color: #b8434f; font-size: calc(1.2rem * var(--ts)); line-height: 1.1; margin-top: .1rem; }
+.friend.errand { align-items: flex-start; }
+.friend.errand .goal-list { margin: .2rem 0 .15rem; padding: 0; font-size: calc(.98rem * var(--ts)); }
+.friend.errand .goal-list li { margin: .15rem 0; }
+.goal-list.plain li.done { text-decoration: none; color: var(--ink); }
 .hearts i { width: .95rem; height: .95rem; background: url('../assets/sprites/icon_heart.webp') center/contain no-repeat; filter: grayscale(1) brightness(.7); opacity: .35; }
 .hearts i.on { filter: none; opacity: 1; }
 .grid-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.2rem, 1fr)); gap: .5rem; }

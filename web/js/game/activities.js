@@ -59,16 +59,20 @@ export class Activities {
     }
     this.pose('stretch', 1.2);
     await tweens.wait(0.8);
+    const sc = this.scene();
+    if (sc && sc.tuckIn) await sc.tuckIn();
     await this.app.day.sleep();
   }
 
   async a_tea() {
     if (!takeItem('tea', 1)) { UI.toast('The tea tin is empty. (Supplies catalog: tea)', 'item_teacup', 'bad'); return; }
-    this.pose('reach', 1.2);
+    this.pose('reach', 1.4);
     Sound.play('kettle', { vol: 0.55 });
+    const sc = this.scene(); if (sc) sc.particles.emit('steam', 255, 250, 10);
     await tweens.wait(1.4);
     Sound.play('cup', { vol: 0.8 });
-    const sc = this.scene(); if (sc) sc.particles.emit('steam', 250, 236, 10);
+    this.pose('tea', 2.4);
+    if (sc && sc.player) sc.particles.emit('steam', sc.player.x + 14 * sc.player.facing, sc.player.y - 230, 5);
     addStat('energy', 15);
     this.spend(15);
     UI.toast(rand.pick(['Strong and sweet, the way Rosa made it.', 'A mug of tea. The rain can wait.', 'Steam on the window, warmth in your hands.']) + ' +energy', 'item_teacup');
@@ -78,7 +82,8 @@ export class Activities {
     const sc = this.scene();
     if (G.vars.pettedCat === G.day) { Sound.play('meow2', { vol: 0.5 }); UI.toast('Biscuit opens one eye, judges you, and goes back to sleep.', 'item_cat_bed'); return; }
     G.vars.pettedCat = G.day;
-    this.pose('load', 1.6);
+    G.vars.catDays = (G.vars.catDays || 0) + 1;
+    this.pose('pet', 2.2);
     Sound.play('purr', { vol: 0.8 });
     if (sc) sc.particles.emit('heart', 880, 620, 3);
     addStat('energy', 6);
@@ -89,13 +94,14 @@ export class Activities {
 
   async a_sketch(o = {}) {
     if (G.energy < 8) { UI.toast('Too tired to hold a pencil straight.', 'item_sketchbook', 'bad'); return; }
-    this.pose('load', 2.2);
+    this.pose('sketch', 2.6);
     Sound.play('pencil', { vol: 0.8 });
     await tweens.wait(2.2);
     const title = o.title || rand.pick(['Rosa\'s window', 'Biscuit, asleep', 'Rain on the rooftops', 'The kettle']);
     G.collections.sketches.push({ title, day: G.day });
     giveItem('sketch', 1);
     G.vars.sketches = (G.vars.sketches || 0) + 1;
+    if (o.title) G.vars.sketchesOut = (G.vars.sketchesOut || 0) + 1;    // out and about, not at home
     if (G.vars.sketches % 3 === 0 && G.skills.sketch < 5) { G.skills.sketch++; UI.toast(`Sketching skill ${G.skills.sketch}!`, 'icon_star'); Sound.play('sparkle', { vol: 0.6 }); }
     addStat('energy', 3);
     this.spend(30);
@@ -106,7 +112,7 @@ export class Activities {
   async a_knit() {
     if (!G.flags.learned_knit) { UI.toast('Rosa\'s yarn basket. You never learned to knit… maybe someone could teach you.', 'item_yarn_basket'); return; }
     if (G.energy < 8) { UI.toast('Too tired to count stitches.', 'item_yarn_basket', 'bad'); return; }
-    this.pose('load', 2.4);
+    this.pose('knit', 2.8);
     Sound.play('knitting', { vol: 0.8 });
     await tweens.wait(2.4);
     G.vars.knitProgress = (G.vars.knitProgress || 0) + 1 + (G.skills.knit >= 3 ? 1 : 0);
@@ -122,7 +128,7 @@ export class Activities {
   }
 
   async a_read() {
-    this.pose('idle', 1);
+    this.pose('read', 3.2);
     Sound.play('page', { vol: 0.7 });
     addStat('energy', 7);
     this.spend(30);
@@ -137,9 +143,9 @@ export class Activities {
     if (o.loc === 'garden') return this.gardenWater();
     if (G.vars.watered === G.day) { UI.toast('The plants are happy. Don\'t drown them.', 'item_pothos'); return; }
     G.vars.watered = G.day;
-    this.pose('reach', 1.0);
+    this.pose('water', 1.8);
     Sound.play('drop', { vol: 0.6 });
-    await tweens.wait(1.0);
+    await tweens.wait(1.4);
     G.vars.plantGrowth = (G.vars.plantGrowth || 0) + 1;
     addStat('energy', 2);
     this.spend(10);
@@ -197,8 +203,8 @@ export class Activities {
     if (!G.flags.has_camera) { UI.toast('A good view. If only you had a camera…', 'item_camera'); return; }
     if (G.vars['photo_' + (o.id || o.title) + G.day]) { UI.toast('You already took a photo here today.', 'item_camera'); return; }
     G.vars['photo_' + (o.id || o.title) + G.day] = 1;
-    this.pose('reach', 0.8);
-    await tweens.wait(0.5);
+    this.pose('photo', 1.6);
+    await tweens.wait(0.6);
     Sound.play('camera', { vol: 0.9 });
     this.flash();
     const tod = G.time >= 20 * 60 ? 'at night' : G.time >= 17 * 60 ? 'at dusk' : G.phase === 'morning' ? 'in the morning' : 'by day';
@@ -228,7 +234,7 @@ export class Activities {
     const sc = this.scene();
     Sound.play('pigeons', { vol: 0.6 });
     if (sc && sc.pigeons) for (const pg of sc.pigeons) { pg.hop = 0; }
-    this.pose('load', 1.0);
+    this.pose('feed', 1.8);
     await tweens.wait(1.0);
     if (G.vars.pigeons === G.day) { UI.toast('The pigeons have eaten. They are now simply loitering.', 'icon_star'); return; }
     G.vars.pigeons = G.day;
@@ -243,7 +249,8 @@ export class Activities {
     if (G.vars.gardenWater === G.day) { UI.toast('The beds are soaked. The squash is practically swimming.', 'item_pothos'); return; }
     if (G.energy < 10) { UI.toast('Too tired to haul watering cans.', 'item_pothos', 'bad'); return; }
     G.vars.gardenWater = G.day;
-    this.pose('reach', 1.8);
+    G.vars.gardenDays = (G.vars.gardenDays || 0) + 1;
+    this.pose('water', 2.2);
     Sound.play('drop', { vol: 0.6 });
     await tweens.wait(1.8);
     addStat('energy', -4);
@@ -258,7 +265,7 @@ export class Activities {
     if (G.vars.flowers === G.day) { UI.toast('Leave some for the bees.', 'decor_flower_vase'); return; }
     if (!G.flags.met_june) { UI.toast('These are someone\'s flowers. Better ask first.', 'decor_flower_vase'); return; }
     G.vars.flowers = G.day;
-    this.pose('load', 1.0);
+    this.pose('pet', 1.4);
     await tweens.wait(1.0);
     giveItem('flowers', 1);
     this.spend(10);

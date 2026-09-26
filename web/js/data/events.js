@@ -1,3 +1,6 @@
+import { ROMANCE_EVENTS } from './romance.js';
+import { QUEST_EVENTS } from './quests.js';
+
 // Story events: when a trigger fires (see game/story.js), the first matching, not-yet-played
 // event runs its script node. Fields: on, day/minDay/maxDay, at (minutes, for 'time'), who, loc,
 // weekday, cond (script expression), once (default true), node.
@@ -120,6 +123,10 @@ export const EVENTS = [
   { id: 'lucky_sock', on: 'sock', cond: 'ev.id == "lucky"', node: 'lucky_sock_found' },
   { id: 'first_sock', on: 'sock', node: 'first_sock' },
   { id: 'late_night_shop', on: 'location', loc: 'laundromat', minDay: 2, cond: 'time >= 19*60 and flag.met_maya and not var.maya_here', node: 'late_night_shop' },
+
+  // ------------------------------------------------------------------ romance, then errands (data/romance.js, data/quests.js)
+  ...ROMANCE_EVENTS,
+  ...QUEST_EVENTS,
 ];
 
 // Things shown on the wall calendar (flag = only once known).

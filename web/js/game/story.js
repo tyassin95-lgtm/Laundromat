@@ -41,6 +41,8 @@ export class Story {
       owns: (d) => G.decor.includes(d), placed: (d) => Object.values(G.placed).includes(d), upgrade: (u) => G.upgrades.includes(u),
       skill: G.skills, socks: G.collections.socks.length, records: G.collections.records.length, ending: G.ending,
       found: id => G.collections.socks.includes(id),
+      ...(this.app.quests ? this.app.quests.helpers() : {}),
+      partner: G.flags.partner || null,
       ev: this.lastEventData || {}, Math,
     };
   }
@@ -197,6 +199,7 @@ export class Story {
     const c = CHARACTERS[who];
     takeItem(item, 1);
     G.gifted[who] = G.day;
+    G.vars['gave_' + who + '_' + item] = G.day;      // errands can ask for a particular gift
     G.stats.gifts++;
     const tags = it.tags || [item];
     let react = 'neutral', pts = 12;
@@ -254,7 +257,7 @@ export class Story {
       case 'music': Sound.music(a[0] === 'none' ? null : a[0], a[1] ? +a[1] : 2); this.musicOverride = a[0]; break;
       case 'resume_music': this.musicOverride = null; app.day.sceneMusic(); break;
       case 'wait': await tweens.wait(+a[0] || 0.5); break;
-      case 'visit': if (scene && scene.spawnVisitor) { scene.spawnVisitor(a[0], { order: a.includes('order') ? true : null, stay: +(a[a.indexOf('stay') + 1]) || 90, to: a.includes('counter') ? { x: 348, y: 620 } : undefined }); await tweens.wait(0.2); } break;
+      case 'visit': if (scene && scene.spawnVisitor) { scene.spawnVisitor(a[0], { order: a.includes('order') ? true : null, stay: +(a[a.indexOf('stay') + 1]) || 90, to: a.includes('counter') ? { ...(scene.counterSpot || { x: 446, y: 628 }) } : undefined }); await tweens.wait(0.2); } break;
       case 'await_arrival': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); for (let i = 0; v && v.state === 'enter' && i < 40; i++) await tweens.wait(0.1); } break;
       case 'leave': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) scene.visitorLeave(v); } break;
       case 'pin': if (scene && scene.visitors) { const v = scene.visitors.get(a[0]); if (v) v.pinned = a[1] !== 'off'; } break;
@@ -286,6 +289,8 @@ export class Story {
       case 'ending': await app.day.ending(a[0]); return { stop: true };
       case 'scene': await app.day.cutTo(a[0], a[1]); break;
       case 'phase': G.phase = a[0]; break;
+      case 'quest': app.quests.command(a[0], a[1]); break;
+      case 'romance': app.quests.romance(a[0], a[1]); break;
       default: console.warn('[story] unknown command', name, args);
     }
     return null;
