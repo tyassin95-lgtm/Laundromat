@@ -270,7 +270,7 @@ export class StreetScene extends Scene {
     }
     r.world();
     if (this.bg) c.drawImage(this.bg, 0, 0, this.worldW, 720);
-    if (this.cfg.shopSign) this.drawShopSign(r);
+    if (this.cfg.shopSign && !this.isTitle) this.drawShopSign(r);   // the title's logo sits there
     if (this.cfg.clothesline) this.drawClothesline(r);
     this.drawSpecial(r);
     for (const { d } of this.sortedDrawables()) d.draw(r, this.t);
@@ -313,7 +313,7 @@ export class StreetScene extends Scene {
     this.rain.draw(c, r.scale);
     r.world();
     for (const a of this.actors) a.drawEmote(r, this.t);
-    this.drawHotspotHints(r);
+    if (!this.isTitle) this.drawHotspotHints(r);
     r.vignette(0.3 + night * 0.15);
   }
 

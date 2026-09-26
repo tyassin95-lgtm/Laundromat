@@ -2,10 +2,10 @@
 
 ## Art
 
-- **Characters, portraits, machines, furniture, props, icons and UI frames**: the sprite sheets supplied by the game's creator (`art/source/`). They were cut into individual sprites by `tools/slice_sheets.py`, and `tools/derived_sprites.py` composited the extra player poses.
-- **Generated with Higgsfield** (GPT Image 2.5), using the supplied art as style references: the neighbours' sprites and portraits (Luis, Priya, Mrs. Haddad and Kai), full-body sprites for June and Remy, the repainted laundromat and flat, the park and riverside backgrounds, the neighbourhood map, the bed, the player's hobby poses (tea, reading, knitting, sketching, watering, photography, petting Biscuit, feeding pigeons), the upgrade icons, and the lemon bars, scarf, spray paint, ma'amoul and old photo icons. The originals are in `art/source/generated/` (lossless WebP, except the two 4K interior paintings, kept at WebP quality 95) and the prompts in `tools/art_requests.json`.
-- **Backgrounds** (laundromat, flat, Linden Street, garden, skyline) were painted procedurally for this project by `tools/paint/`, to match the supplied art.
-- **Launcher icon** was generated from the washer sprite by `tools/make_icons.py`.
+- **Characters, portraits and UI**: the player, her portraits, the UI frames and most item icons come from the sprite sheets supplied by the game's creator (`art/source/`), cut into sprites by `tools/slice_sheets.py`; `tools/derived_sprites.py` composited some of the player's poses. The eight neighbours' and friends' full-body sprites and nine-expression portrait sheets were supplied as images too (`art/source/characters/`, imported with `tools/import_character.py`).
+- **Scenes, machines and props (v1.4)** were generated with **Higgsfield** (GPT Image 2.5) as flat 2D art, from flat colour blockings of each scene and with the game's own art as style references: every background (the laundromat, the flat, Linden Street and its closed-shop and night versions, the park, the garden and its night version, the riverside, the far skyline and its night lights, and the two views out of the windows, day and night); the six washers and five dryer towers, closed and with their doors open; the furniture, decor, street furniture, signs and billboards, laundry, puddles, lint bunny, pigeons, clouds and leaves; the clock parts, door signs and moon; the traffic and passers-by seen through the shop window; and the player's sitting, knitting and folding poses. The originals are in `art/source/generated/` and the prompts and import commands in `tools/art_requests.json`.
+- **Earlier generated art** (Higgsfield): the neighbourhood map, the bed, the player's hobby poses (tea, reading, sketching, watering, photography, petting Biscuit, feeding pigeons), the upgrade icons, and the lemon bars, scarf, spray paint, ma'amoul and old photo icons.
+- **Launcher icon** was composed from the classic washer sprite by `tools/make_icons.py`.
 
 ## Music
 

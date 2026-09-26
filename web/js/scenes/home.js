@@ -50,7 +50,7 @@ export class HomeScene extends Scene {
     this.asleep = 0;
     if (opts.from === 'bed') {
       // the morning starts in bed; she gets up a moment later
-      this.player.x = BED.x - 200; this.player.y = 664; this.player.facing = -1;
+      this.player.x = BED.x - 140; this.player.y = 664; this.player.facing = -1;
       this.player.visible = false;
       this.asleep = 1;
       this.wakeUp();
@@ -116,7 +116,7 @@ export class HomeScene extends Scene {
     E({ id: 'kettle', z: COUNTER_TOP, draw: r => r.sprite('decor_kettle', 292, COUNTER_TOP, { h: 44 }), hit: { x: 262, y: 400, w: 64, h: 56 }, tap: act('tea', 300, 632, 1) });
     E({ id: 'mug', z: COUNTER_TOP, draw: r => r.sprite('scn_mug', 362, COUNTER_TOP, { h: 22 }) });
     E({ id: 'lantern', z: SEAT_TOP, draw: r => r.sprite('item_lantern', LANTERN.x, LANTERN.y, { h: 48 }) });
-    E({ id: 'bed', z: BED.base, draw: r => this.drawBed(r), hit: { x: BED.x - 168, y: BED.base - BED.h, w: 336, h: BED.h }, tap: act('sleep', BED.x - 200, 664, 1) });
+    E({ id: 'bed', z: BED.base, draw: r => this.drawBed(r), hit: { x: BED.x - 168, y: BED.base - BED.h, w: 336, h: BED.h }, tap: act('sleep', BED.x - 140, 664, 1) });
     E({ id: 'window', z: 50, hit: WIN, tap: act('window', 722, 640, 1) });
     E({ id: 'seat', z: 430, hit: { x: 515, y: 420, w: 410, h: 70 }, tap: act('read', 722, 646, 1) });
     E({ id: 'door', z: 60, hit: DOOR, tap: act('door', DOOR.at[0], DOOR.at[1], -1) });

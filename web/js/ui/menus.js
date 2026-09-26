@@ -55,7 +55,7 @@ export class Menus {
       `<div class="summary-row"><span>Status</span><span>${where}</span></div>`;
     if (o.stage !== 'ready') html += `<p style="text-align:center"><b>Next:</b> ${next}</p>`;
     if (o.softener) html += `<p style="text-align:center">Asked for lavender softener${(G.inv.softener || 0) > 0 ? '' : ' — you\'re out!'}</p>`;
-    if (o.gentle) html += `<p style="text-align:center">Delicates — the Blue Heron eco washer is gentlest.</p>`;
+    if (o.gentle) html += `<p style="text-align:center">Delicates — the gentle machines (Blue Heron, Heron Pro, Titan XL) treat them best.</p>`;
     if (o.note) html += `<div class="letter" style="text-align:center;margin-top:.6rem">“${formatText(o.note)}”</div>`;
     UI.notice(html, { ok: 'OK' });
   }

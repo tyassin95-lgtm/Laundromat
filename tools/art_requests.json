@@ -12,7 +12,8 @@
   "style_laundromat": "the new laundromat background (web/assets/bg/laundromat.webp, world x 560-2080), 1520x720: the flat 2D style every prop matches",
   "style_home": "the new flat background (web/assets/bg/home.webp), 1600x720",
   "style_chars": "player_idle and the eight npc_* sprites side by side on cream: the characters' drawing style",
-  "ref_player_sit": "player_idle, player_sit, player_knit and player_fold side by side on white, at one scale: the player's look for new poses"
+  "ref_player_sit": "player_idle, player_sit, player_knit and player_fold side by side on white, at one scale: the player's look for new poses",
+  "blockings": "art/source/blockings/: the flat colour blockings every scene was painted from (blocking.py draws them)"
  },
  "style": "See the prompts: every request asks for the game's hand-painted style (ink outlines, textured gouache and coloured-pencil shading) and a transparent background.",
  "characters": {},
@@ -1078,16 +1079,102 @@
   }
  ],
  "scenes": {
-  "about": "Backgrounds repainted from the existing ones: the current background (window glass white, padded at the bottom to the model's aspect ratio) is the composition reference, so the painting lands on the same coordinates. gpt_image_2_5, quality medium, resolution 4k (1.25 credits). Import with: python3 tools/import_scene.py <name> <image>.",
+  "about": "v1.4: every scene is painted as flat 2D from a flat colour blocking drawn in world px by art/source/blockings/blocking.py (then padded to the model's aspect ratio: interiors at the bottom, exteriors at the top), so each painting lands on known coordinates. gpt_image_2_5, quality medium, 4K for the big scenes (1.25 credits), 2K/1K for the skyline and window views. Glass and sky are painted pure white and cut out on import; night versions are edits of the day painting (the day image as the only reference) and become *_lights.webp layers. The import command for each is below.",
   "laundromat": {
    "aspect_ratio": "21:9",
-   "reference": "laundromat.webp (the fire extinguisher by the door painted out), padded with floor to 2880x1234",
-   "prompt": "Repaint this side-scrolling 2D game background — the empty interior of an old neighbourhood laundromat, back wall and floor seen straight on — as a rich hand-painted storybook illustration: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, a warm, slightly worn, lived-in look, soft warm daylight. Keep EXACTLY the same composition, proportions and positions as the reference image: the pressed-tin ceiling strip along the top with a thin electrical conduit, the four teal enamel pendant lamps hanging at the same places, the pale mint-green beadboard upper wall, the wooden chair rail, the cream square-tile wainscot below it, the teal-and-cream diamond checkerboard floor seen in perspective, the wooden door at the far left with a small plaque reading UPSTAIRS and the small sign above it reading ATTENDANT / on duty 8-6, the empty dark-green chalkboard in a wooden frame (leave it completely blank, no writing at all), the long back window with three panes, the five copper water hook-ups with one red and one blue tap each, spaced evenly along the wall, the two silver dryer vent ducts coming down from the ceiling on the right with the small sign reading LINT / clean traps between them, the tall shop-front window on the right with a low wooden ledge along its bottom, the glass front door at the far right with a PUSH plate and a small brass bell above it, the WELCOME doormat by the door and the round floor drain. Every window pane and the glass of the front door and its transom must stay pure flat white (#FFFFFF) with nothing seen through them, no reflections, no curtains and no lettering. Add gentle painterly detail: scuffs and chips on the tiles, faint water stains, worn paint, a couple of electrical outlets. Do NOT add any washing machines, dryers, furniture, tables, benches, shelves, plants, posters, clocks, people, animals, or any other text."
+   "resolution": "4k",
+   "refs": [
+    "blocking laundromat",
+    "style_chars"
+   ],
+   "prompt": "The interior of Rosa's, a small old neighbourhood laundromat, as one long flat back wall. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. Left to right: a wooden door with a small window and an UPSTAIRS sign; a blank dark-green chalkboard; a copper water line with a red and a blue tap over each of five washer bays; two ribbed dryer vent ducts and a small LINT sign; four teal pendant lamps; the shop front: a big window with three transom panes and a sill, and a teal glass door. Pressed-tin ceiling, mint plaster, chair rail, cream tiles, teal baseboard; a flat teal-and-cream checkerboard floor band with a drain and a WELCOME mat. All glass flat pure white. No machines, furniture, clock, plants, bags or people.",
+   "import": "python3 tools/import_scene.py laundromat <image> --world 2080 --glass \"1705,175,1760,230;1780,175,1830,230;1852,175,1905,230;1710,260,1900,520;1952,175,2056,228;1965,280,2045,500;1965,522,2045,540\""
   },
   "home": {
    "aspect_ratio": "16:9",
-   "reference": "home.webp with the painted bed replaced by wall and floor, padded with floor to 2100x1181",
-   "prompt": "Repaint this side-scrolling 2D game background — the inside of a small, cosy, slightly shabby studio flat above a laundromat, seen straight on — as a rich hand-painted storybook illustration: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted colours, soft warm light. Keep EXACTLY the same composition, proportions and positions as the reference image: the dark wooden ceiling beams along the top, the faded rose striped wallpaper with small dots, the wooden wainscot panelling along the bottom of the walls, the warm honey-coloured wooden floorboards seen in perspective, the plain wooden front door at the far left, the peg rail with a teal and an orange tea towel, the small kitchenette with a white tiled splashback, a two-ring hob and a small sink, the teal painted cabinets under a worn wooden counter top, the wall shelf above it with jars and tins, the big six-pane window in the middle with rust-red curtains tied back on both sides, the round pendant lamp hanging in front of the window, the teal cushioned window seat with a mustard and a rust cushion, the radiator under it, and the wall shelf of books on the right. Every glass pane of the window must stay pure flat white (#FFFFFF) with nothing seen through it: no sky, no buildings, no reflections. Keep the right third of the room empty: plain wallpaper and wainscot with bare floorboards in front (a bed will be placed there later). Do NOT add any bed, table, desk, chair, stool, rug, plant, picture frame, lamp, person, animal or text."
+   "resolution": "4k",
+   "refs": [
+    "blocking home",
+    "style_chars"
+   ],
+   "prompt": "A small warm studio flat above a laundromat, as one long flat back wall. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. A wooden door, two wall hooks with a tote and a scarf, a kitchenette (jar shelf, tiled splashback, counter with a hob and tap, teal cabinets), a four-pane window with rust curtains over a built-in window seat with two pillows and a radiator grille, a brass pendant lamp, a shelf of books; beams, dusty-rose dotted wallpaper, wainscot, a band of honey floorboards. Window glass flat pure white. No bed, desk, chairs, rugs, cat, plants or kettle.",
+   "import": "python3 tools/import_scene.py home <image> --world 1600 --glass \"560,100,650,240;672,100,770,240;790,100,888,240;560,260,650,400;672,260,770,400;790,260,888,400\""
+  },
+  "linden": {
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "refs": [
+    "blocking street",
+    "style_laundromat"
+   ],
+   "prompt": "Linden Street, one old city block. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. The Alder Arms (four-storey brick, ALDER ARMS sign, stoop), Rosa's laundromat (flat upstairs, a BLANK teal fascia, a big window onto a mint laundromat with washers and pendant lamps, a teal glass door), the Corner Cup (CORNER CUP fascia, warm cafe window), Delgado's Market (DELGADO'S MARKET sign, produce window), an empty lot behind a chain-link fence with the old CAP & SEAL CO. factory; a flat sidewalk band, kerb and road. Sky flat pure white. No people, cars, lamp posts, trees or street furniture.",
+   "night": "Night-time version of this exact painting (the day painting as the only reference): same everything, only the lighting: facades dim blue-grey, shop windows glowing warm, about half the flats' windows lit, signs faintly lit; sky stays white.",
+   "closed": "Delgado's storefront (a 580x725 crop of the painting at 2644,627) edited closed down: papered window with a FOR LEASE sign, empty shelves, dark door with a CLOSED card, faded sign; pasted back feathered.",
+   "import": "python3 tools/import_scene.py linden <image> --world 2600 --keep bottom --shift 101 --sky --night <night image>   (linden_closed: the same with the patched painting; linden_closed_lights is linden_lights with Delgado's dark)"
+  },
+  "park": {
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "refs": [
+    "blocking park",
+    "style_laundromat"
+   ],
+   "prompt": "Linden Park. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. A band of round trees (a few turning), a lawn, a black iron fence with a hedge, a round stone fountain in the centre, a gravel path along the bottom, a strip of grass. Sky flat pure white. No lamp posts, benches, people or buildings.",
+   "import": "python3 tools/import_scene.py park <image> --world 2000 --keep bottom --sky"
+  },
+  "garden": {
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "refs": [
+    "blocking garden",
+    "style_laundromat"
+   ],
+   "prompt": "The community garden behind the Alder Arms. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. The Alder Arms' brick back wall with a fire escape, a lower brick building, a tall plank fence with ivy, morning glories and sunflowers, a teal LINDEN GROWERS tool shed, two T-shaped clothesline posts (no line), an earth path. Sky flat pure white. No beds, planters, people or clothes.",
+   "night": "Night-time version of this exact painting: only the lighting changes; about half the windows lit warm.",
+   "import": "python3 tools/import_scene.py garden <image> --world 1800 --keep bottom --sky --night <night image>"
+  },
+  "riverside": {
+   "aspect_ratio": "21:9",
+   "resolution": "4k",
+   "refs": [
+    "blocking riverside",
+    "style_laundromat"
+   ],
+   "prompt": "The riverside promenade. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. A low far bank with tiny warehouses, a wide calm river, a steel truss bridge across the right half on two stone piers, a black iron railing, a paved promenade. Sky flat pure white. No lamps, benches, trees in front, people or boats.",
+   "import": "python3 tools/import_scene.py riverside <image> --world 1800 --keep bottom --sky --holes 352"
+  },
+  "skyline": {
+   "aspect_ratio": "21:9",
+   "resolution": "2k",
+   "refs": [
+    "blocking skyline",
+    "style_laundromat"
+   ],
+   "prompt": "A distant hazy city skyline for the far parallax layer, soft and low-contrast, with the Crestline tower under construction (bare top floors, a yellow tower crane). STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette.",
+   "night": "Night-time version: buildings dark navy with many lit windows, red aviation lights on the crane.",
+   "import": "python3 tools/import_scene.py skyline <image> --world 1600 --height 600 --keep bottom --sky --holes 600 --night <night image>"
+  },
+  "view_shop": {
+   "aspect_ratio": "1:1",
+   "resolution": "1k",
+   "refs": [
+    "blocking view_shop",
+    "style_laundromat"
+   ],
+   "prompt": "What Rosa's front window looks out on, across the street: FERRANTE'S BAKERY (green-and-cream awning, bread in the window) and LINDEN HARDWARE, flats above; far sidewalk, road with a dashed centre line, near sidewalk. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. Sky flat pure white. No people, cars or lamps (the scene animates those).",
+   "night": "Night-time version: the bakery window glowing, some flats lit.",
+   "import": "python3 tools/import_scene.py view_shop <image> --world 640 --height 600 --keep bottom --sky --night <night image>"
+  },
+  "view_home": {
+   "aspect_ratio": "9:8",
+   "resolution": "1k",
+   "refs": [
+    "blocking view_home",
+    "style_home"
+   ],
+   "prompt": "The view from the flat's back window over city rooftops: tar roofs, a wooden water tower, chimneys, lit windows, hazy mid-rises and the Crestline tower with its crane. STRICT FLAT 2D: a pure orthographic front elevation with no perspective at all, no vanishing points, no side walls, no receding planes; like an architectural elevation drawing or a theatre backdrop. The first reference image is a flat colour blocking: keep EXACTLY its composition, proportions, heights and positions. Match the style of the second reference: fine dark-brown ink outlines, textured gouache and coloured-pencil shading with subtle paper grain, warm muted palette. Sky flat pure white.",
+   "night": "Night-time version: rooftops dark navy, many windows lit, the tower's floors in cool bands.",
+   "import": "python3 tools/import_scene.py view_home <image> --world 560 --height 480 --keep bottom --sky --night <night image>"
   }
  }
 }

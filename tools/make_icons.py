@@ -1,8 +1,10 @@
-"""Generate the Android launcher icons (legacy + adaptive) from the game's washer sprite.
+"""Generate the Android launcher icons (legacy + adaptive) from the game's washer sprite
+(Rosa's classic washer, with its steel drum and a load of washing behind the glass).
 
 Usage: python3 tools/make_icons.py
 Writes android/app/src/main/res/mipmap-*/ic_launcher*.png and mipmap-anydpi-v26/*.xml.
 """
+import json
 import math
 import os
 import random
@@ -11,7 +13,8 @@ from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, 'android', 'app', 'src', 'main', 'res')
-SPRITE = os.path.join(ROOT, 'web', 'assets', 'sprites', 'machine_washer_idle.webp')
+SPRITES = os.path.join(ROOT, 'web', 'assets', 'sprites')
+ART = os.path.join(ROOT, 'web', 'js', 'data', 'machine_art.js')
 DENS = {'mdpi': 1, 'hdpi': 1.5, 'xhdpi': 2, 'xxhdpi': 3, 'xxxhdpi': 4}
 S = 1024  # master size (represents 108dp for adaptive layers)
 
@@ -43,10 +46,34 @@ def background(size):
     return im
 
 
+def washer():
+    """washer_classic with the drum and a bundle of laundry showing through its glass."""
+    spr = Image.open(os.path.join(SPRITES, 'washer_classic.webp')).convert('RGBA')
+    text = open(ART, encoding='utf8').read()
+    door = json.loads(text[text.index('{'):text.rindex('}') + 1])['washer_classic']['doors'][0]
+    cx, cy, r = door['cx'] * spr.width, door['cy'] * spr.height, door['r'] * spr.width * 1.08
+    out = Image.new('RGBA', spr.size, (0, 0, 0, 0))
+    drum = Image.open(os.path.join(SPRITES, 'drum_interior.webp')).convert('RGBA')
+    d = int(r * 2.3)
+    drum = drum.resize((d, d), Image.LANCZOS)
+    out.alpha_composite(drum, (int(cx - d / 2), int(cy - d / 2)))
+    for name, dx, dy, k in (('drum_blue', -0.35, 0.25, 0.95), ('drum_white', 0.3, 0.3, 0.9), ('drum_red', -0.05, -0.05, 0.9)):
+        b = Image.open(os.path.join(SPRITES, name + '.webp')).convert('RGBA')
+        w = int(r * k); h = int(b.height * w / b.width)
+        b = b.resize((w, h), Image.LANCZOS)
+        out.alpha_composite(b, (int(cx + dx * r - w / 2), int(cy + dy * r - h / 2)))
+    mask = Image.new('L', spr.size, 0)
+    ImageDraw.Draw(mask).ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
+    inside = Image.new('RGBA', spr.size, (0, 0, 0, 0))
+    inside.paste(out, (0, 0), mask)
+    inside.alpha_composite(spr)
+    return inside
+
+
 def foreground(size, scale=0.56):
     """The washer, centred inside the adaptive-icon safe zone, with a soft shadow."""
     im = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    spr = Image.open(SPRITE).convert('RGBA')
+    spr = washer()
     h = int(size * scale)
     w = int(spr.width * h / spr.height)
     spr = spr.resize((w, h), Image.LANCZOS)

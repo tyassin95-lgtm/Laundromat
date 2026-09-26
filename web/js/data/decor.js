@@ -11,10 +11,10 @@ export const SHOP_SLOTS = {
   wall_b: { x: 1290, y: 214, label: 'Wall' },
   sill: { x: 1742, y: 540, label: 'Window sill' },
   sill2: { x: 1872, y: 540, label: 'Window sill' },
-  counter_top: { x: 290, y: 534, label: 'Counter' },
+  counter_top: { x: 290, y: 536, label: 'Counter' },
   lounge_table: { x: 1742, y: 684, label: 'Lounge table' },
   floor_l1: { x: 1655, y: 640, label: 'By the dryers' },
-  floor_r1: { x: 2046, y: 708, label: 'By the door' },
+  floor_r1: { x: 1962, y: 708, label: 'By the door' },
   rug: { x: 1800, y: 706, label: 'Floor' },
   seat: { x: 1860, y: 668, label: 'Under the window (instead of the bench)' },
 };
@@ -26,7 +26,7 @@ export const HOME_SLOTS = {
   h_wall2: { x: 1405, y: 262, label: 'Wall' },
   h_shelf: { x: 780, y: 460, label: 'Window seat' },
   h_table: { x: 1085, y: 508, label: 'Desk' },
-  h_floor: { x: 196, y: 632, label: 'By the door' },
+  h_floor: { x: 178, y: 640, label: 'By the door' },
   h_rug: { x: 760, y: 706, label: 'Floor' },
 };
 

@@ -13,7 +13,7 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
 
 | | |
 | --- | --- |
-| ![A shift in the laundromat](docs/screenshots/shift.jpg) | ![Meeting Remy outside the Corner Cup](docs/screenshots/dialogue.jpg) |
+| ![A shift in the laundromat](docs/screenshots/shift.jpg) | ![Remy outside the Corner Cup](docs/screenshots/dialogue.jpg) |
 | ![Rosa's flat at night](docs/screenshots/home_night.jpg) | ![Linden Park on a rainy evening](docs/screenshots/park.jpg) |
 
 - **Days in the shop.** Take in drop-off orders, then wash, dry, fold (a swipe mini-game) and
@@ -26,15 +26,17 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
   who works nights; June, a retired teacher who runs the garden; and Remy, a barista who
   paints murals. Each has their own routine and ten friendship levels with scenes along the way.
 - **And the neighbours.** Regulars who stop to talk when they bring their laundry in: Luis from
-  the corner market, Priya the ER night nurse, Mrs. Haddad from the Alder Arms and Kai the bike
-  courier. Each has a small story of their own, five friendship levels, and a voice at the
+  the corner market, Priya who bakes the bread at Ferrante's through the night, Sami who brings
+  his grandmother's laundry down from the Alder Arms, and Kai the bike courier. Each has a small story of their own, five friendship levels, and a voice at the
   council hearing if they like you enough.
 - **Errands.** Nine side missions from friends, neighbours and one very judgemental cat: knit
   Walt a scarf, shoot cover art for Maya, sketch studies for Remy's mural, find Kai field data
   on vanishing socks, send Priya's night crew a care package… Each pays off in money, skills or
   a lasting perk, and the Journal's Errands page keeps track.
-- **Upgrades.** Twelve practical upgrades that change how the shop runs: faster washes, slower
-  lint, a coin changer, Wi-Fi, a snack machine, a delivery bike, cheaper bills and more.
+- **Machines and upgrades.** Six washers and five dryer towers in an upgrade tree, each with its
+  own speed, detergent use, wear and perks (Catalog > Machines), and twelve practical upgrades
+  that change how the shop runs: a coin changer, Wi-Fi, a snack machine, a delivery bike, cheaper
+  bills and more.
 - **Romance, if you like.** Maya, Remy, Kai and Priya can become more than friends. It is all
   opt-in: a moment when you're close, a date somewhere in the neighbourhood, and later a real
   question. Choose "just friends" at any point and that's that. A partner changes a few mornings
@@ -42,8 +44,10 @@ A 2D life-sim and shop-management game for Android phones (landscape, touch).
 - **Your choices matter.** Your prices, house rules and story decisions change the shop's
   reputation and community spirit. Friendships decide who stands up for the shop when it
   matters. There are three endings.
-- **Rain on the glass.** Hand-painted art with ink outlines and warm lighting. Time of day
-  and weather are dynamic, and the music and ambient sound change with where you are.
+- **Rain on the glass.** Flat, hand-painted 2D scenes with ink outlines and warm lighting. The
+  shop window looks out on Linden Street, with traffic and people going by; the flat looks over
+  the rooftops to the Crestline tower going up. Time of day and weather are dynamic (it rains in
+  September; it doesn't snow), and the music and ambient sound change with where you are.
 
 ## Install (Android)
 
@@ -164,18 +168,23 @@ the file and keep its name.**
   isn't in the manifest speaks with just a name plate; a neighbour without an in-world sprite
   (`npc_<name>`) is heard at the counter instead of seen. Add the files and they appear, with
   no code changes. `node tools/check_assets.mjs` reports any optional art that's missing.
-- **Generated art.** The neighbours, June's and Remy's full-body sprites, the laundromat and
-  flat backgrounds, the park, the riverside, the map, the bed, the player's hobby poses, the
-  upgrade icons and a few item icons were generated with Higgsfield using the supplied art as
-  style references. `tools/art_requests.json` records each image's model, references and
-  prompt, and the originals are in `art/source/generated/`.
+- **Generated art.** Every scene, machine and prop, the window views, the map, the bed, some of
+  the player's poses, the upgrade icons and a few item icons were generated with Higgsfield
+  using the game's own art as style references. `tools/art_requests.json` records each image's
+  model, references, prompt and import command, and the originals are in `art/source/generated/`.
   `python3 tools/import_generated.py <request> <image or URL>` turns a generated image into
   sprites: it keeps a transparent background or keys out a flat one, cuts the figures apart
   (row by row for sheets), scales them (one shared scale for a character's poses, so they
   match) and registers them in the manifest.
-  `python3 tools/import_scene.py <scene> <image or URL>` does the same for a repainted
-  background: the painting is made from the old background as a composition reference, so it
-  is scaled back onto the same coordinates and its white window glass is cut out.
+  `python3 tools/import_scene.py <scene> <image or URL> --world W ...` does the same for a
+  background. Each scene is painted from a flat colour blocking in world pixels, so the
+  painting lands on known coordinates: the tool scales it back onto them, cuts out its white
+  window glass (`--glass`) or sky (`--sky`), and with `--night` extracts the layer of lit
+  windows and signs from a night version of the painting.
+  `python3 tools/import_machines.py <sheet> <names> --height H --hinge left|right [--open]`
+  cuts a row of machines, keys out their magenta door glass (the scene draws the turning drum
+  behind it) and measures each door into `web/js/data/machine_art.js`; `--open` imports the same
+  machines with their doors open.
 - **Sprites** live in `web/assets/sprites/<name>.webp`, listed in `manifest.json`.
   Characters, machines, props, portraits (`face_<who>_<expression>`), icons and UI frames
   all live here. You can re-cut them from new source sheets in `art/source/` with
@@ -183,19 +192,19 @@ the file and keep its name.**
   `tools/derived_sprites.py` builds the composite poses. Sizes in the game are set in
   virtual pixels, so a higher-resolution replacement just looks sharper.
 - **Backgrounds** live in `web/assets/bg/*.webp`: the laundromat, the flat, Linden Street
-  (day, closed-bodega and night-lights layers), the park, garden, riverside, skyline and
-  map. They are painted procedurally by `tools/paint/scenes/*.js` and baked with
-  `node tools/bake_backgrounds.mjs [scene]`, except the laundromat, flat, park, riverside and
-  map paintings, which were generated. The bake tool leaves those alone unless you name them
+  (day, closed-shop and night-lights layers), the park, garden (and its lights), riverside,
+  skyline (and its lights), the two window views (`view_shop`, `view_home`, with their lights)
+  and the map. All are generated paintings. The old procedural painter
+  (`tools/paint/`, `node tools/bake_backgrounds.mjs`) leaves them alone unless you name a layer
   exactly (`laundromat:base`) or pass `--force`. To use your own art instead, drop in a WebP
-  with the same name and aspect ratio. Window areas must stay transparent, because the game
-  draws the outside view behind them.
+  with the same name and aspect ratio. Window glass and sky must stay transparent, because the
+  game draws the view, the sky and the weather behind them.
 - **Audio** lives in `web/assets/audio/{music,sfx,amb}/*.ogg`. `tools/build_audio.py`
   rebuilds everything from the downloaded sources (music tables at the top of the file).
   Ambience files should loop seamlessly.
 - **Fonts** live in `web/assets/fonts/`. Change them in `css/style.css`.
 - **Launcher icon:** run `python3 tools/make_icons.py` to regenerate every density (and the
-  adaptive icon) from `machine_washer_idle`.
+  adaptive icon) from `washer_classic`.
 
 ## Writing content
 

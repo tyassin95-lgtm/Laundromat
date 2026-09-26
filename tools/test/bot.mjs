@@ -82,7 +82,7 @@ export async function botStep(page) {
       if (step === 'dry') {
         const d = L.dryers().find(L.isFree) || (!sc.canCarryMore() && mine('dryer'));
         if (!d) return 'wait-dryer';
-        sc.tapDryerUnit(Math.floor(d.slot / 2), d.slot % 2 ? 400 : 250); return (d.state === 'done' ? 'swap ' : 'dry ') + o.id;
+        sc.tapDryerUnit(Math.floor(d.slot / 2), sc.doorGeom(d).cy); return (d.state === 'done' ? 'swap ' : 'dry ') + o.id;
       }
       if (step === 'fold') { sc.tapFold(); return 'fold ' + o.id; }
       sc.tapShelf(); return 'shelf ' + o.id;
@@ -90,7 +90,7 @@ export async function botStep(page) {
     // 4. unload finished machines holding our orders
     const done = G.machines.find(m => m.state === 'done' && m.load && m.load !== 'self' && !m.broken);
     if (done) {
-      if (done.kind === 'washer') sc.tapWasherSlot(done.slot); else sc.tapDryerUnit(Math.floor(done.slot / 2), done.slot % 2 ? 400 : 250);
+      if (done.kind === 'washer') sc.tapWasherSlot(done.slot); else sc.tapDryerUnit(Math.floor(done.slot / 2), sc.doorGeom(done).cy);
       return 'unload ' + done.id;
     }
     // 5. take a new bag from the counter
@@ -98,7 +98,7 @@ export async function botStep(page) {
     // 6. repair broken machines when nothing else is waiting
     const broken = G.machines.find(m => m.broken);
     if (broken) {
-      if (broken.kind === 'washer') sc.tapWasherSlot(broken.slot); else sc.tapDryerUnit(Math.floor(broken.slot / 2), broken.slot % 2 ? 400 : 250);
+      if (broken.kind === 'washer') sc.tapWasherSlot(broken.slot); else sc.tapDryerUnit(Math.floor(broken.slot / 2), sc.doorGeom(broken).cy);
       return 'repair ' + broken.id;
     }
     // 7. chores

@@ -20,7 +20,8 @@ const OUT = path.join(ROOT, 'web', 'assets', 'bg');
 // Painted with Higgsfield (see tools/art_requests.json and art/source/generated/): baking these
 // again would replace the painting with the procedural version, so they're only baked when named
 // exactly (e.g. park:base) or with --force.
-const GENERATED = new Set(['park:base', 'riverside:base', 'map:base', 'laundromat:base', 'home:base']);
+const GENERATED = new Set(['laundromat:base', 'home:base', 'linden:base', 'linden:closed', 'linden:lights', 'skyline:base', 'skyline:lights',
+  'park:base', 'garden:base', 'garden:lights', 'riverside:base', 'map:base']);
 
 // name -> list of [variant, output file, format]
 export const JOBS = {
