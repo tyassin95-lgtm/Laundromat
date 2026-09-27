@@ -1,0 +1,46 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street_view.gd" id="1_street_view"]
+[ext_resource type="Texture2D" path="res://assets/bg/view_shop.webp" id="2_view_shop"]
+[ext_resource type="Script" path="res://scripts/world/view_movers.gd" id="3_view_movers"]
+[ext_resource type="Texture2D" path="res://assets/bg/view_shop_lights.webp" id="6_view_shop_li"]
+[ext_resource type="Script" path="res://scripts/world/view_headlights.gd" id="8_view_headlig"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4"]
+blend_mode = 3
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7"]
+blend_mode = 1
+
+[node name="StreetView" type="Node2D"]
+script = ExtResource("1_street_view")
+view_size = Vector2(640, 600)
+follow = 0.2
+
+[node name="Painting" type="Sprite2D" parent="."]
+texture = ExtResource("2_view_shop")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="Movers" type="Node2D" parent="."]
+script = ExtResource("3_view_movers")
+
+[node name="Tint" type="ColorRect" parent="."]
+material = SubResource("CanvasItemMaterial_4")
+offset_right = 640.0
+offset_bottom = 600.0
+mouse_filter = 2
+
+[node name="Lights" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_5")
+texture = ExtResource("6_view_shop_li")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+visible = false
+
+[node name="Headlights" type="Node2D" parent="."]
+script = ExtResource("8_view_headlig")
+material = SubResource("CanvasItemMaterial_7")

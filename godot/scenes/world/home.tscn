@@ -1,0 +1,463 @@
+[gd_scene load_steps=39 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/home/home.gd" id="1_home"]
+[ext_resource type="PackedScene" path="res://scenes/objects/roof_view.tscn" id="2_roof_view"]
+[ext_resource type="Script" path="res://scripts/world/glass_rain_outside.gd" id="3_glass_rain_o"]
+[ext_resource type="Texture2D" path="res://assets/bg/home.webp" id="4_home"]
+[ext_resource type="Script" path="res://scripts/world/glass_rain.gd" id="5_glass_rain"]
+[ext_resource type="PackedScene" path="res://scenes/objects/decor_slot.tscn" id="6_decor_slot"]
+[ext_resource type="Script" path="res://scripts/world/scene_light.gd" id="7_scene_light"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="8_tap_area"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_desk.webp" id="12_furn_desk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_pencil_cup.webp" id="13_scn_pencil_c"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_sketchbook.webp" id="14_scn_sketchbo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_journal.webp" id="16_scn_journal"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_chair.webp" id="18_furn_chair"]
+[ext_resource type="Script" path="res://scripts/world/home/cat_bed.gd" id="19_cat_bed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_cat_bed.webp" id="20_item_cat_bed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_yarn_basket.webp" id="22_scn_yarn_bas"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decor_kettle.webp" id="24_decor_kettle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_mug.webp" id="26_scn_mug"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_lantern.webp" id="27_item_lantern"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_camera.webp" id="28_scn_camera"]
+[ext_resource type="Script" path="res://scripts/world/home/bed.gd" id="30_bed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_bed_sleep.webp" id="31_furn_bed_sle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_bed.webp" id="32_furn_bed"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player.tscn" id="34_player"]
+[ext_resource type="Script" path="res://scripts/world/particles.gd" id="35_particles"]
+[ext_resource type="Script" path="res://scripts/world/glow_layer.gd" id="36_glow_layer"]
+[ext_resource type="Script" path="res://scripts/world/emote_layer.gd" id="37_emote_layer"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="38_glow_marker"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
+size = Vector2(357, 330)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_10"]
+size = Vector2(430, 90)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_11"]
+size = Vector2(132, 392)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_15"]
+size = Vector2(170, 140)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_17"]
+size = Vector2(60, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_21"]
+size = Vector2(112, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_23"]
+size = Vector2(76, 74)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_25"]
+size = Vector2(84, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_29"]
+size = Vector2(62, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_33"]
+size = Vector2(356, 170)
+
+[node name="Home" type="Node2D"]
+script = ExtResource("1_home")
+place = "home"
+scene_kind = "home"
+world_width = 1600.0
+interior = true
+walk_band = Vector2(620, 700)
+char_scale = 1.0
+vignette = 0.32
+
+[node name="WindowView" parent="." instance=ExtResource("2_roof_view")]
+position = Vector2(500, 100)
+
+[node name="RainOutside" type="Node2D" parent="."]
+script = ExtResource("3_glass_rain_o")
+rain = NodePath("../GlassRain")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("4_home")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="GlassRain" type="Node2D" parent="."]
+script = ExtResource("5_glass_rain")
+panes = Array[Rect2]([Rect2(555, 97, 102, 148), Rect2(668, 97, 106, 148), Rect2(786, 97, 105, 148), Rect2(554, 256, 103, 151), Rect2(668, 256, 105, 151), Rect2(786, 256, 105, 151)])
+
+[node name="Wall" type="Node2D" parent="."]
+
+[node name="SlotHang" parent="Wall" instance=ExtResource("6_decor_slot")]
+position = Vector2(486, 190)
+slot_id = "h_hang"
+style = 2
+ceiling_y = 40.0
+sway_speed = 1.1
+
+[node name="Tap" parent="Wall/SlotHang"]
+priority = 190.0
+
+[node name="SlotLights" parent="Wall" instance=ExtResource("6_decor_slot")]
+position = Vector2(722, 76)
+slot_id = "h_lights"
+
+[node name="Tap" parent="Wall/SlotLights"]
+priority = 76.0
+
+[node name="Light" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("7_scene_light")
+position = Vector2(0, 44)
+radius = 300.0
+color = Color(1.0, 0.7451, 0.4314, 1.0)
+day_intensity = 0.1
+night_intensity = 0.6
+needs_decor = "*"
+
+[node name="SlotWall1" parent="Wall" instance=ExtResource("6_decor_slot")]
+position = Vector2(1085, 200)
+slot_id = "h_wall1"
+
+[node name="Tap" parent="Wall/SlotWall1"]
+priority = 200.0
+
+[node name="SlotWall2" parent="Wall" instance=ExtResource("6_decor_slot")]
+position = Vector2(1405, 262)
+slot_id = "h_wall2"
+
+[node name="Tap" parent="Wall/SlotWall2"]
+priority = 262.0
+
+[node name="Window" type="Area2D" parent="Wall"]
+script = ExtResource("8_tap_area")
+priority = 50.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/Window"]
+position = Vector2(722.5, 252.0)
+shape = SubResource("RectangleShape2D_9")
+
+[node name="WindowSeat" type="Area2D" parent="Wall"]
+script = ExtResource("8_tap_area")
+priority = 430.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/WindowSeat"]
+position = Vector2(720.0, 455.0)
+shape = SubResource("RectangleShape2D_10")
+
+[node name="Door" type="Area2D" parent="Wall"]
+script = ExtResource("8_tap_area")
+priority = 60.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/Door"]
+position = Vector2(86.0, 426.0)
+shape = SubResource("RectangleShape2D_11")
+
+[node name="FloorDecals" type="Node2D" parent="."]
+
+[node name="SlotRug" parent="FloorDecals" instance=ExtResource("6_decor_slot")]
+position = Vector2(760, 706)
+slot_id = "h_rug"
+style = 3
+
+[node name="Tap" parent="FloorDecals/SlotRug"]
+priority = 619.0
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Desk" type="Node2D" parent="Entities"]
+position = Vector2(1085, 628)
+
+[node name="Desk" type="Sprite2D" parent="Entities/Desk"]
+texture = ExtResource("12_furn_desk")
+centered = false
+offset = Vector2(-180.0, -220.0)
+scale = Vector2(0.5455, 0.5455)
+
+[node name="PencilCup" type="Sprite2D" parent="Entities/Desk"]
+position = Vector2(76, -116.24)
+texture = ExtResource("13_scn_pencil_c")
+centered = false
+offset = Vector2(-21.0, -90.0)
+scale = Vector2(0.4222, 0.4222)
+
+[node name="Sketchbook" type="Sprite2D" parent="Entities/Desk"]
+position = Vector2(-72, -116.24)
+texture = ExtResource("14_scn_sketchbo")
+centered = false
+offset = Vector2(-38.0, -90.0)
+scale = Vector2(0.3111, 0.3111)
+
+[node name="Tap" type="Area2D" parent="Entities/Desk"]
+script = ExtResource("8_tap_area")
+priority = 628.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Desk/Tap"]
+position = Vector2(-23.0, -60.0)
+shape = SubResource("RectangleShape2D_15")
+
+[node name="Journal" type="Node2D" parent="Entities/Desk"]
+position = Vector2(44, -116.24)
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Desk/Journal"]
+texture = ExtResource("16_scn_journal")
+centered = false
+offset = Vector2(-35.5, -90.0)
+scale = Vector2(0.3111, 0.3111)
+
+[node name="Tap" type="Area2D" parent="Entities/Desk/Journal"]
+script = ExtResource("8_tap_area")
+priority = 629.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Desk/Journal/Tap"]
+position = Vector2(2.0, -15.0)
+shape = SubResource("RectangleShape2D_17")
+
+[node name="SlotTable" parent="Entities/Desk" instance=ExtResource("6_decor_slot")]
+position = Vector2(0, -116.24)
+slot_id = "h_table"
+
+[node name="Tap" parent="Entities/Desk/SlotTable"]
+priority = 629.0
+
+[node name="Chair" type="Sprite2D" parent="Entities"]
+position = Vector2(1004, 652)
+texture = ExtResource("18_furn_chair")
+centered = false
+offset = Vector2(-60.5, -230.0)
+scale = Vector2(0.6522, 0.6522)
+
+[node name="Cat" type="Node2D" parent="Entities"]
+position = Vector2(904, 702)
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Cat"]
+texture = ExtResource("20_item_cat_bed")
+centered = false
+offset = Vector2(-95.0, -130.0)
+scale = Vector2(0.4308, 0.4308)
+script = ExtResource("19_cat_bed")
+
+[node name="Tap" type="Area2D" parent="Entities/Cat"]
+script = ExtResource("8_tap_area")
+priority = 700.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Cat/Tap"]
+position = Vector2(0.0, -26.0)
+shape = SubResource("RectangleShape2D_21")
+
+[node name="Yarn" type="Node2D" parent="Entities"]
+position = Vector2(1196, 702)
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Yarn"]
+texture = ExtResource("22_scn_yarn_bas")
+centered = false
+offset = Vector2(-58.0, -130.0)
+scale = Vector2(0.3846, 0.3846)
+
+[node name="Tap" type="Area2D" parent="Entities/Yarn"]
+script = ExtResource("8_tap_area")
+priority = 700.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Yarn/Tap"]
+position = Vector2(2.0, -25.0)
+shape = SubResource("RectangleShape2D_23")
+
+[node name="Kettle" type="Node2D" parent="Entities"]
+position = Vector2(292, 454)
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Kettle"]
+texture = ExtResource("24_decor_kettle")
+centered = false
+offset = Vector2(-52.0, -110.0)
+scale = Vector2(0.4, 0.4)
+
+[node name="Tap" type="Area2D" parent="Entities/Kettle"]
+script = ExtResource("8_tap_area")
+priority = 454.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Kettle/Tap"]
+position = Vector2(2.0, -26.0)
+shape = SubResource("RectangleShape2D_25")
+
+[node name="Mug" type="Sprite2D" parent="Entities"]
+position = Vector2(362, 454)
+texture = ExtResource("26_scn_mug")
+centered = false
+offset = Vector2(-32.5, -60.0)
+scale = Vector2(0.3667, 0.3667)
+
+[node name="Lantern" type="Sprite2D" parent="Entities"]
+position = Vector2(722, 460)
+texture = ExtResource("27_item_lantern")
+centered = false
+offset = Vector2(-30.0, -140.0)
+scale = Vector2(0.3429, 0.3429)
+
+[node name="Camera" type="Node2D" parent="Entities"]
+position = Vector2(668, 460)
+visible = false
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Camera"]
+texture = ExtResource("28_scn_camera")
+centered = false
+offset = Vector2(-53.5, -70.0)
+scale = Vector2(0.3714, 0.3714)
+
+[node name="Tap" type="Area2D" parent="Entities/Camera"]
+script = ExtResource("8_tap_area")
+priority = 460.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Camera/Tap"]
+position = Vector2(1.0, -15.0)
+shape = SubResource("RectangleShape2D_29")
+
+[node name="SlotShelf" parent="Entities" instance=ExtResource("6_decor_slot")]
+position = Vector2(780, 460)
+slot_id = "h_shelf"
+
+[node name="Tap" parent="Entities/SlotShelf"]
+priority = 460.0
+
+[node name="SlotFloor" parent="Entities" instance=ExtResource("6_decor_slot")]
+position = Vector2(178, 640)
+slot_id = "h_floor"
+
+[node name="Tap" parent="Entities/SlotFloor"]
+priority = 640.0
+
+[node name="Bed" type="Node2D" parent="Entities"]
+script = ExtResource("30_bed")
+position = Vector2(1405, 648)
+
+[node name="Asleep" type="Sprite2D" parent="Entities/Bed"]
+texture = ExtResource("31_furn_bed_sle")
+centered = false
+offset = Vector2(-291.0, -260.0)
+scale = Vector2(0.5769, 0.5769)
+visible = false
+
+[node name="Made" type="Sprite2D" parent="Entities/Bed"]
+texture = ExtResource("32_furn_bed")
+centered = false
+offset = Vector2(-291.0, -260.0)
+scale = Vector2(0.5769, 0.5769)
+
+[node name="Tap" type="Area2D" parent="Entities/Bed"]
+script = ExtResource("8_tap_area")
+priority = 648.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Bed/Tap"]
+position = Vector2(0.0, -75.0)
+shape = SubResource("RectangleShape2D_33")
+
+[node name="Player" parent="Entities" instance=ExtResource("34_player")]
+position = Vector2(86, 640)
+speed = 300.0
+hit_w = 110.0
+
+[node name="Particles" type="Node2D" parent="."]
+script = ExtResource("35_particles")
+
+[node name="Spots" type="Node2D" parent="."]
+
+[node name="Door" type="Marker2D" parent="Spots"]
+position = Vector2(86, 640)
+
+[node name="Bed" type="Marker2D" parent="Spots"]
+position = Vector2(1265, 664)
+
+[node name="Desk" type="Marker2D" parent="Spots"]
+position = Vector2(1025, 648)
+
+[node name="Journal" type="Marker2D" parent="Spots"]
+position = Vector2(1125, 652)
+
+[node name="Cat" type="Marker2D" parent="Spots"]
+position = Vector2(820, 690)
+
+[node name="Knit" type="Marker2D" parent="Spots"]
+position = Vector2(1285, 650)
+
+[node name="Kettle" type="Marker2D" parent="Spots"]
+position = Vector2(300, 632)
+
+[node name="Window" type="Marker2D" parent="Spots"]
+position = Vector2(722, 640)
+
+[node name="Seat" type="Marker2D" parent="Spots"]
+position = Vector2(722, 646)
+
+[node name="Lights" type="Node2D" parent="."]
+
+[node name="Lamp" type="Node2D" parent="Lights"]
+script = ExtResource("7_scene_light")
+position = Vector2(722, 150)
+radius = 520.0
+color = Color(1.0, 0.8235, 0.5882, 1.0)
+day_intensity = 0.1375
+night_intensity = 0.55
+
+[node name="LampPool" type="Node2D" parent="Lights"]
+script = ExtResource("7_scene_light")
+position = Vector2(722, 640)
+radius = 420.0
+color = Color(1.0, 0.7843, 0.549, 1.0)
+day_intensity = 0.0875
+night_intensity = 0.35
+squash = 0.5
+
+[node name="Daylight" type="Node2D" parent="Lights"]
+script = ExtResource("7_scene_light")
+position = Vector2(722, 260)
+radius = 560.0
+color = Color(0.8431, 0.8941, 1.0, 1.0)
+day_intensity = 0.6
+night_intensity = 0.0
+
+[node name="Lantern" type="Node2D" parent="Lights"]
+script = ExtResource("7_scene_light")
+position = Vector2(722, 436)
+radius = 160.0
+color = Color(1.0, 0.7059, 0.3529, 1.0)
+day_intensity = 0.0
+night_intensity = 0.45
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="Glows" type="Node2D" parent="Overlay"]
+script = ExtResource("36_glow_layer")
+
+[node name="Overlay2" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="Emotes" type="Node2D" parent="Overlay2"]
+script = ExtResource("37_emote_layer")
+
+[node name="LampGlow" type="Node2D" parent="Overlay"]
+script = ExtResource("38_glow_marker")
+position = Vector2(722, 138)
+radius = 60.0
+color = Color(1.0, 0.8627, 0.5882, 1.0)
+day_alpha = 0.075
+night_alpha = 0.3
+
+[node name="LanternGlow" type="Node2D" parent="Overlay"]
+script = ExtResource("38_glow_marker")
+position = Vector2(722, 434)
+radius = 40.0
+color = Color(1.0, 0.7451, 0.3922, 1.0)
+day_alpha = 0.0
+night_alpha = 0.4
+
+[connection signal="tapped" from="Entities/Desk/Tap" to="." method="_on_desk_tapped"]
+[connection signal="tapped" from="Entities/Desk/Journal/Tap" to="." method="_on_journal_tapped"]
+[connection signal="tapped" from="Entities/Cat/Tap" to="." method="_on_cat_tapped"]
+[connection signal="tapped" from="Entities/Yarn/Tap" to="." method="_on_yarn_tapped"]
+[connection signal="tapped" from="Entities/Kettle/Tap" to="." method="_on_kettle_tapped"]
+[connection signal="tapped" from="Entities/Bed/Tap" to="." method="_on_bed_tapped"]
+[connection signal="tapped" from="Entities/Camera/Tap" to="." method="_on_camera_tapped"]
+[connection signal="tapped" from="Wall/Window" to="." method="_on_window_tapped"]
+[connection signal="tapped" from="Wall/WindowSeat" to="." method="_on_seat_tapped"]
+[connection signal="tapped" from="Wall/Door" to="." method="_on_door_tapped"]

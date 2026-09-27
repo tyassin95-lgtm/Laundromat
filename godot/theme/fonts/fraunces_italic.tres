@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=2 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Fraunces.woff2" id="1"]
+
+[resource]
+base_font = ExtResource("1")
+variation_opentype = {2003265652: 400, 1869640570: 18}
+variation_transform = Transform2D(1, 0.2, 0, 1, 0, 0)

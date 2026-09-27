@@ -1,0 +1,593 @@
+[gd_scene load_steps=37 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/laundromat.gd" id="1_laundromat"]
+[ext_resource type="PackedScene" path="res://scenes/objects/street_view.tscn" id="2_street_view"]
+[ext_resource type="Script" path="res://scripts/world/glass_rain_outside.gd" id="3_glass_rain_o"]
+[ext_resource type="Texture2D" path="res://assets/bg/laundromat.webp" id="4_laundromat"]
+[ext_resource type="Script" path="res://scripts/world/glass_rain.gd" id="5_glass_rain"]
+[ext_resource type="FontFile" path="res://assets/fonts/Pacifico-Regular.woff2" id="6_Pacifico-Reg"]
+[ext_resource type="FontVariation" path="res://theme/fonts/fraunces_bold.tres" id="7_fraunces_bol"]
+[ext_resource type="Script" path="res://scripts/world/painted_text.gd" id="8_painted_text"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/door_sign.gd" id="9_door_sign"]
+[ext_resource type="Texture2D" path="res://assets/sprites/sign_closed.webp" id="10_sign_closed"]
+[ext_resource type="Texture2D" path="res://assets/sprites/upg_water_heater.webp" id="11_upg_water_he"]
+[ext_resource type="Texture2D" path="res://assets/sprites/upg_coin_changer.webp" id="12_upg_coin_cha"]
+[ext_resource type="PackedScene" path="res://scenes/objects/wall_clock.tscn" id="13_wall_clock"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/price_board.gd" id="14_price_board"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="15_tap_area"]
+[ext_resource type="PackedScene" path="res://scenes/objects/supply_shelf.tscn" id="17_supply_shelf"]
+[ext_resource type="PackedScene" path="res://scenes/objects/decor_slot.tscn" id="18_decor_slot"]
+[ext_resource type="Script" path="res://scripts/world/scene_light.gd" id="19_scene_light"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="20_glow_marker"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/floor_stuff.gd" id="23_floor_stuff"]
+[ext_resource type="PackedScene" path="res://scenes/objects/washer.tscn" id="24_washer"]
+[ext_resource type="PackedScene" path="res://scenes/objects/dryer_tower.tscn" id="25_dryer_tower"]
+[ext_resource type="PackedScene" path="res://scenes/objects/pickup_shelf.tscn" id="26_pickup_shelf"]
+[ext_resource type="PackedScene" path="res://scenes/objects/counter.tscn" id="27_counter"]
+[ext_resource type="PackedScene" path="res://scenes/objects/fold_table.tscn" id="28_fold_table"]
+[ext_resource type="PackedScene" path="res://scenes/objects/window_seat.tscn" id="29_window_seat"]
+[ext_resource type="PackedScene" path="res://scenes/objects/lounge_table.tscn" id="30_lounge_table"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player.tscn" id="31_player"]
+[ext_resource type="Script" path="res://scripts/world/particles.gd" id="32_particles"]
+[ext_resource type="Script" path="res://scripts/world/glow_layer.gd" id="33_glow_layer"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/indicators.gd" id="34_indicators"]
+[ext_resource type="Script" path="res://scripts/world/emote_layer.gd" id="35_emote_layer"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/ripples.gd" id="36_ripples"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_16"]
+size = Vector2(229, 148)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_21"]
+size = Vector2(138, 382)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_22"]
+size = Vector2(166, 482)
+
+[node name="Laundromat" type="Node2D"]
+script = ExtResource("1_laundromat")
+place = "laundromat"
+scene_kind = "laundromat"
+world_width = 2080.0
+interior = true
+walk_band = Vector2(618, 694)
+char_scale = 1.0
+vignette = 0.35
+
+[node name="WindowView" parent="." instance=ExtResource("2_street_view")]
+position = Vector2(1440, -30)
+
+[node name="RainOutside" type="Node2D" parent="."]
+script = ExtResource("3_glass_rain_o")
+rain = NodePath("../GlassRain")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("4_laundromat")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="GlassRain" type="Node2D" parent="."]
+script = ExtResource("5_glass_rain")
+panes = Array[Rect2]([Rect2(1701, 169, 64, 65), Rect2(1776, 169, 61, 65), Rect2(1848, 169, 61, 65), Rect2(1700, 248, 209, 282), Rect2(1947, 169, 114, 64), Rect2(1959, 268, 92, 275)])
+
+[node name="GlassDecal" type="Node2D" parent="."]
+script = ExtResource("8_painted_text")
+position = Vector2(1805, 322)
+font = ExtResource("6_Pacifico-Reg")
+font_size = 44
+color = Color(0.9412, 0.8235, 0.5882, 0.6)
+outline_color = Color(0.3137, 0.1569, 0.0784, 0.35)
+outline_size = 3
+mirrored = true
+subtitle = "LAUNDROMAT · WASH & FOLD"
+subtitle_font = ExtResource("7_fraunces_bol")
+subtitle_size = 15
+subtitle_color = Color(0.9412, 0.8627, 0.7059, 0.55)
+subtitle_offset = 30.0
+
+[node name="DoorSign" type="Sprite2D" parent="."]
+position = Vector2(2005, 272)
+texture = ExtResource("10_sign_closed")
+centered = false
+offset = Vector2(-80.5, 0)
+scale = Vector2(0.3333, 0.3333)
+script = ExtResource("9_door_sign")
+
+[node name="Wall" type="Node2D" parent="."]
+
+[node name="WaterHeater" type="Sprite2D" parent="Wall"]
+position = Vector2(638, 322)
+texture = ExtResource("11_upg_water_he")
+centered = false
+offset = Vector2(-29.0, -170.0)
+scale = Vector2(0.6118, 0.6118)
+visible = false
+
+[node name="CoinChanger" type="Sprite2D" parent="Wall"]
+position = Vector2(1056, 406)
+texture = ExtResource("12_upg_coin_cha")
+centered = false
+offset = Vector2(-33.0, -130.0)
+scale = Vector2(0.4923, 0.4923)
+visible = false
+
+[node name="Clock" parent="Wall" instance=ExtResource("13_wall_clock")]
+position = Vector2(1006, 196)
+
+[node name="PriceBoard" type="Node2D" parent="Wall"]
+script = ExtResource("14_price_board")
+position = Vector2(276, 200)
+
+[node name="Tap" type="Area2D" parent="Wall/PriceBoard"]
+script = ExtResource("15_tap_area")
+priority = 54.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/PriceBoard/Tap"]
+position = Vector2(86.5, 36.0)
+shape = SubResource("RectangleShape2D_16")
+
+[node name="SupplyShelf" parent="Wall" instance=ExtResource("17_supply_shelf")]
+position = Vector2(546, 312)
+
+[node name="SlotHang1" parent="Wall" instance=ExtResource("18_decor_slot")]
+position = Vector2(1106, 236)
+slot_id = "hang1"
+style = 1
+
+[node name="Tap" parent="Wall/SlotHang1"]
+priority = 52.0
+
+[node name="SlotHang2" parent="Wall" instance=ExtResource("18_decor_slot")]
+position = Vector2(1734, 304)
+slot_id = "hang2"
+style = 1
+
+[node name="Tap" parent="Wall/SlotHang2"]
+priority = 52.0
+
+[node name="SlotLights" parent="Wall" instance=ExtResource("18_decor_slot")]
+position = Vector2(1805, 158)
+slot_id = "lights"
+
+[node name="Tap" parent="Wall/SlotLights"]
+priority = 52.0
+
+[node name="Light" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("19_scene_light")
+position = Vector2(0, 32)
+radius = 300.0
+color = Color(1.0, 0.7451, 0.4314, 1.0)
+day_intensity = 0.1
+night_intensity = 0.6
+needs_decor = "*"
+
+[node name="Bulb1" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(-104.0, 30.0)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 0.0
+needs_decor = "*"
+
+[node name="Bulb2" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(-62.4, 42.9313)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 1.0
+needs_decor = "*"
+
+[node name="Bulb3" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(-20.8, 50.9232)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 2.0
+needs_decor = "*"
+
+[node name="Bulb4" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(20.8, 50.9232)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 3.0
+needs_decor = "*"
+
+[node name="Bulb5" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(62.4, 42.9313)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 4.0
+needs_decor = "*"
+
+[node name="Bulb6" type="Node2D" parent="Wall/SlotLights"]
+script = ExtResource("20_glow_marker")
+position = Vector2(104.0, 30.0)
+radius = 24.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.25
+night_alpha = 0.59
+twinkle = 0.06
+twinkle_phase = 5.0
+needs_decor = "*"
+
+[node name="SlotWallA" parent="Wall" instance=ExtResource("18_decor_slot")]
+position = Vector2(742, 214)
+slot_id = "wall_a"
+
+[node name="Tap" parent="Wall/SlotWallA"]
+priority = 52.0
+
+[node name="SlotWallB" parent="Wall" instance=ExtResource("18_decor_slot")]
+position = Vector2(1290, 214)
+slot_id = "wall_b"
+
+[node name="Tap" parent="Wall/SlotWallB"]
+priority = 52.0
+
+[node name="BackDoor" type="Area2D" parent="Wall"]
+script = ExtResource("15_tap_area")
+priority = 50.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/BackDoor"]
+position = Vector2(77.0, 431.0)
+shape = SubResource("RectangleShape2D_21")
+
+[node name="FrontDoor" type="Area2D" parent="Wall"]
+script = ExtResource("15_tap_area")
+priority = 50.0
+
+[node name="Shape" type="CollisionShape2D" parent="Wall/FrontDoor"]
+position = Vector2(2007.0, 381.0)
+shape = SubResource("RectangleShape2D_22")
+
+[node name="FloorDecals" type="Node2D" parent="."]
+
+[node name="SlotRug" parent="FloorDecals" instance=ExtResource("18_decor_slot")]
+position = Vector2(1800, 706)
+slot_id = "rug"
+style = 3
+
+[node name="Tap" parent="FloorDecals/SlotRug"]
+priority = 1.0
+
+[node name="FloorStuff" type="Node2D" parent="FloorDecals"]
+script = ExtResource("23_floor_stuff")
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Washer1" parent="Entities" instance=ExtResource("24_washer")]
+position = Vector2(681, 614)
+bay = 0
+
+[node name="Washer2" parent="Entities" instance=ExtResource("24_washer")]
+position = Vector2(831, 614)
+bay = 1
+
+[node name="Washer3" parent="Entities" instance=ExtResource("24_washer")]
+position = Vector2(981, 614)
+bay = 2
+
+[node name="Washer4" parent="Entities" instance=ExtResource("24_washer")]
+position = Vector2(1131, 614)
+bay = 3
+
+[node name="Washer5" parent="Entities" instance=ExtResource("24_washer")]
+position = Vector2(1281, 614)
+bay = 4
+
+[node name="DryerTower1" parent="Entities" instance=ExtResource("25_dryer_tower")]
+position = Vector2(1419, 614)
+bay = 0
+
+[node name="DryerTower2" parent="Entities" instance=ExtResource("25_dryer_tower")]
+position = Vector2(1564, 614)
+bay = 1
+
+[node name="PickupShelf" parent="Entities" instance=ExtResource("26_pickup_shelf")]
+position = Vector2(202, 614)
+
+[node name="Counter" parent="Entities" instance=ExtResource("27_counter")]
+position = Vector2(345, 654)
+
+[node name="FoldTable" parent="Entities" instance=ExtResource("28_fold_table")]
+position = Vector2(540, 668)
+
+[node name="WindowSeat" parent="Entities" instance=ExtResource("29_window_seat")]
+position = Vector2(1860, 668)
+
+[node name="LoungeTable" parent="Entities" instance=ExtResource("30_lounge_table")]
+position = Vector2(1742, 684)
+
+[node name="SlotSill" parent="Entities" instance=ExtResource("18_decor_slot")]
+position = Vector2(1742, 540)
+slot_id = "sill"
+
+[node name="Tap" parent="Entities/SlotSill"]
+priority = 613.0
+
+[node name="Lantern" type="Node2D" parent="Entities/SlotSill"]
+script = ExtResource("19_scene_light")
+position = Vector2(0, -30)
+radius = 200.0
+color = Color(1.0, 0.7059, 0.3529, 1.0)
+day_intensity = 0.0
+night_intensity = 0.5
+needs_decor = "lantern"
+
+[node name="SlotSill2" parent="Entities" instance=ExtResource("18_decor_slot")]
+position = Vector2(1872, 540)
+slot_id = "sill2"
+
+[node name="Tap" parent="Entities/SlotSill2"]
+priority = 613.0
+
+[node name="Lantern" type="Node2D" parent="Entities/SlotSill2"]
+script = ExtResource("19_scene_light")
+position = Vector2(0, -30)
+radius = 200.0
+color = Color(1.0, 0.7059, 0.3529, 1.0)
+day_intensity = 0.0
+night_intensity = 0.5
+needs_decor = "lantern"
+
+[node name="SlotFloorL1" parent="Entities" instance=ExtResource("18_decor_slot")]
+position = Vector2(1655, 640)
+slot_id = "floor_l1"
+
+[node name="Tap" parent="Entities/SlotFloorL1"]
+priority = 640.0
+
+[node name="FloorLamp" type="Node2D" parent="Entities/SlotFloorL1"]
+script = ExtResource("19_scene_light")
+position = Vector2(30, -170)
+radius = 260.0
+color = Color(1.0, 0.7686, 0.4706, 1.0)
+day_intensity = 0.4
+night_intensity = 0.8
+needs_decor = "floor_lamp"
+
+[node name="SlotFloorR1" parent="Entities" instance=ExtResource("18_decor_slot")]
+position = Vector2(1962, 708)
+slot_id = "floor_r1"
+
+[node name="Tap" parent="Entities/SlotFloorR1"]
+priority = 708.0
+
+[node name="Player" parent="Entities" instance=ExtResource("31_player")]
+position = Vector2(80, 636)
+
+[node name="Particles" type="Node2D" parent="."]
+script = ExtResource("32_particles")
+
+[node name="Spots" type="Node2D" parent="."]
+
+[node name="BackDoor" type="Marker2D" parent="Spots"]
+position = Vector2(80, 636)
+
+[node name="FrontDoor" type="Marker2D" parent="Spots"]
+position = Vector2(2004, 650)
+
+[node name="Counter" type="Marker2D" parent="Spots"]
+position = Vector2(452, 688)
+
+[node name="Staff" type="Marker2D" parent="Spots"]
+position = Vector2(345, 628)
+
+[node name="Shelf" type="Marker2D" parent="Spots"]
+position = Vector2(280, 628)
+
+[node name="MayaNight" type="Marker2D" parent="Spots"]
+position = Vector2(1520, 676)
+
+[node name="Lounge1" type="Marker2D" parent="Spots"]
+position = Vector2(1690, 690)
+
+[node name="Lounge2" type="Marker2D" parent="Spots"]
+position = Vector2(1545, 682)
+
+[node name="Lounge3" type="Marker2D" parent="Spots"]
+position = Vector2(1405, 688)
+
+[node name="Lounge4" type="Marker2D" parent="Spots"]
+position = Vector2(1250, 680)
+
+[node name="Lights" type="Node2D" parent="."]
+
+[node name="Lamp1" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(352, 160)
+radius = 430.0
+color = Color(1.0, 0.8392, 0.6275, 1.0)
+day_intensity = 0.24
+night_intensity = 0.8
+
+[node name="LampPool1" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(352, 640)
+radius = 340.0
+color = Color(1.0, 0.7843, 0.5882, 1.0)
+day_intensity = 0.135
+night_intensity = 0.45
+squash = 0.55
+
+[node name="Lamp2" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(831, 160)
+radius = 430.0
+color = Color(1.0, 0.8392, 0.6275, 1.0)
+day_intensity = 0.24
+night_intensity = 0.8
+
+[node name="LampPool2" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(831, 640)
+radius = 340.0
+color = Color(1.0, 0.7843, 0.5882, 1.0)
+day_intensity = 0.135
+night_intensity = 0.45
+squash = 0.55
+
+[node name="Lamp3" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1188, 160)
+radius = 430.0
+color = Color(1.0, 0.8392, 0.6275, 1.0)
+day_intensity = 0.24
+night_intensity = 0.8
+
+[node name="LampPool3" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1188, 640)
+radius = 340.0
+color = Color(1.0, 0.7843, 0.5882, 1.0)
+day_intensity = 0.135
+night_intensity = 0.45
+squash = 0.55
+
+[node name="Lamp4" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1816, 160)
+radius = 430.0
+color = Color(1.0, 0.8392, 0.6275, 1.0)
+day_intensity = 0.24
+night_intensity = 0.8
+
+[node name="LampPool4" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1816, 640)
+radius = 340.0
+color = Color(1.0, 0.7843, 0.5882, 1.0)
+day_intensity = 0.135
+night_intensity = 0.45
+squash = 0.55
+
+[node name="Window" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1805, 380)
+radius = 560.0
+color = Color(0.8431, 0.8941, 1.0, 1.0)
+day_intensity = 0.55
+night_intensity = 0.0
+
+[node name="DoorGlass" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(2005, 400)
+radius = 300.0
+color = Color(0.8431, 0.8941, 1.0, 1.0)
+day_intensity = 0.4
+night_intensity = 0.0
+
+[node name="PowerCut1" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1742, 500)
+radius = 360.0
+color = Color(1.0, 0.6667, 0.3137, 1.0)
+day_intensity = 0.9
+night_intensity = 0.9
+mode = 1
+
+[node name="PowerCut2" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(1872, 500)
+radius = 360.0
+color = Color(1.0, 0.6667, 0.3137, 1.0)
+day_intensity = 0.9
+night_intensity = 0.9
+mode = 1
+
+[node name="PowerCut3" type="Node2D" parent="Lights"]
+script = ExtResource("19_scene_light")
+position = Vector2(290, 500)
+radius = 360.0
+color = Color(1.0, 0.6667, 0.3137, 1.0)
+day_intensity = 0.9
+night_intensity = 0.9
+mode = 1
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="Glows" type="Node2D" parent="Overlay"]
+script = ExtResource("33_glow_layer")
+
+[node name="Overlay2" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="Indicators" type="Node2D" parent="Overlay2"]
+script = ExtResource("34_indicators")
+
+[node name="Emotes" type="Node2D" parent="Overlay2"]
+script = ExtResource("35_emote_layer")
+
+[node name="Ripples" type="Node2D" parent="Overlay2"]
+script = ExtResource("36_ripples")
+
+[node name="LampGlow1" type="Node2D" parent="Overlay"]
+script = ExtResource("20_glow_marker")
+position = Vector2(352, 150)
+radius = 70.0
+color = Color(1.0, 0.8824, 0.6275, 1.0)
+day_alpha = 0.105
+night_alpha = 0.35
+
+[node name="LampGlow2" type="Node2D" parent="Overlay"]
+script = ExtResource("20_glow_marker")
+position = Vector2(831, 150)
+radius = 70.0
+color = Color(1.0, 0.8824, 0.6275, 1.0)
+day_alpha = 0.105
+night_alpha = 0.35
+
+[node name="LampGlow3" type="Node2D" parent="Overlay"]
+script = ExtResource("20_glow_marker")
+position = Vector2(1188, 150)
+radius = 70.0
+color = Color(1.0, 0.8824, 0.6275, 1.0)
+day_alpha = 0.105
+night_alpha = 0.35
+
+[node name="LampGlow4" type="Node2D" parent="Overlay"]
+script = ExtResource("20_glow_marker")
+position = Vector2(1816, 150)
+radius = 70.0
+color = Color(1.0, 0.8824, 0.6275, 1.0)
+day_alpha = 0.105
+night_alpha = 0.35
+
+[node name="PowerCutGlow" type="Node2D" parent="Overlay"]
+script = ExtResource("20_glow_marker")
+position = Vector2(1742, 505)
+radius = 90.0
+color = Color(1.0, 0.7451, 0.3922, 1.0)
+day_alpha = 0.4
+night_alpha = 0.4
+mode = 1
+
+[connection signal="tapped" from="Wall/PriceBoard/Tap" to="." method="_on_prices_tapped"]
+[connection signal="tapped" from="Wall/Clock/Tap" to="." method="_on_clock_tapped"]
+[connection signal="tapped" from="Wall/SupplyShelf/Tap" to="." method="_on_supply_tapped"]
+[connection signal="tapped" from="Wall/BackDoor" to="." method="_on_back_door_tapped"]
+[connection signal="tapped" from="Wall/FrontDoor" to="." method="_on_front_door_tapped"]
+[connection signal="tapped" from="Entities/PickupShelf/Tap" to="." method="_on_shelf_tapped"]
+[connection signal="tapped" from="Entities/Counter/Tap" to="." method="_on_counter_tapped"]
+[connection signal="tapped" from="Entities/FoldTable/Tap" to="." method="_on_fold_tapped"]
+[connection signal="tapped" from="Entities/WindowSeat/Tap" to="." method="_on_seat_tapped"]

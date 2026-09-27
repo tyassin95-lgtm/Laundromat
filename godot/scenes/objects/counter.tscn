@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/counter.gd" id="1_counter"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_counter.webp" id="2_furn_counter"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_bell.webp" id="3_scn_bell"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/shelf_items.gd" id="4_shelf_items"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="5_tap_area"]
+[ext_resource type="PackedScene" path="res://scenes/objects/decor_slot.tscn" id="7_decor_slot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
+size = Vector2(190, 194)
+
+[node name="Counter" type="Node2D"]
+script = ExtResource("1_counter")
+
+[node name="Counter" type="Sprite2D" parent="."]
+texture = ExtResource("2_furn_counter")
+centered = false
+offset = Vector2(-111.5, -150.0)
+scale = Vector2(0.8267, 0.8267)
+
+[node name="Bell" type="Sprite2D" parent="."]
+position = Vector2(72.1733, -117.172)
+texture = ExtResource("3_scn_bell")
+centered = false
+offset = Vector2(-28.5, -50.0)
+scale = Vector2(0.4, 0.4)
+
+[node name="Items" type="Node2D" parent="."]
+script = ExtResource("4_shelf_items")
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("5_tap_area")
+priority = 654.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, -87.0)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="SlotCounterTop" parent="." instance=ExtResource("7_decor_slot")]
+position = Vector2(-55, -118)
+slot_id = "counter_top"
+
+[node name="Tap" parent="SlotCounterTop"]
+priority = 655.0

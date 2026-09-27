@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/fold_table.gd" id="1_fold_table"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player_fold_clean.webp" id="2_player_fold_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/prop_fold_table.webp" id="3_prop_fold_ta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_folded.webp" id="4_scn_folded"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="5_tap_area"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
+size = Vector2(176, 138)
+
+[node name="FoldTable" type="Node2D"]
+script = ExtResource("1_fold_table")
+
+[node name="Folder" type="Sprite2D" parent="."]
+position = Vector2(0, -18)
+texture = ExtResource("2_player_fold_")
+centered = false
+offset = Vector2(-92.5, -499.0)
+scale = Vector2(0.5347, 0.5347)
+visible = false
+
+[node name="Table" type="Sprite2D" parent="."]
+texture = ExtResource("3_prop_fold_ta")
+centered = false
+offset = Vector2(-97.0, -140.0)
+scale = Vector2(0.8429, 0.8429)
+
+[node name="Stack" type="Sprite2D" parent="."]
+position = Vector2(49.0543, -109.448)
+texture = ExtResource("4_scn_folded")
+centered = false
+offset = Vector2(-51.5, -80.0)
+scale = Vector2(0.25, 0.25)
+visible = false
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("5_tap_area")
+priority = 668.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, -59.0)
+shape = SubResource("RectangleShape2D_6")

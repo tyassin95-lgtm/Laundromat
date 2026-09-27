@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street/prop.gd" id="1_prop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_bicycle.webp" id="2_street_bicyc"]
+
+[node name="Prop" type="Node2D"]
+script = ExtResource("1_prop")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_street_bicyc")
+centered = false
+offset = Vector2(-133.5, -160.0)
+scale = Vector2(0.55, 0.55)

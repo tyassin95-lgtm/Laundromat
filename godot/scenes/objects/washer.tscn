@@ -1,0 +1,61 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/machine_unit.gd" id="1_machine_unit"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/drum_view.gd" id="2_drum_view"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/drum_contents.gd" id="3_drum_content"]
+[ext_resource type="Texture2D" path="res://assets/sprites/washer_classic.webp" id="4_washer_class"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/machine_glass.gd" id="5_machine_glas"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_out_of_order.webp" id="6_scn_out_of_o"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/empty_bay.gd" id="7_empty_bay"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="8_tap_area"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
+size = Vector2(148, 226.0)
+
+[node name="Washer" type="Node2D"]
+script = ExtResource("1_machine_unit")
+kind = 0
+height = 206.0
+
+[node name="Shake" type="Node2D" parent="."]
+
+[node name="Drum0" type="Node2D" parent="Shake"]
+script = ExtResource("2_drum_view")
+position = Vector2(-1.0737, -98.5504)
+clip_children = 2
+
+[node name="Contents" type="Node2D" parent="Shake/Drum0"]
+script = ExtResource("3_drum_content")
+
+[node name="Body" type="Sprite2D" parent="Shake"]
+texture = ExtResource("4_washer_class")
+centered = false
+offset = Vector2(-100.0, -330.0)
+scale = Vector2(0.6242, 0.6242)
+
+[node name="Glass0" type="Node2D" parent="Shake"]
+script = ExtResource("5_machine_glas")
+position = Vector2(-1.0737, -98.5504)
+
+[node name="OutOfOrder0" type="Sprite2D" parent="Shake"]
+position = Vector2(-3.0737, -80.3743)
+texture = ExtResource("6_scn_out_of_o")
+centered = false
+offset = Vector2(-55.0, -110.0)
+scale = Vector2(0.3605, 0.3605)
+rotation = -0.08
+visible = false
+
+[node name="EmptyBay" type="Node2D" parent="."]
+script = ExtResource("7_empty_bay")
+visible = false
+half_width = 60.0
+height = 206.0
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("8_tap_area")
+priority = 614.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, -103.0)
+shape = SubResource("RectangleShape2D_9")

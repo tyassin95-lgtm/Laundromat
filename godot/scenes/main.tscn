@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/world/game_camera.gd" id="2_game_camera"]
+[ext_resource type="Script" path="res://scripts/world/lighting.gd" id="3_lighting"]
+[ext_resource type="Script" path="res://scripts/world/light_painter.gd" id="5_light_painte"]
+[ext_resource type="Shader" path="res://shaders/vignette.gdshader" id="8_vignette"]
+[ext_resource type="Script" path="res://scripts/world/vignette.gd" id="10_vignette"]
+[ext_resource type="Script" path="res://scripts/world/flash.gd" id="11_flash"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4"]
+blend_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_6"]
+viewport_path = NodePath("Lighting/LightViewport")
+resource_local_to_scene = true
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7"]
+blend_mode = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_9"]
+shader = ExtResource("8_vignette")
+shader_parameter/strength = 0.35
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_12"]
+shader = ExtResource("8_vignette")
+shader_parameter/strength = 0.35
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Camera" type="Camera2D" parent="."]
+script = ExtResource("2_game_camera")
+
+[node name="Lighting" type="Node" parent="."]
+script = ExtResource("3_lighting")
+
+[node name="LightViewport" type="SubViewport" parent="Lighting"]
+transparent_bg = true
+size = Vector2i(400, 180)
+render_target_update_mode = 4
+
+[node name="Painter" type="Node2D" parent="Lighting/LightViewport"]
+script = ExtResource("5_light_painte")
+material = SubResource("CanvasItemMaterial_4")
+
+[node name="Layer" type="CanvasLayer" parent="Lighting"]
+layer = 1
+
+[node name="Lightmap" type="TextureRect" parent="Lighting/Layer"]
+material = SubResource("CanvasItemMaterial_7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("ViewportTexture_6")
+expand_mode = 1
+texture_filter = 2
+
+[node name="Vignette" type="CanvasLayer" parent="."]
+layer = 8
+
+[node name="Shade" type="ColorRect" parent="Vignette"]
+script = ExtResource("10_vignette")
+material = SubResource("ShaderMaterial_9")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Flash" type="ColorRect" parent="Vignette"]
+script = ExtResource("11_flash")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.8745, 0.9098, 1.0, 1.0)
+visible = false
+
+[node name="TitleShade" type="ColorRect" parent="Vignette"]
+script = ExtResource("10_vignette")
+material = SubResource("ShaderMaterial_12")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+extra = true

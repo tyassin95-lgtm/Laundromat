@@ -1,0 +1,114 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/machine_unit.gd" id="1_machine_unit"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/drum_view.gd" id="2_drum_view"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/drum_contents.gd" id="3_drum_content"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dryer_stack.webp" id="4_dryer_stack"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/machine_glass.gd" id="5_machine_glas"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_out_of_order.webp" id="6_scn_out_of_o"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/empty_bay.gd" id="7_empty_bay"]
+[ext_resource type="Texture2D" path="res://assets/sprites/scn_lint.webp" id="8_scn_lint"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_cat_bed.webp" id="9_item_cat_bed"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="10_tap_area"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_11"]
+size = Vector2(132, 316.0)
+
+[node name="DryerTower" type="Node2D"]
+script = ExtResource("1_machine_unit")
+kind = 1
+height = 296.0
+
+[node name="Shake" type="Node2D" parent="."]
+
+[node name="Drum0" type="Node2D" parent="Shake"]
+script = ExtResource("2_drum_view")
+position = Vector2(0.6754, -216.4648)
+clip_children = 2
+
+[node name="Contents" type="Node2D" parent="Shake/Drum0"]
+script = ExtResource("3_drum_content")
+
+[node name="Drum1" type="Node2D" parent="Shake"]
+script = ExtResource("2_drum_view")
+position = Vector2(0.7189, -92.0856)
+clip_children = 2
+
+[node name="Contents" type="Node2D" parent="Shake/Drum1"]
+script = ExtResource("3_drum_content")
+
+[node name="Body" type="Sprite2D" parent="Shake"]
+texture = ExtResource("4_dryer_stack")
+centered = false
+offset = Vector2(-92.0, -500.0)
+scale = Vector2(0.592, 0.592)
+
+[node name="TopHalf" type="Sprite2D" parent="Shake"]
+texture = ExtResource("4_dryer_stack")
+centered = false
+offset = Vector2(-92.0, -500.0)
+scale = Vector2(0.592, 0.592)
+visible = false
+
+[node name="BottomHalf" type="Sprite2D" parent="Shake"]
+texture = ExtResource("4_dryer_stack")
+centered = false
+offset = Vector2(-92.0, -500.0)
+scale = Vector2(0.592, 0.592)
+visible = false
+
+[node name="Glass0" type="Node2D" parent="Shake"]
+script = ExtResource("5_machine_glas")
+position = Vector2(0.6754, -216.4648)
+
+[node name="Glass1" type="Node2D" parent="Shake"]
+script = ExtResource("5_machine_glas")
+position = Vector2(0.7189, -92.0856)
+
+[node name="OutOfOrder0" type="Sprite2D" parent="Shake"]
+position = Vector2(-1.3246, -198.5995)
+texture = ExtResource("6_scn_out_of_o")
+centered = false
+offset = Vector2(-55.0, -110.0)
+scale = Vector2(0.3544, 0.3544)
+rotation = -0.08
+visible = false
+
+[node name="OutOfOrder1" type="Sprite2D" parent="Shake"]
+position = Vector2(-1.2811, -74.1844)
+texture = ExtResource("6_scn_out_of_o")
+centered = false
+offset = Vector2(-55.0, -110.0)
+scale = Vector2(0.3551, 0.3551)
+rotation = -0.08
+visible = false
+
+[node name="EmptyBay" type="Node2D" parent="."]
+script = ExtResource("7_empty_bay")
+visible = false
+half_width = 52.0
+height = 296.0
+
+[node name="LintBunny" type="Sprite2D" parent="."]
+position = Vector2(23.9642, -14.8)
+texture = ExtResource("8_scn_lint")
+centered = false
+offset = Vector2(-33.0, -70.0)
+scale = Vector2(0.4286, 0.4286)
+visible = false
+
+[node name="Cat" type="Sprite2D" parent="."]
+position = Vector2(0, -292.0)
+texture = ExtResource("9_item_cat_bed")
+centered = false
+offset = Vector2(-95.0, -130.0)
+scale = Vector2(0.3538, 0.3538)
+visible = false
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("10_tap_area")
+priority = 615.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, -148.0)
+shape = SubResource("RectangleShape2D_11")

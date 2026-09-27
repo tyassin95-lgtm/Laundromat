@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/supply_shelf.gd" id="1_supply_shelf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decor_wall_shelf.webp" id="2_decor_wall_s"]
+[ext_resource type="Script" path="res://scripts/world/laundromat/shelf_items.gd" id="3_shelf_items"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="4_tap_area"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5"]
+size = Vector2(138, 102)
+
+[node name="SupplyShelf" type="Node2D"]
+script = ExtResource("1_supply_shelf")
+
+[node name="Shelf" type="Sprite2D" parent="."]
+texture = ExtResource("2_decor_wall_s")
+centered = false
+offset = Vector2(-116.0, -150.0)
+scale = Vector2(0.5086, 0.5086)
+
+[node name="Items" type="Node2D" parent="."]
+script = ExtResource("3_shelf_items")
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("4_tap_area")
+priority = 60.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, -39.0)
+shape = SubResource("RectangleShape2D_5")

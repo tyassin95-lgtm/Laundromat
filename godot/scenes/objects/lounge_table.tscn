@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/street_cafe_table.webp" id="1_street_cafe_"]
+[ext_resource type="PackedScene" path="res://scenes/objects/decor_slot.tscn" id="2_decor_slot"]
+
+[node name="LoungeTable" type="Node2D"]
+
+[node name="Table" type="Sprite2D" parent="."]
+texture = ExtResource("1_street_cafe_")
+centered = false
+offset = Vector2(-84.5, -180.0)
+scale = Vector2(0.4889, 0.4889)
+
+[node name="Slot" parent="." instance=ExtResource("2_decor_slot")]
+position = Vector2(0, -85.064)
+slot_id = "lounge_table"
+base_offset = Vector2(0, 85.064)
+
+[node name="Tap" parent="Slot"]
+priority = 684.0

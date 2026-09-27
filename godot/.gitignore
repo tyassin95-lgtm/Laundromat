@@ -1,0 +1,4 @@
+# Godot 4 editor cache and imported data (regenerated on import)
+.godot/
+*.tmp
+export_presets.cfg

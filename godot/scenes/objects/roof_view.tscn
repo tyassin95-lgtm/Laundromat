@@ -1,0 +1,67 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/roof_view.gd" id="1_roof_view"]
+[ext_resource type="Texture2D" path="res://assets/sprites/moon.webp" id="2_moon"]
+[ext_resource type="Script" path="res://scripts/world/halo.gd" id="4_halo"]
+[ext_resource type="Script" path="res://scripts/world/roof_clouds.gd" id="5_roof_clouds"]
+[ext_resource type="Script" path="res://scripts/world/roof_birds.gd" id="6_roof_birds"]
+[ext_resource type="Texture2D" path="res://assets/bg/view_home.webp" id="7_view_home"]
+[ext_resource type="Script" path="res://scripts/world/roof_smoke.gd" id="8_roof_smoke"]
+[ext_resource type="Texture2D" path="res://assets/bg/view_home_lights.webp" id="11_view_home_li"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_9"]
+blend_mode = 3
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_10"]
+blend_mode = 1
+
+[node name="RoofView" type="Node2D"]
+script = ExtResource("1_roof_view")
+scale = Vector2(0.72, 0.72)
+view_size = Vector2(560, 480)
+follow = 0.2
+
+[node name="Moon" type="Sprite2D" parent="."]
+position = Vector2(123.2, 46)
+texture = ExtResource("2_moon")
+centered = false
+offset = Vector2(-59.0, -60.0)
+scale = Vector2(0.25, 0.25)
+visible = false
+
+[node name="Sun" type="Node2D" parent="."]
+script = ExtResource("4_halo")
+material = SubResource("CanvasItemMaterial_3")
+radius = 70.0
+color = Color(1.0, 0.9412, 0.7843, 1.0)
+alpha = 0.3
+
+[node name="Clouds" type="Node2D" parent="."]
+script = ExtResource("5_roof_clouds")
+
+[node name="Birds" type="Node2D" parent="."]
+script = ExtResource("6_roof_birds")
+
+[node name="Painting" type="Sprite2D" parent="."]
+texture = ExtResource("7_view_home")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="Smoke" type="Node2D" parent="."]
+script = ExtResource("8_roof_smoke")
+
+[node name="Tint" type="ColorRect" parent="."]
+material = SubResource("CanvasItemMaterial_9")
+offset_right = 560.0
+offset_bottom = 480.0
+mouse_filter = 2
+
+[node name="Lights" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_10")
+texture = ExtResource("11_view_home_li")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+visible = false

@@ -1,0 +1,393 @@
+[gd_scene load_steps=44 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street/street.gd" id="1_street"]
+[ext_resource type="Script" path="res://scripts/world/street/sky_backdrop.gd" id="2_sky_backdrop"]
+[ext_resource type="Texture2D" path="res://assets/bg/skyline.webp" id="3_skyline"]
+[ext_resource type="Texture2D" path="res://assets/bg/garden.webp" id="4_garden"]
+[ext_resource type="Script" path="res://scripts/world/street/clothesline.gd" id="5_clothesline"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_sheet.webp" id="6_line_sheet"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_shirt_blue.webp" id="7_line_shirt_b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_jeans.webp" id="8_line_jeans"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_dress.webp" id="9_line_dress"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_socks.webp" id="10_line_socks"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_towel.webp" id="11_line_towel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/line_shirt_cream.webp" id="12_line_shirt_c"]
+[ext_resource type="PackedScene" path="res://scenes/objects/prop.tscn" id="13_prop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_garden_bed.webp" id="14_street_garde"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_brick_planter.webp" id="15_street_brick"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_flower_planter.webp" id="16_street_flowe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_veg_basket.webp" id="17_street_veg_b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_lantern.webp" id="18_item_lantern"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="19_glow_marker"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_tree_autumn.webp" id="20_street_tree_"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player.tscn" id="21_player"]
+[ext_resource type="Script" path="res://scripts/world/street/sock_pickup.gd" id="22_sock_pickup"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_sock.webp" id="23_item_sock"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="24_tap_area"]
+[ext_resource type="Script" path="res://scripts/world/particles.gd" id="26_particles"]
+[ext_resource type="PackedScene" path="res://scenes/objects/hotspot.tscn" id="27_hotspot"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights.gd" id="34_far_lights"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights_painter.gd" id="35_far_lights_p"]
+[ext_resource type="Script" path="res://scripts/world/street/stars.gd" id="37_stars"]
+[ext_resource type="Texture2D" path="res://assets/bg/garden_lights.webp" id="39_garden_light"]
+[ext_resource type="Script" path="res://scripts/world/glow_layer.gd" id="40_glow_layer"]
+[ext_resource type="Script" path="res://scripts/world/rain.gd" id="41_rain"]
+[ext_resource type="Script" path="res://scripts/world/emote_layer.gd" id="42_emote_layer"]
+[ext_resource type="Script" path="res://scripts/world/street/hotspot_hints.gd" id="43_hotspot_hint"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_25"]
+size = Vector2(68, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_28"]
+size = Vector2(752, 122)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_29"]
+size = Vector2(232, 92)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_30"]
+size = Vector2(132, 102)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_31"]
+size = Vector2(132, 112)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_32"]
+blend_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_33"]
+viewport_path = NodePath("ScreenFx/FarLights/Mask")
+resource_local_to_scene = true
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_36"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_38"]
+blend_mode = 1
+
+[node name="Garden" type="Node2D"]
+script = ExtResource("1_street")
+place = "garden"
+scene_kind = "street"
+world_width = 1800.0
+interior = false
+walk_band = Vector2(608, 676)
+char_scale = 0.68
+vignette = 0.3
+
+[node name="Sky" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Backdrop" type="Node2D" parent="Sky"]
+script = ExtResource("2_sky_backdrop")
+skyline_y = -150.0
+skyline_scale = 1.0
+
+[node name="Skyline" type="Sprite2D" parent="Sky/Backdrop"]
+texture = ExtResource("3_skyline")
+centered = false
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("4_garden")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="Clothesline" type="Node2D" parent="."]
+script = ExtResource("5_clothesline")
+from_x = 100.0
+to_x = 1000.0
+line_y = 292.0
+
+[node name="Sheet" type="Sprite2D" parent="Clothesline"]
+position = Vector2(172.0, 294.832)
+texture = ExtResource("6_line_sheet")
+centered = false
+offset = Vector2(-65.0, 0)
+scale = Vector2(0.59, 0.59)
+
+[node name="ShirtBlue" type="Sprite2D" parent="Clothesline"]
+position = Vector2(316.0, 307.888)
+texture = ExtResource("7_line_shirt_b")
+centered = false
+offset = Vector2(-67.5, 0)
+scale = Vector2(0.5571, 0.5571)
+
+[node name="Jeans" type="Sprite2D" parent="Clothesline"]
+position = Vector2(433.0, 313.972)
+texture = ExtResource("8_line_jeans")
+centered = false
+offset = Vector2(-49.0, 0)
+scale = Vector2(0.62, 0.62)
+
+[node name="Dress" type="Sprite2D" parent="Clothesline"]
+position = Vector2(559.0, 315.988)
+texture = ExtResource("9_line_dress")
+centered = false
+offset = Vector2(-53.0, 0)
+scale = Vector2(0.58, 0.58)
+
+[node name="Socks" type="Sprite2D" parent="Clothesline"]
+position = Vector2(658.0, 314.272)
+texture = ExtResource("10_line_socks")
+centered = false
+offset = Vector2(-40.5, 0)
+scale = Vector2(0.4333, 0.4333)
+
+[node name="Towel" type="Sprite2D" parent="Clothesline"]
+position = Vector2(766.0, 309.088)
+texture = ExtResource("11_line_towel")
+centered = false
+offset = Vector2(-52.0, 0)
+scale = Vector2(0.5556, 0.5556)
+
+[node name="ShirtCream" type="Sprite2D" parent="Clothesline"]
+position = Vector2(910.0, 296.8)
+texture = ExtResource("12_line_shirt_c")
+centered = false
+offset = Vector2(-67.0, 0)
+scale = Vector2(0.5429, 0.5429)
+
+[node name="Specials" type="Node2D" parent="."]
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="GardenBed1" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(245, 606)
+
+[node name="Sprite" parent="Entities/GardenBed1"]
+texture = ExtResource("14_street_garde")
+centered = false
+offset = Vector2(-150.0, -170.0)
+scale = Vector2(0.6118, 0.6118)
+
+[node name="GardenBed2" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(520, 606)
+
+[node name="Sprite" parent="Entities/GardenBed2"]
+texture = ExtResource("14_street_garde")
+centered = false
+offset = Vector2(-150.0, -170.0)
+scale = Vector2(0.6118, 0.6118)
+
+[node name="GardenBed3" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(790, 606)
+
+[node name="Sprite" parent="Entities/GardenBed3"]
+texture = ExtResource("14_street_garde")
+centered = false
+offset = Vector2(-150.0, -170.0)
+scale = Vector2(0.6118, 0.6118)
+
+[node name="BrickPlanter" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1170, 604)
+
+[node name="Sprite" parent="Entities/BrickPlanter"]
+texture = ExtResource("15_street_brick")
+centered = false
+offset = Vector2(-108.0, -120.0)
+scale = Vector2(0.55, 0.55)
+
+[node name="FlowerPlanter1" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1300, 604)
+
+[node name="Sprite" parent="Entities/FlowerPlanter1"]
+texture = ExtResource("16_street_flowe")
+centered = false
+offset = Vector2(-59.5, -130.0)
+scale = Vector2(0.4923, 0.4923)
+
+[node name="VegBasket" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1080, 646)
+
+[node name="Sprite" parent="Entities/VegBasket"]
+texture = ExtResource("17_street_veg_b")
+centered = false
+offset = Vector2(-55.5, -110.0)
+scale = Vector2(0.3818, 0.3818)
+
+[node name="Lantern" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1604, 452)
+
+[node name="Sprite" parent="Entities/Lantern"]
+texture = ExtResource("18_item_lantern")
+centered = false
+offset = Vector2(-30.0, -140.0)
+scale = Vector2(0.3286, 0.3286)
+
+[node name="Glow" type="Node2D" parent="Entities/Lantern"]
+script = ExtResource("19_glow_marker")
+position = Vector2(0, -23.0)
+radius = 50.0
+color = Color(1.0, 0.7451, 0.3922, 1.0)
+day_alpha = 0.0
+night_alpha = 0.5
+
+[node name="FlowerPlanter2" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1700, 606)
+
+[node name="Sprite" parent="Entities/FlowerPlanter2"]
+texture = ExtResource("16_street_flowe")
+centered = false
+offset = Vector2(-59.5, -130.0)
+scale = Vector2(0.4615, 0.4615)
+
+[node name="AutumnTree" parent="Entities" instance=ExtResource("13_prop")]
+position = Vector2(1760, 600)
+when = "day >= 18"
+tree = true
+
+[node name="Sprite" parent="Entities/AutumnTree"]
+texture = ExtResource("20_street_tree_")
+centered = false
+offset = Vector2(-199.5, -560.0)
+scale = Vector2(0.5357, 0.5357)
+
+[node name="Player" parent="Entities" instance=ExtResource("21_player")]
+position = Vector2(1520, 650)
+speed = 330.0
+
+[node name="Sock" type="Node2D" parent="Entities"]
+script = ExtResource("22_sock_pickup")
+position = Vector2(1400, 666)
+sock_id = "holiday"
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Sock"]
+texture = ExtResource("23_item_sock")
+centered = false
+offset = Vector2(-45.0, -111.0)
+scale = Vector2(0.2162, 0.2162)
+rotation = 0.6
+
+[node name="Tap" type="Area2D" parent="Entities/Sock"]
+script = ExtResource("24_tap_area")
+priority = 10.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Sock/Tap"]
+position = Vector2(0.0, -12.0)
+shape = SubResource("RectangleShape2D_25")
+
+[node name="Particles" type="Node2D" parent="."]
+script = ExtResource("26_particles")
+
+[node name="Hotspots" type="Node2D" parent="."]
+
+[node name="Beds" parent="Hotspots" instance=ExtResource("27_hotspot")]
+hotspot_id = "beds"
+label = "Garden beds"
+act = "water"
+
+[node name="Shape" parent="Hotspots/Beds"]
+position = Vector2(520.0, 555.0)
+shape = SubResource("RectangleShape2D_28")
+
+[node name="Flowers" parent="Hotspots" instance=ExtResource("27_hotspot")]
+hotspot_id = "flowers"
+label = "Flowers"
+act = "flowers"
+
+[node name="Shape" parent="Hotspots/Flowers"]
+position = Vector2(1240.0, 570.0)
+shape = SubResource("RectangleShape2D_29")
+
+[node name="Photo" parent="Hotspots" instance=ExtResource("27_hotspot")]
+hotspot_id = "photo"
+label = "Photo spot"
+act = "photo"
+photo = "photo_garden"
+title = "The community garden"
+
+[node name="Shape" parent="Hotspots/Photo"]
+position = Vector2(360.0, 465.0)
+shape = SubResource("RectangleShape2D_30")
+
+[node name="Sketch" parent="Hotspots" instance=ExtResource("27_hotspot")]
+hotspot_id = "sketch"
+label = "Sketch the shed"
+act = "sketch"
+title = "The tool shed"
+
+[node name="Shape" parent="Hotspots/Sketch"]
+position = Vector2(1530.0, 380.0)
+shape = SubResource("RectangleShape2D_31")
+
+[node name="Spots" type="Node2D" parent="."]
+
+[node name="june" type="Marker2D" parent="Spots"]
+position = Vector2(870, 650)
+
+[node name="remy" type="Marker2D" parent="Spots"]
+position = Vector2(1250, 654)
+
+[node name="walt" type="Marker2D" parent="Spots"]
+position = Vector2(560, 654)
+
+[node name="maya" type="Marker2D" parent="Spots"]
+position = Vector2(400, 652)
+
+[node name="haddad" type="Marker2D" parent="Spots"]
+position = Vector2(1010, 656)
+
+[node name="Entries" type="Node2D" parent="."]
+
+[node name="default" type="Marker2D" parent="Entries"]
+position = Vector2(1520, 650)
+
+[node name="Lights" type="Node2D" parent="."]
+
+[node name="ScreenFx" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="FarLights" type="TextureRect" parent="ScreenFx"]
+script = ExtResource("34_far_lights")
+material = SubResource("CanvasItemMaterial_32")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+expand_mode = 1
+texture_filter = 2
+texture = SubResource("ViewportTexture_33")
+backdrop = NodePath("../../Sky/Backdrop")
+background = NodePath("../../Background")
+
+[node name="Mask" type="SubViewport" parent="ScreenFx/FarLights"]
+transparent_bg = true
+size = Vector2i(800, 360)
+render_target_update_mode = 4
+
+[node name="Painter" type="Node2D" parent="ScreenFx/FarLights/Mask"]
+script = ExtResource("35_far_lights_p")
+
+[node name="Stars" type="Node2D" parent="ScreenFx"]
+script = ExtResource("37_stars")
+material = SubResource("CanvasItemMaterial_36")
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="BgLights" type="Sprite2D" parent="Overlay"]
+material = SubResource("CanvasItemMaterial_38")
+texture = ExtResource("39_garden_light")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+visible = false
+
+[node name="Glows" type="Node2D" parent="Overlay"]
+script = ExtResource("40_glow_layer")
+
+[node name="RainLayer" type="CanvasLayer" parent="."]
+layer = 4
+
+[node name="Rain" type="Node2D" parent="RainLayer"]
+script = ExtResource("41_rain")
+ground_y = 700.0
+
+[node name="Overlay2" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="Emotes" type="Node2D" parent="Overlay2"]
+script = ExtResource("42_emote_layer")
+
+[node name="HotspotHints" type="Node2D" parent="Overlay2"]
+script = ExtResource("43_hotspot_hint")

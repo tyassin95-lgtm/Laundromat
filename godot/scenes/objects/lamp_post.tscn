@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street/prop.gd" id="1_prop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_lamp_post.webp" id="2_street_lamp_"]
+[ext_resource type="Script" path="res://scripts/world/scene_light.gd" id="3_scene_light"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="4_glow_marker"]
+
+[node name="LampPost" type="Node2D"]
+script = ExtResource("1_prop")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_street_lamp_")
+centered = false
+offset = Vector2(-48.0, -480.0)
+scale = Vector2(0.6875, 0.6875)
+
+[node name="Head" type="Node2D" parent="."]
+script = ExtResource("3_scene_light")
+position = Vector2(0, -302)
+radius = 380.0
+color = Color(1.0, 0.8039, 0.549, 1.0)
+day_intensity = 0.0
+night_intensity = 0.85
+
+[node name="Pool" type="Node2D" parent="."]
+script = ExtResource("3_scene_light")
+position = Vector2(0, 40)
+radius = 260.0
+color = Color(1.0, 0.7843, 0.549, 1.0)
+day_intensity = 0.0
+night_intensity = 0.6
+squash = 0.5
+
+[node name="Glow" type="Node2D" parent="."]
+script = ExtResource("4_glow_marker")
+position = Vector2(0, -320)
+radius = 60.0
+color = Color(1.0, 0.8627, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.5
+night_curve = 2.0

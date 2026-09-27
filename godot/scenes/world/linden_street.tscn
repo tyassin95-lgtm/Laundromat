@@ -1,0 +1,738 @@
+[gd_scene load_steps=63 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street/street.gd" id="1_street"]
+[ext_resource type="Texture2D" path="res://assets/bg/linden_closed.webp" id="2_linden_close"]
+[ext_resource type="Texture2D" path="res://assets/bg/linden_closed_lights.webp" id="3_linden_close"]
+[ext_resource type="Script" path="res://scripts/world/street/sky_backdrop.gd" id="4_sky_backdrop"]
+[ext_resource type="Texture2D" path="res://assets/bg/skyline.webp" id="5_skyline"]
+[ext_resource type="Texture2D" path="res://assets/bg/linden.webp" id="6_linden"]
+[ext_resource type="FontFile" path="res://assets/fonts/Pacifico-Regular.woff2" id="7_Pacifico-Reg"]
+[ext_resource type="FontVariation" path="res://theme/fonts/fraunces_bold.tres" id="8_fraunces_bol"]
+[ext_resource type="Script" path="res://scripts/world/painted_text.gd" id="9_painted_text"]
+[ext_resource type="PackedScene" path="res://scenes/objects/prop.tscn" id="10_prop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_ad_crestline.webp" id="11_street_ad_cr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_ad_tagged.webp" id="12_street_ad_ta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_sold_banner.webp" id="13_street_sold_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_poster.webp" id="14_street_poste"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_mural_rosa.webp" id="15_street_mural"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_tree_green.webp" id="16_street_tree_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_mailbox.webp" id="17_street_mailb"]
+[ext_resource type="PackedScene" path="res://scenes/objects/lamp_post.tscn" id="18_lamp_post"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_flower_planter.webp" id="19_street_flowe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_bicycle.webp" id="20_street_bicyc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/upg_cargo_bike.webp" id="21_upg_cargo_bi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/upg_awning.webp" id="22_upg_awning"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decor_hanging_sign.webp" id="23_decor_hangin"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="24_tap_area"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decor_string_lights.webp" id="26_decor_string"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="27_glow_marker"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_cafe_chair.webp" id="28_street_cafe_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_cafe_table.webp" id="29_street_cafe_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decor_chalkboard.webp" id="30_decor_chalkb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_trash_can.webp" id="31_street_trash"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_crates.webp" id="32_street_crate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_news_box.webp" id="33_street_news_"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_billboard.webp" id="34_street_billb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_bus_shelter.webp" id="36_street_bus_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_barrier.webp" id="37_street_barri"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player.tscn" id="38_player"]
+[ext_resource type="Script" path="res://scripts/world/street/sock_pickup.gd" id="39_sock_pickup"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_sock.webp" id="40_item_sock"]
+[ext_resource type="Script" path="res://scripts/world/particles.gd" id="42_particles"]
+[ext_resource type="PackedScene" path="res://scenes/objects/hotspot.tscn" id="43_hotspot"]
+[ext_resource type="Script" path="res://scripts/world/scene_light.gd" id="50_scene_light"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights.gd" id="53_far_lights"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights_painter.gd" id="54_far_lights_p"]
+[ext_resource type="Script" path="res://scripts/world/street/stars.gd" id="56_stars"]
+[ext_resource type="Texture2D" path="res://assets/bg/linden_lights.webp" id="58_linden_light"]
+[ext_resource type="Script" path="res://scripts/world/glow_layer.gd" id="59_glow_layer"]
+[ext_resource type="Script" path="res://scripts/world/rain.gd" id="60_rain"]
+[ext_resource type="Script" path="res://scripts/world/emote_layer.gd" id="61_emote_layer"]
+[ext_resource type="Script" path="res://scripts/world/street/hotspot_hints.gd" id="62_hotspot_hint"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_25"]
+size = Vector2(140, 124)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_35"]
+size = Vector2(320, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_41"]
+size = Vector2(68, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_44"]
+size = Vector2(122, 260)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_45"]
+size = Vector2(114, 265)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_46"]
+size = Vector2(117, 242)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_47"]
+size = Vector2(312, 260)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_48"]
+size = Vector2(102, 102)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_49"]
+size = Vector2(102, 92)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_51"]
+blend_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_52"]
+viewport_path = NodePath("ScreenFx/FarLights/Mask")
+resource_local_to_scene = true
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_55"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_57"]
+blend_mode = 1
+
+[node name="LindenStreet" type="Node2D"]
+script = ExtResource("1_street")
+place = "street"
+scene_kind = "street"
+world_width = 2600.0
+interior = false
+walk_band = Vector2(616, 688)
+char_scale = 0.68
+vignette = 0.3
+alt_background = ExtResource("2_linden_close")
+alt_lights = ExtResource("3_linden_close")
+alt_when = "flag.bodega_closed"
+
+[node name="Sky" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Backdrop" type="Node2D" parent="Sky"]
+script = ExtResource("4_sky_backdrop")
+skyline_y = -110.0
+skyline_scale = 1.0
+
+[node name="Skyline" type="Sprite2D" parent="Sky/Backdrop"]
+texture = ExtResource("5_skyline")
+centered = false
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("6_linden")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="ShopSign" type="Node2D" parent="."]
+script = ExtResource("9_painted_text")
+position = Vector2(861, 322)
+font = ExtResource("7_Pacifico-Reg")
+font_size = 46
+color = Color(0.9529, 0.8902, 0.7647, 1.0)
+outline_color = Color(0.1176, 0.1961, 0.2039, 0.85)
+outline_size = 5
+max_width = 552.0
+middle = true
+subtitle = "SELF-SERVICE · WASH & FOLD"
+subtitle_font = ExtResource("8_fraunces_bol")
+subtitle_size = 13
+subtitle_color = Color(0.9529, 0.8902, 0.7647, 0.85)
+subtitle_offset = 26.0
+
+[node name="Specials" type="Node2D" parent="."]
+
+[node name="CrestlineAd" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(2300, 606)
+when = "flag.mural_gone and not flag.ad_tagged"
+occludes_sky = true
+
+[node name="Sprite" parent="Specials/CrestlineAd"]
+texture = ExtResource("11_street_ad_cr")
+centered = false
+offset = Vector2(-176.5, -330.0)
+scale = Vector2(0.5455, 0.5455)
+
+[node name="CrestlineAdTagged" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(2300, 606)
+when = "flag.mural_gone and flag.ad_tagged"
+
+[node name="Sprite" parent="Specials/CrestlineAdTagged"]
+texture = ExtResource("12_street_ad_ta")
+centered = false
+offset = Vector2(-176.5, -330.0)
+scale = Vector2(0.5455, 0.5455)
+
+[node name="SoldBanner" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(238, 196)
+when = "flag.alder_sold"
+rotation = -0.02
+
+[node name="Sprite" parent="Specials/SoldBanner"]
+texture = ExtResource("13_street_sold_")
+centered = false
+offset = Vector2(-178.5, -55.0)
+scale = Vector2(0.8403, 0.8403)
+
+[node name="Poster1" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(479, 500)
+when = "flag.petition_started"
+rotation = 0.04
+occludes_sky = false
+
+[node name="Sprite" parent="Specials/Poster1"]
+texture = ExtResource("14_street_poste")
+centered = false
+offset = Vector2(-49.5, -60.0)
+scale = Vector2(0.4333, 0.4333)
+
+[node name="Poster2" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(1233, 500)
+when = "flag.petition_started"
+rotation = 0.04
+occludes_sky = false
+
+[node name="Sprite" parent="Specials/Poster2"]
+texture = ExtResource("14_street_poste")
+centered = false
+offset = Vector2(-49.5, -60.0)
+scale = Vector2(0.4333, 0.4333)
+
+[node name="Poster3" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(2193, 500)
+when = "flag.petition_started"
+rotation = 0.04
+occludes_sky = false
+
+[node name="Sprite" parent="Specials/Poster3"]
+texture = ExtResource("14_street_poste")
+centered = false
+offset = Vector2(-49.5, -60.0)
+scale = Vector2(0.4333, 0.4333)
+
+[node name="NewMural" parent="Specials" instance=ExtResource("10_prop")]
+position = Vector2(2300, 606)
+when = "flag.new_mural"
+
+[node name="Sprite" parent="Specials/NewMural"]
+texture = ExtResource("15_street_mural")
+centered = false
+offset = Vector2(-176.5, -330.0)
+scale = Vector2(0.5455, 0.5455)
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Tree" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(92, 616)
+tree = true
+
+[node name="Sprite" parent="Entities/Tree"]
+texture = ExtResource("16_street_tree_")
+centered = false
+offset = Vector2(-198.5, -560.0)
+scale = Vector2(0.5357, 0.5357)
+
+[node name="Mailbox" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(430, 618)
+
+[node name="Sprite" parent="Entities/Mailbox"]
+texture = ExtResource("17_street_mailb")
+centered = false
+offset = Vector2(-47.5, -160.0)
+scale = Vector2(0.575, 0.575)
+
+[node name="LampPost1" parent="Entities" instance=ExtResource("18_lamp_post")]
+position = Vector2(478, 620)
+
+[node name="Head" parent="Entities/LampPost1"]
+position = Vector2(0, -302)
+
+[node name="Pool" parent="Entities/LampPost1"]
+position = Vector2(0, 40)
+
+[node name="Glow" parent="Entities/LampPost1"]
+position = Vector2(0, -320)
+
+[node name="FlowerPlanter" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(548, 618)
+
+[node name="Sprite" parent="Entities/FlowerPlanter"]
+texture = ExtResource("19_street_flowe")
+centered = false
+offset = Vector2(-59.5, -130.0)
+scale = Vector2(0.4462, 0.4462)
+
+[node name="Bicycle" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(962, 622)
+when = "not upgrade(\"cargo_bike\")"
+
+[node name="Sprite" parent="Entities/Bicycle"]
+texture = ExtResource("20_street_bicyc")
+centered = false
+offset = Vector2(-133.5, -160.0)
+scale = Vector2(0.55, 0.55)
+
+[node name="CargoBike" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(950, 624)
+when = "upgrade(\"cargo_bike\")"
+
+[node name="Sprite" parent="Entities/CargoBike"]
+texture = ExtResource("21_upg_cargo_bi")
+centered = false
+offset = Vector2(-153.5, -170.0)
+scale = Vector2(0.5529, 0.5529)
+
+[node name="Awning" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1120, 424)
+when = "upgrade(\"awning\")"
+
+[node name="Sprite" parent="Entities/Awning"]
+texture = ExtResource("22_upg_awning")
+centered = false
+offset = Vector2(-100.0, -110)
+scale = Vector2(0.6, 0.6)
+
+[node name="HangingSign" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1212, 470)
+when = "upgrade(\"sign\")"
+tap_action = "sign"
+
+[node name="Sprite" parent="Entities/HangingSign"]
+texture = ExtResource("23_decor_hangin")
+centered = false
+offset = Vector2(-70.5, -170)
+scale = Vector2(0.6118, 0.6118)
+
+[node name="Name" type="Node2D" parent="Entities/HangingSign"]
+script = ExtResource("9_painted_text")
+position = Vector2(0, -28.08)
+font = ExtResource("7_Pacifico-Reg")
+font_size = 18
+color = Color(0.3529, 0.1804, 0.0784, 1.0)
+max_width = 62.1064
+middle = true
+
+[node name="Tap" type="Area2D" parent="Entities/HangingSign"]
+script = ExtResource("24_tap_area")
+priority = 470.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/HangingSign/Tap"]
+position = Vector2(0.0, -52.0)
+shape = SubResource("RectangleShape2D_25")
+
+[node name="LampPost2" parent="Entities" instance=ExtResource("18_lamp_post")]
+position = Vector2(1232, 620)
+
+[node name="Head" parent="Entities/LampPost2"]
+position = Vector2(0, -302)
+
+[node name="Pool" parent="Entities/LampPost2"]
+position = Vector2(0, 40)
+
+[node name="Glow" parent="Entities/LampPost2"]
+position = Vector2(0, -320)
+
+[node name="StringLights" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1432, 352)
+
+[node name="Sprite" parent="Entities/StringLights"]
+texture = ExtResource("26_decor_string")
+centered = false
+offset = Vector2(-128.5, 0)
+scale = Vector2(1.284, 1.284)
+
+[node name="Bulb1" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(-99.0, 71.6498)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 0.0
+
+[node name="Bulb2" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(-59.4, 80.558)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 1.0
+
+[node name="Bulb3" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(-19.8, 76.4157)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 2.0
+
+[node name="Bulb4" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(19.8, 65.2913)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 3.0
+
+[node name="Bulb5" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(59.4, 63.4821)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 4.0
+
+[node name="Bulb6" type="Node2D" parent="Entities/StringLights"]
+script = ExtResource("27_glow_marker")
+position = Vector2(99.0, 73.6386)
+radius = 22.0
+color = Color(1.0, 0.7843, 0.4706, 1.0)
+day_alpha = 0.0
+night_alpha = 0.35
+twinkle = 0.2
+twinkle_phase = 5.0
+
+[node name="CafeChair1" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1300, 620)
+
+[node name="Sprite" parent="Entities/CafeChair1"]
+texture = ExtResource("28_street_cafe_")
+centered = false
+offset = Vector2(-49.5, -170.0)
+scale = Vector2(0.5176, 0.5176)
+
+[node name="CafeTable1" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1352, 622)
+
+[node name="Sprite" parent="Entities/CafeTable1"]
+texture = ExtResource("29_street_cafe_")
+centered = false
+offset = Vector2(-84.5, -180.0)
+scale = Vector2(0.4556, 0.4556)
+
+[node name="CafeChair2" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1404, 620)
+
+[node name="Sprite" parent="Entities/CafeChair2"]
+texture = ExtResource("28_street_cafe_")
+centered = false
+offset = Vector2(-49.5, -170.0)
+scale = Vector2(0.5176, 0.5176)
+flip_h = true
+
+[node name="CafeTable2" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1500, 622)
+
+[node name="Sprite" parent="Entities/CafeTable2"]
+texture = ExtResource("29_street_cafe_")
+centered = false
+offset = Vector2(-84.5, -180.0)
+scale = Vector2(0.4556, 0.4556)
+
+[node name="CafeChair3" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1552, 620)
+
+[node name="Sprite" parent="Entities/CafeChair3"]
+texture = ExtResource("28_street_cafe_")
+centered = false
+offset = Vector2(-49.5, -170.0)
+scale = Vector2(0.5176, 0.5176)
+flip_h = true
+
+[node name="Chalkboard" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1772, 620)
+
+[node name="Sprite" parent="Entities/Chalkboard"]
+texture = ExtResource("30_decor_chalkb")
+centered = false
+offset = Vector2(-79.0, -200.0)
+scale = Vector2(0.42, 0.42)
+
+[node name="TrashCan" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1834, 620)
+
+[node name="Sprite" parent="Entities/TrashCan"]
+texture = ExtResource("31_street_trash")
+centered = false
+offset = Vector2(-53.5, -140.0)
+scale = Vector2(0.4857, 0.4857)
+
+[node name="Crates" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(1936, 620)
+when = "not flag.bodega_closed"
+
+[node name="Sprite" parent="Entities/Crates"]
+texture = ExtResource("32_street_crate")
+centered = false
+offset = Vector2(-107.0, -150.0)
+scale = Vector2(0.4267, 0.4267)
+
+[node name="NewsBox" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(2154, 620)
+
+[node name="Sprite" parent="Entities/NewsBox"]
+texture = ExtResource("33_street_news_")
+centered = false
+offset = Vector2(-41.5, -170.0)
+scale = Vector2(0.4941, 0.4941)
+
+[node name="LampPost3" parent="Entities" instance=ExtResource("18_lamp_post")]
+position = Vector2(2192, 620)
+
+[node name="Head" parent="Entities/LampPost3"]
+position = Vector2(0, -302)
+
+[node name="Pool" parent="Entities/LampPost3"]
+position = Vector2(0, 40)
+
+[node name="Glow" parent="Entities/LampPost3"]
+position = Vector2(0, -320)
+
+[node name="Billboard" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(2300, 606)
+when = "not flag.mural_gone"
+tap_action = "mural"
+
+[node name="Sprite" parent="Entities/Billboard"]
+texture = ExtResource("34_street_billb")
+centered = false
+offset = Vector2(-211.5, -330.0)
+scale = Vector2(0.5455, 0.5455)
+
+[node name="Tap" type="Area2D" parent="Entities/Billboard"]
+script = ExtResource("24_tap_area")
+priority = 606.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Billboard/Tap"]
+position = Vector2(0.0, -90.0)
+shape = SubResource("RectangleShape2D_35")
+
+[node name="BusShelter" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(2494, 624)
+
+[node name="Sprite" parent="Entities/BusShelter"]
+texture = ExtResource("36_street_bus_s")
+centered = false
+offset = Vector2(-217.0, -330.0)
+scale = Vector2(0.4848, 0.4848)
+
+[node name="Barrier1" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(2566, 654)
+when = "day >= 15"
+
+[node name="Sprite" parent="Entities/Barrier1"]
+texture = ExtResource("37_street_barri")
+centered = false
+offset = Vector2(-107.0, -150.0)
+scale = Vector2(0.56, 0.56)
+
+[node name="Barrier2" parent="Entities" instance=ExtResource("10_prop")]
+position = Vector2(2236, 656)
+when = "day >= 19"
+
+[node name="Sprite" parent="Entities/Barrier2"]
+texture = ExtResource("37_street_barri")
+centered = false
+offset = Vector2(-107.0, -150.0)
+scale = Vector2(0.5333, 0.5333)
+flip_h = true
+
+[node name="Player" parent="Entities" instance=ExtResource("38_player")]
+position = Vector2(700, 652)
+speed = 330.0
+
+[node name="Sock" type="Node2D" parent="Entities"]
+script = ExtResource("39_sock_pickup")
+position = Vector2(1880, 664)
+sock_id = "polka"
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Sock"]
+texture = ExtResource("40_item_sock")
+centered = false
+offset = Vector2(-45.0, -111.0)
+scale = Vector2(0.2162, 0.2162)
+rotation = 0.6
+
+[node name="Tap" type="Area2D" parent="Entities/Sock"]
+script = ExtResource("24_tap_area")
+priority = 10.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Sock/Tap"]
+position = Vector2(0.0, -12.0)
+shape = SubResource("RectangleShape2D_41")
+
+[node name="Particles" type="Node2D" parent="."]
+script = ExtResource("42_particles")
+
+[node name="Hotspots" type="Node2D" parent="."]
+
+[node name="Shopdoor" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "shopdoor"
+label = "Rosa's"
+act = "enter_shop"
+
+[node name="Shape" parent="Hotspots/Shopdoor"]
+position = Vector2(1120.0, 484.0)
+shape = SubResource("RectangleShape2D_44")
+
+[node name="Cafedoor" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "cafedoor"
+label = "Corner Cup"
+act = "cafe"
+
+[node name="Shape" parent="Hotspots/Cafedoor"]
+position = Vector2(1684.0, 481.5)
+shape = SubResource("RectangleShape2D_45")
+
+[node name="Alder" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "alder"
+label = "Alder Arms"
+act = "alder"
+
+[node name="Shape" parent="Hotspots/Alder"]
+position = Vector2(278.5, 491.0)
+shape = SubResource("RectangleShape2D_46")
+
+[node name="Bodega" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "bodega"
+label = "Delgado's"
+act = "bodega"
+
+[node name="Shape" parent="Hotspots/Bodega"]
+position = Vector2(1990.0, 484.0)
+shape = SubResource("RectangleShape2D_47")
+
+[node name="Photo" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "photo"
+label = "Photo spot"
+act = "photo"
+photo = "photo"
+title = "Linden Street"
+
+[node name="Shape" parent="Hotspots/Photo"]
+position = Vector2(835.0, 185.0)
+shape = SubResource("RectangleShape2D_48")
+
+[node name="Sketch" parent="Hotspots" instance=ExtResource("43_hotspot")]
+hotspot_id = "sketch"
+label = "Sketch the café"
+act = "sketch"
+title = "The Corner Cup"
+
+[node name="Shape" parent="Hotspots/Sketch"]
+position = Vector2(1495.0, 580.0)
+shape = SubResource("RectangleShape2D_49")
+
+[node name="Spots" type="Node2D" parent="."]
+
+[node name="remy" type="Marker2D" parent="Spots"]
+position = Vector2(1455, 652)
+
+[node name="june" type="Marker2D" parent="Spots"]
+position = Vector2(270, 648)
+
+[node name="maya" type="Marker2D" parent="Spots"]
+position = Vector2(2440, 660)
+
+[node name="walt" type="Marker2D" parent="Spots"]
+position = Vector2(760, 652)
+
+[node name="delgado" type="Marker2D" parent="Spots"]
+position = Vector2(1994, 650)
+
+[node name="kai" type="Marker2D" parent="Spots"]
+position = Vector2(640, 664)
+
+[node name="Entries" type="Node2D" parent="."]
+
+[node name="shop" type="Marker2D" parent="Entries"]
+position = Vector2(1120, 646)
+
+[node name="default" type="Marker2D" parent="Entries"]
+position = Vector2(700, 652)
+
+[node name="map" type="Marker2D" parent="Entries"]
+position = Vector2(1300, 660)
+
+[node name="Lights" type="Node2D" parent="."]
+
+[node name="ShopWindow" type="Node2D" parent="Lights"]
+script = ExtResource("50_scene_light")
+position = Vector2(830, 420)
+radius = 420.0
+color = Color(1.0, 0.8235, 0.5882, 1.0)
+day_intensity = 0.0
+night_intensity = 0.75
+
+[node name="CafeWindow" type="Node2D" parent="Lights"]
+script = ExtResource("50_scene_light")
+position = Vector2(1400, 430)
+radius = 400.0
+color = Color(1.0, 0.7451, 0.4706, 1.0)
+day_intensity = 0.0
+night_intensity = 0.6
+
+[node name="ScreenFx" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="FarLights" type="TextureRect" parent="ScreenFx"]
+script = ExtResource("53_far_lights")
+material = SubResource("CanvasItemMaterial_51")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+expand_mode = 1
+texture_filter = 2
+texture = SubResource("ViewportTexture_52")
+backdrop = NodePath("../../Sky/Backdrop")
+background = NodePath("../../Background")
+
+[node name="Mask" type="SubViewport" parent="ScreenFx/FarLights"]
+transparent_bg = true
+size = Vector2i(800, 360)
+render_target_update_mode = 4
+
+[node name="Painter" type="Node2D" parent="ScreenFx/FarLights/Mask"]
+script = ExtResource("54_far_lights_p")
+
+[node name="Stars" type="Node2D" parent="ScreenFx"]
+script = ExtResource("56_stars")
+material = SubResource("CanvasItemMaterial_55")
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="BgLights" type="Sprite2D" parent="Overlay"]
+material = SubResource("CanvasItemMaterial_57")
+texture = ExtResource("58_linden_light")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+visible = false
+
+[node name="Glows" type="Node2D" parent="Overlay"]
+script = ExtResource("59_glow_layer")
+
+[node name="RainLayer" type="CanvasLayer" parent="."]
+layer = 4
+
+[node name="Rain" type="Node2D" parent="RainLayer"]
+script = ExtResource("60_rain")
+ground_y = 700.0
+
+[node name="Overlay2" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="Emotes" type="Node2D" parent="Overlay2"]
+script = ExtResource("61_emote_layer")
+
+[node name="HotspotHints" type="Node2D" parent="Overlay2"]
+script = ExtResource("62_hotspot_hint")

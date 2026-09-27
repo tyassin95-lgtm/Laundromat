@@ -1,0 +1,337 @@
+[gd_scene load_steps=29 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/street/street.gd" id="1_street"]
+[ext_resource type="Script" path="res://scripts/world/street/sky_backdrop.gd" id="2_sky_backdrop"]
+[ext_resource type="Texture2D" path="res://assets/bg/skyline.webp" id="3_skyline"]
+[ext_resource type="Texture2D" path="res://assets/bg/riverside.webp" id="4_riverside"]
+[ext_resource type="PackedScene" path="res://scenes/objects/lamp_post.tscn" id="5_lamp_post"]
+[ext_resource type="PackedScene" path="res://scenes/objects/prop.tscn" id="6_prop"]
+[ext_resource type="Texture2D" path="res://assets/sprites/furn_bench.webp" id="7_furn_bench"]
+[ext_resource type="Texture2D" path="res://assets/sprites/street_tree_green.webp" id="8_street_tree_"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player.tscn" id="9_player"]
+[ext_resource type="Script" path="res://scripts/world/street/sock_pickup.gd" id="10_sock_pickup"]
+[ext_resource type="Texture2D" path="res://assets/sprites/item_sock.webp" id="11_item_sock"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="12_tap_area"]
+[ext_resource type="Script" path="res://scripts/world/particles.gd" id="14_particles"]
+[ext_resource type="PackedScene" path="res://scenes/objects/hotspot.tscn" id="15_hotspot"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights.gd" id="20_far_lights"]
+[ext_resource type="Script" path="res://scripts/world/street/far_lights_painter.gd" id="21_far_lights_p"]
+[ext_resource type="Script" path="res://scripts/world/street/stars.gd" id="23_stars"]
+[ext_resource type="Script" path="res://scripts/world/glow_layer.gd" id="24_glow_layer"]
+[ext_resource type="Script" path="res://scripts/world/glow_marker.gd" id="25_glow_marker"]
+[ext_resource type="Script" path="res://scripts/world/rain.gd" id="26_rain"]
+[ext_resource type="Script" path="res://scripts/world/emote_layer.gd" id="27_emote_layer"]
+[ext_resource type="Script" path="res://scripts/world/street/hotspot_hints.gd" id="28_hotspot_hint"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_13"]
+size = Vector2(68, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_16"]
+size = Vector2(432, 162)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_17"]
+size = Vector2(132, 92)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_18"]
+blend_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_19"]
+viewport_path = NodePath("ScreenFx/FarLights/Mask")
+resource_local_to_scene = true
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_22"]
+blend_mode = 1
+
+[node name="Riverside" type="Node2D"]
+script = ExtResource("1_street")
+place = "riverside"
+scene_kind = "street"
+world_width = 1800.0
+interior = false
+walk_band = Vector2(622, 700)
+char_scale = 0.68
+vignette = 0.3
+
+[node name="Sky" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Backdrop" type="Node2D" parent="Sky"]
+script = ExtResource("2_sky_backdrop")
+skyline_y = -125.0
+skyline_scale = 0.85
+
+[node name="Skyline" type="Sprite2D" parent="Sky/Backdrop"]
+texture = ExtResource("3_skyline")
+centered = false
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("4_riverside")
+centered = false
+scale = Vector2(0.6667, 0.6667)
+
+[node name="Specials" type="Node2D" parent="."]
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="LampPost1" parent="Entities" instance=ExtResource("5_lamp_post")]
+position = Vector2(260, 612)
+
+[node name="Head" parent="Entities/LampPost1"]
+position = Vector2(0, -304)
+
+[node name="Pool" parent="Entities/LampPost1"]
+position = Vector2(0, 48)
+
+[node name="Glow" parent="Entities/LampPost1"]
+position = Vector2(0, -322)
+
+[node name="Bench1" parent="Entities" instance=ExtResource("6_prop")]
+position = Vector2(560, 616)
+
+[node name="Sprite" parent="Entities/Bench1"]
+texture = ExtResource("7_furn_bench")
+centered = false
+offset = Vector2(-151.0, -180.0)
+scale = Vector2(0.5556, 0.5556)
+
+[node name="LampPost2" parent="Entities" instance=ExtResource("5_lamp_post")]
+position = Vector2(900, 612)
+
+[node name="Head" parent="Entities/LampPost2"]
+position = Vector2(0, -304)
+
+[node name="Pool" parent="Entities/LampPost2"]
+position = Vector2(0, 48)
+
+[node name="Glow" parent="Entities/LampPost2"]
+position = Vector2(0, -322)
+
+[node name="Tree" parent="Entities" instance=ExtResource("6_prop")]
+position = Vector2(1110, 612)
+tree = true
+
+[node name="Sprite" parent="Entities/Tree"]
+texture = ExtResource("8_street_tree_")
+centered = false
+offset = Vector2(-198.5, -560.0)
+scale = Vector2(0.6429, 0.6429)
+
+[node name="Bench2" parent="Entities" instance=ExtResource("6_prop")]
+position = Vector2(1330, 616)
+
+[node name="Sprite" parent="Entities/Bench2"]
+texture = ExtResource("7_furn_bench")
+centered = false
+offset = Vector2(-151.0, -180.0)
+scale = Vector2(0.5556, 0.5556)
+
+[node name="LampPost3" parent="Entities" instance=ExtResource("5_lamp_post")]
+position = Vector2(1560, 612)
+
+[node name="Head" parent="Entities/LampPost3"]
+position = Vector2(0, -304)
+
+[node name="Pool" parent="Entities/LampPost3"]
+position = Vector2(0, 48)
+
+[node name="Glow" parent="Entities/LampPost3"]
+position = Vector2(0, -322)
+
+[node name="Player" parent="Entities" instance=ExtResource("9_player")]
+position = Vector2(140, 662)
+speed = 330.0
+
+[node name="Sock" type="Node2D" parent="Entities"]
+script = ExtResource("10_sock_pickup")
+position = Vector2(1700, 692)
+sock_id = "compression"
+
+[node name="Sprite" type="Sprite2D" parent="Entities/Sock"]
+texture = ExtResource("11_item_sock")
+centered = false
+offset = Vector2(-45.0, -111.0)
+scale = Vector2(0.2162, 0.2162)
+rotation = 0.6
+
+[node name="Tap" type="Area2D" parent="Entities/Sock"]
+script = ExtResource("12_tap_area")
+priority = 10.0
+
+[node name="Shape" type="CollisionShape2D" parent="Entities/Sock/Tap"]
+position = Vector2(0.0, -12.0)
+shape = SubResource("RectangleShape2D_13")
+
+[node name="Particles" type="Node2D" parent="."]
+script = ExtResource("14_particles")
+
+[node name="Hotspots" type="Node2D" parent="."]
+
+[node name="View" parent="Hotspots" instance=ExtResource("15_hotspot")]
+hotspot_id = "view"
+label = "The skyline"
+act = "photo"
+photo = "photo_night"
+title = "The city from the river"
+
+[node name="Shape" parent="Hotspots/View"]
+position = Vector2(770.0, 275.0)
+shape = SubResource("RectangleShape2D_16")
+
+[node name="Sketch" parent="Hotspots" instance=ExtResource("15_hotspot")]
+hotspot_id = "sketch"
+label = "Sketch the bridge"
+act = "sketch"
+title = "The bridge"
+
+[node name="Shape" parent="Hotspots/Sketch"]
+position = Vector2(1320.0, 580.0)
+shape = SubResource("RectangleShape2D_17")
+
+[node name="Spots" type="Node2D" parent="."]
+
+[node name="maya" type="Marker2D" parent="Spots"]
+position = Vector2(760, 662)
+
+[node name="remy" type="Marker2D" parent="Spots"]
+position = Vector2(1430, 670)
+
+[node name="walt" type="Marker2D" parent="Spots"]
+position = Vector2(470, 670)
+
+[node name="june" type="Marker2D" parent="Spots"]
+position = Vector2(1220, 670)
+
+[node name="priya" type="Marker2D" parent="Spots"]
+position = Vector2(1000, 668)
+
+[node name="Entries" type="Node2D" parent="."]
+
+[node name="default" type="Marker2D" parent="Entries"]
+position = Vector2(140, 662)
+
+[node name="Lights" type="Node2D" parent="."]
+
+[node name="ScreenFx" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="FarLights" type="TextureRect" parent="ScreenFx"]
+script = ExtResource("20_far_lights")
+material = SubResource("CanvasItemMaterial_18")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+expand_mode = 1
+texture_filter = 2
+texture = SubResource("ViewportTexture_19")
+backdrop = NodePath("../../Sky/Backdrop")
+background = NodePath("../../Background")
+
+[node name="Mask" type="SubViewport" parent="ScreenFx/FarLights"]
+transparent_bg = true
+size = Vector2i(800, 360)
+render_target_update_mode = 4
+
+[node name="Painter" type="Node2D" parent="ScreenFx/FarLights/Mask"]
+script = ExtResource("21_far_lights_p")
+
+[node name="Stars" type="Node2D" parent="ScreenFx"]
+script = ExtResource("23_stars")
+material = SubResource("CanvasItemMaterial_22")
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 3
+follow_viewport_enabled = true
+
+[node name="Glows" type="Node2D" parent="Overlay"]
+script = ExtResource("24_glow_layer")
+
+[node name="BridgeLamp1" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1010.0, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp2" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1107.5, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp3" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1205.0, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp4" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1302.5, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp5" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1400.0, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp6" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1497.5, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp7" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1595.0, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp8" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1692.5, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="BridgeLamp9" type="Node2D" parent="Overlay"]
+script = ExtResource("25_glow_marker")
+position = Vector2(1790.0, 236)
+radius = 20.0
+color = Color(1.0, 0.8392, 0.5882, 1.0)
+day_alpha = 0.0
+night_alpha = 0.7
+
+[node name="RainLayer" type="CanvasLayer" parent="."]
+layer = 4
+
+[node name="Rain" type="Node2D" parent="RainLayer"]
+script = ExtResource("26_rain")
+ground_y = 700.0
+
+[node name="Overlay2" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="Emotes" type="Node2D" parent="Overlay2"]
+script = ExtResource("27_emote_layer")
+
+[node name="HotspotHints" type="Node2D" parent="Overlay2"]
+script = ExtResource("28_hotspot_hint")

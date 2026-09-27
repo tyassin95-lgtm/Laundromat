@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/laundromat/wall_clock.gd" id="1_wall_clock"]
+[ext_resource type="Texture2D" path="res://assets/sprites/prop_clock.webp" id="2_prop_clock"]
+[ext_resource type="Texture2D" path="res://assets/sprites/clock_hand_hour.webp" id="3_clock_hand_h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/clock_hand_minute.webp" id="4_clock_hand_m"]
+[ext_resource type="Script" path="res://scripts/world/tap_area.gd" id="5_tap_area"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
+size = Vector2(96, 96)
+
+[node name="WallClock" type="Node2D"]
+script = ExtResource("1_wall_clock")
+
+[node name="Face" type="Sprite2D" parent="."]
+texture = ExtResource("2_prop_clock")
+centered = false
+offset = Vector2(-69.5, -70.0)
+scale = Vector2(0.5286, 0.5286)
+
+[node name="Hour" type="Sprite2D" parent="."]
+texture = ExtResource("3_clock_hand_h")
+centered = false
+offset = Vector2(-20.008, -100.68)
+scale = Vector2(0.1542, 0.1542)
+
+[node name="Minute" type="Sprite2D" parent="."]
+texture = ExtResource("4_clock_hand_m")
+centered = false
+offset = Vector2(-18.696, -140.96)
+scale = Vector2(0.1758, 0.1758)
+
+[node name="Tap" type="Area2D" parent="."]
+script = ExtResource("5_tap_area")
+priority = 55.0
+
+[node name="Shape" type="CollisionShape2D" parent="Tap"]
+position = Vector2(0.0, 0.0)
+shape = SubResource("RectangleShape2D_6")
